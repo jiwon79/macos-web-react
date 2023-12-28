@@ -5,15 +5,15 @@ export function Desktop() {
     <>
       <p>MENU</p>
       <Window>
-        <Window.ControlMenu />
+        <Window.Control />
         <p>window 1</p>
       </Window>
       <Window>
-        <Window.ControlMenu />
+        <Window.Control />
         <p>window 2</p>
       </Window>
       <Window>
-        <Window.ControlMenu />
+        <Window.Control />
         <p>window 3</p>
       </Window>
       <p>DOCK</p>
