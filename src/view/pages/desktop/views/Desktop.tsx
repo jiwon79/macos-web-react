@@ -5,11 +5,11 @@ export function Desktop() {
     <>
       <p>MENU</p>
       <Window>
-        <Window.Control />
+        <Window.Control size={'standard'} />
         <p>window 1</p>
       </Window>
       <Window>
-        <Window.Control />
+        <Window.Control size={'withTitle'} />
         <p>window 2</p>
       </Window>
       <Window>
