@@ -1,27 +1,28 @@
-import { Window } from '../../../../domain/window';
+import { useWindowStore } from '../../../../domain/store';
+import { WindowRenderer } from '../../../../domain/window';
 
 export function Desktop() {
+  const store = useWindowStore();
+
   return (
     <>
       <p>MENU</p>
-      <Window>
-        <Window.MovableArea>
-          <Window.Control size={'standard'} />
-        </Window.MovableArea>
-        <p>window 1</p>
-      </Window>
-      <Window>
-        <Window.MovableArea>
-          <Window.Control size={'withTitle'} />
-          <p>window 2</p>
-        </Window.MovableArea>
-      </Window>
-      <Window>
-        <Window.MovableArea>
-          <Window.Control />
-        </Window.MovableArea>
-        <p>window 3</p>
-      </Window>
+      {store.windows &&
+        store.windows.map((window) => (
+          <WindowRenderer
+            id={window.id}
+            x={window.x}
+            y={window.y}
+            width={window.width}
+            height={window.height}
+            setX={() => {}}
+            setY={() => {}}
+            setWidth={() => {}}
+            setHeight={() => {}}
+          >
+            {window.window}
+          </WindowRenderer>
+        ))}
       <p>DOCK</p>
     </>
   );
