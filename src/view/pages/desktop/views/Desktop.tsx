@@ -1,11 +1,28 @@
-import { useWindowStore } from '../../../../domain/store';
+import { useUserInteraction, useWindowStore } from '../../../../domain/store';
 import { WindowRenderer } from '../../../../domain/window';
+import * as styles from './Desktop.css.ts';
 
 export function Desktop() {
   const { windows, updateWindow } = useWindowStore();
+  const { isDragging, mousePosition, selectedWindow, updateMousePosition } =
+    useUserInteraction();
+
+  const onMouseMove = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    const lastMousePosition = mousePosition;
+    updateMousePosition(e.clientX, e.clientY);
+    const window = windows.find((window) => window.id === selectedWindow);
+    if (window && selectedWindow && isDragging) {
+      const dx = e.clientX - lastMousePosition.x;
+      const dy = e.clientY - lastMousePosition.y;
+      updateWindow(selectedWindow, {
+        x: window.x + dx,
+        y: window.y + dy,
+      });
+    }
+  };
 
   return (
-    <>
+    <div onMouseMove={onMouseMove} className={styles.desktop}>
       <p>MENU</p>
       {windows &&
         windows.map((window) => (
@@ -41,6 +58,6 @@ export function Desktop() {
           </WindowRenderer>
         ))}
       <p>DOCK</p>
-    </>
+    </div>
   );
 }
