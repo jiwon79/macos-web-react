@@ -1,5 +1,5 @@
-import { Window } from '../../window';
-import { WindowInfo } from '../interface';
+import { WindowState } from '../interface';
+import { Window } from '../views';
 
 export const Window1 = () => {
   return (
@@ -34,32 +34,38 @@ export const Window3 = () => {
   );
 };
 
-export const initWindowInfos: WindowInfo[] = [
+export const initialWindowStates: WindowState[] = [
   {
     id: '1',
-    title: 'Window 1',
-    window: <Window1 />,
-    x: 10,
-    y: 100,
-    width: 200,
-    height: 150,
+    title: 'WindowState 1',
+    content: <Window1 />,
+    style: {
+      x: 10,
+      y: 100,
+      width: 200,
+      height: 150,
+    },
   },
   {
     id: '2',
-    title: 'Window 2',
-    window: <Window2 />,
-    x: 200,
-    y: 200,
-    width: 100,
-    height: 100,
+    title: 'WindowState 2',
+    content: <Window2 />,
+    style: {
+      x: 200,
+      y: 200,
+      width: 100,
+      height: 100,
+    },
   },
   {
     id: '3',
-    title: 'Window 3',
-    window: <Window3 />,
-    x: 30,
-    y: 250,
-    width: 200,
-    height: 80,
+    title: 'WindowState 3',
+    content: <Window3 />,
+    style: {
+      x: 30,
+      y: 250,
+      width: 200,
+      height: 80,
+    },
   },
 ];

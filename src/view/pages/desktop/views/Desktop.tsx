@@ -1,16 +1,21 @@
 import {
   userUserInteractionActions,
   useUserInteraction,
-  useWindowStore,
 } from '../../../../domain/store';
 import { WindowRenderer } from '../../../../domain/window';
 import * as styles from './Desktop.css.ts';
+import {
+  useFocusedWindowID,
+  useWindows,
+  useWindowsActions,
+} from '../../../../domain/window/hooks';
 
 export function Desktop() {
-  const { windows, updateWindow } = useWindowStore();
+  const windows = useWindows();
+  const focusedWindowID = useFocusedWindowID();
+  const { updateWindow } = useWindowsActions();
   const isDragging = useUserInteraction((state) => state.isDragging);
   const mousePosition = useUserInteraction((state) => state.mousePosition);
-  const focusedWindowID = useWindowStore((state) => state.focusedWindowID);
   const { setMousePosition } = userUserInteractionActions();
 
   const onMouseMove = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
@@ -23,8 +28,11 @@ export function Desktop() {
       const dx = e.clientX - lastMousePosition.x;
       const dy = e.clientY - lastMousePosition.y;
       updateWindow(focusedWindow.id, {
-        x: focusedWindow.x + dx,
-        y: focusedWindow.y + dy,
+        style: {
+          ...focusedWindow.style,
+          x: focusedWindow.style.x + dx,
+          y: focusedWindow.style.y + dy,
+        },
       });
     }
   };
@@ -37,32 +45,44 @@ export function Desktop() {
           <WindowRenderer
             key={window.id}
             id={window.id}
-            x={window.x}
-            y={window.y}
-            width={window.width}
-            height={window.height}
+            x={window.style.x}
+            y={window.style.y}
+            width={window.style.width}
+            height={window.style.height}
             setX={(newX: number) => {
               updateWindow(window.id, {
-                x: newX,
+                style: {
+                  ...window.style,
+                  x: newX,
+                },
               });
             }}
             setY={(newY: number) => {
               updateWindow(window.id, {
-                y: newY,
+                style: {
+                  ...window.style,
+                  y: newY,
+                },
               });
             }}
             setWidth={(newWidth: number) => {
               updateWindow(window.id, {
-                width: newWidth,
+                style: {
+                  ...window.style,
+                  width: newWidth,
+                },
               });
             }}
             setHeight={(newHeight: number) => {
               updateWindow(window.id, {
-                height: newHeight,
+                style: {
+                  ...window.style,
+                  height: newHeight,
+                },
               });
             }}
           >
-            {window.window}
+            {window.content}
           </WindowRenderer>
         ))}
       <p>DOCK</p>
