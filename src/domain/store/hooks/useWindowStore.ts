@@ -4,6 +4,8 @@ import { initWindowInfos } from './test.tsx';
 
 interface WindowStoreState {
   windows: WindowInfo[];
+  focusedWindowID?: string;
+  setFocusedWindowID: (id: string) => void;
   addWindow: (window: WindowInfo) => void;
   removeWindow: (id: string) => void;
   updateWindow: (id: string, data: Partial<WindowInfo>) => void;
@@ -11,6 +13,8 @@ interface WindowStoreState {
 
 export const useWindowStore = create<WindowStoreState>((set) => ({
   windows: initWindowInfos as WindowInfo[],
+  focusedWindowID: undefined,
+  setFocusedWindowID: (id: string) => set({ focusedWindowID: id }),
   addWindow: (window: WindowInfo) =>
     set((state) => ({ windows: [...state.windows, window] })),
   removeWindow: (id: string) =>
