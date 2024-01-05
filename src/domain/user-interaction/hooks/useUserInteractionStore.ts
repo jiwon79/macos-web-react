@@ -6,7 +6,7 @@ const initialUserInteractionState: UserInteractionState = {
   mousePosition: { x: 0, y: 0 },
 };
 
-export const useUserInteraction = create<
+export const useUserInteractionStore = create<
   UserInteractionState,
   UserInteractionActions
 >((set) => ({
@@ -18,7 +18,3 @@ export const useUserInteraction = create<
       set({ mousePosition: { x, y } }),
   },
 }));
-
-export const userUserInteractionActions = () =>
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  useUserInteraction((state) => state.actions);

@@ -1,7 +1,7 @@
 import { container } from './WindowMovableArea.css.ts';
 import { useWindowContext } from '../WindowRenderer';
-import { userUserInteractionActions } from '../../../store';
 import { useWindowsActions } from '../../hooks';
+import { useUserInteractionActions } from '../../../user-interaction';
 
 interface WindowMovableAreaProps {
   children?: React.ReactNode;
@@ -9,7 +9,7 @@ interface WindowMovableAreaProps {
 
 export function WindowMovableArea({ children }: WindowMovableAreaProps) {
   const { id: windowID } = useWindowContext();
-  const { startDragging, endDragging } = userUserInteractionActions();
+  const { startDragging, endDragging } = useUserInteractionActions();
   const { setFocusedWindowID } = useWindowsActions();
 
   const onMouseDown = () => {

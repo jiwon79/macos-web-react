@@ -1,7 +1,7 @@
 import {
-  userUserInteractionActions,
-  useUserInteraction,
-} from '../../../../domain/store';
+  useUserInteractionActions,
+  useUserInteractionStore,
+} from '../../../../domain/user-interaction';
 import { WindowRenderer } from '../../../../domain/window';
 import * as styles from './Desktop.css.ts';
 import {
@@ -14,9 +14,9 @@ export function Desktop() {
   const windows = useWindows();
   const focusedWindowID = useFocusedWindowID();
   const { updateWindow } = useWindowsActions();
-  const isDragging = useUserInteraction((state) => state.isDragging);
-  const mousePosition = useUserInteraction((state) => state.mousePosition);
-  const { setMousePosition } = userUserInteractionActions();
+  const isDragging = useUserInteractionStore((state) => state.isDragging);
+  const mousePosition = useUserInteractionStore((state) => state.mousePosition);
+  const { setMousePosition } = useUserInteractionActions();
 
   const onMouseMove = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     const lastMousePosition = mousePosition;
