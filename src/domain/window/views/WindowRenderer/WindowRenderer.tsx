@@ -1,0 +1,75 @@
+import { createContext, useContext, useMemo } from 'react';
+import { renderer } from './WindowRenderer.css.ts';
+
+export interface WindowRendererProps {
+  id: string;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  setX: (x: number) => void;
+  setY: (y: number) => void;
+  setWidth: (width: number) => void;
+  setHeight: (height: number) => void;
+  children: React.ReactNode;
+}
+
+interface WindowContextProps {
+  id: string;
+  setX: (x: number) => void;
+  setY: (y: number) => void;
+  setWidth: (width: number) => void;
+  setHeight: (height: number) => void;
+}
+
+const WindowContext = createContext<WindowContextProps>({
+  id: '',
+  setX: () => {},
+  setY: () => {},
+  setWidth: () => {},
+  setHeight: () => {},
+});
+
+export function useWindowContext() {
+  return useContext(WindowContext);
+}
+
+export function WindowRenderer({
+  id,
+  x,
+  y,
+  width,
+  height,
+  setX,
+  setY,
+  setWidth,
+  setHeight,
+  children,
+}: WindowRendererProps) {
+  const context = useMemo(
+    () => ({
+      id,
+      setX,
+      setY,
+      setWidth,
+      setHeight,
+    }),
+    [id, setX, setY, setWidth, setHeight]
+  );
+
+  return (
+    <WindowContext.Provider value={context}>
+      <div
+        id={id}
+        style={{
+          width: `${width}px`,
+          height: `${height}px`,
+          transform: `translate(${x}px, ${y}px)`,
+        }}
+        className={renderer}
+      >
+        {children}
+      </div>
+    </WindowContext.Provider>
+  );
+}
