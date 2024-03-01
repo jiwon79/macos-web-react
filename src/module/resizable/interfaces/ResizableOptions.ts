@@ -9,4 +9,5 @@ export interface ResizableOptions {
   canResize?: (e: ResizableResizeEvent) => boolean;
   verticalPositiveDeltaDirection: 'top' | 'bottom';
   horizontalPositiveDeltaDirection: 'left' | 'right';
+  keepRatio?: boolean;
 }

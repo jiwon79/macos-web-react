@@ -1,4 +1,4 @@
-import { filterUndefinedFromObject } from 'src/utils/objects';
+import { filterUndefinedFromObject } from '../../utils/object';
 import { ResizableEventManager } from './ResizableEventManager';
 import {
   ResizableEventListener,
