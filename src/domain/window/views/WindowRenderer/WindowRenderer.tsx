@@ -16,6 +16,10 @@ export interface WindowRendererProps {
 
 interface WindowContextProps {
   id: string;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
   setX: (x: number) => void;
   setY: (y: number) => void;
   setWidth: (width: number) => void;
@@ -24,6 +28,10 @@ interface WindowContextProps {
 
 const WindowContext = createContext<WindowContextProps>({
   id: '',
+  x: 0,
+  y: 0,
+  width: 0,
+  height: 0,
   setX: () => {},
   setY: () => {},
   setWidth: () => {},
@@ -49,12 +57,16 @@ export function WindowRenderer({
   const context = useMemo(
     () => ({
       id,
+      x,
+      y,
+      width,
+      height,
       setX,
       setY,
       setWidth,
       setHeight,
     }),
-    [id, setX, setY, setWidth, setHeight]
+    [id, x, y, width, height, setX, setY, setWidth, setHeight]
   );
 
   return (

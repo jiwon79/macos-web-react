@@ -50,36 +50,16 @@ export function Desktop() {
             width={window.style.width}
             height={window.style.height}
             setX={(newX: number) => {
-              updateWindow(window.id, {
-                style: {
-                  ...window.style,
-                  x: newX,
-                },
-              });
+              updateWindow(window.id, { style: { x: newX } });
             }}
             setY={(newY: number) => {
-              updateWindow(window.id, {
-                style: {
-                  ...window.style,
-                  y: newY,
-                },
-              });
+              updateWindow(window.id, { style: { y: newY } });
             }}
             setWidth={(newWidth: number) => {
-              updateWindow(window.id, {
-                style: {
-                  ...window.style,
-                  width: newWidth,
-                },
-              });
+              updateWindow(window.id, { style: { width: newWidth } });
             }}
             setHeight={(newHeight: number) => {
-              updateWindow(window.id, {
-                style: {
-                  ...window.style,
-                  height: newHeight,
-                },
-              });
+              updateWindow(window.id, { style: { height: newHeight } });
             }}
           >
             {window.content}
