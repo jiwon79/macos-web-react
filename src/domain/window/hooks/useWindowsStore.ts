@@ -2,7 +2,6 @@ import { create } from '../../../third-parties/zustand';
 import { initialWindowStates } from './initialWindowStatesXX.tsx';
 import { WindowsAction, WindowsState } from '../interface/WindowsStore.ts';
 import { deepMergeObject } from '../../../utils/object/deepMergeObject.ts';
-import { WindowState, WindowStyle } from '../interface/WindowState.ts';
 
 const initialWindowsState = {
   windows: initialWindowStates,
@@ -20,7 +19,6 @@ export const useWindowsStore = create<WindowsState, WindowsAction>((set) => ({
         windows: state.windows.filter((window) => window.id !== id),
       })),
     updateWindow: (id, data) => {
-      console.log('updateWindow', id, data);
       set((state) => ({
         windows: state.windows.map((window) =>
           window.id === id ? deepMergeObject(window, data) : window

@@ -8,6 +8,7 @@ import {
 import { WindowResizeHandlerBaseProps } from './interfaces';
 import { ResizableEventByType } from '../../../../module/resizable/interfaces';
 import { useWindowContext } from '..';
+import { WindowStyle } from '../../interface';
 
 const pointResizeHandlerPositions = [
   'top-left',
@@ -24,40 +25,31 @@ const lineResizeHandlerPositions = [
 ] satisfies WindowLineResizeHandlerPosition[];
 
 export function WindowResizer({ children }: { children?: ReactNode }) {
-  const { x, y, setX, setY, width, height, setWidth, setHeight } =
-    useWindowContext();
-  const initialStyleRef = useRef<
-    | {
-        x: number;
-        y: number;
-        width: number;
-        height: number;
-      }
-    | undefined
-  >(undefined);
+  const { style, onStyleChange } = useWindowContext();
+  const initialStyleRef = useRef<WindowStyle | undefined>(undefined);
 
   const handleResize = (event: ResizableEventByType['resize']) => {
     const initialStyle = initialStyleRef.current;
-    console.log('@event', event, initialStyle);
     if (initialStyle === undefined) {
       return;
     }
     (() => {
       const deltaWidth = event.delta.width;
       if (deltaWidth === undefined || event.width === undefined) {
-        console.log('no deltaWidth');
         return;
       }
 
       if (event.horizontalPositiveDeltaDirection === 'left') {
-        setX(initialStyle.x - deltaWidth);
-        setWidth(initialStyle.width + deltaWidth);
-        console.log('left', initialStyle.x, deltaWidth);
+        onStyleChange({
+          x: initialStyle.x - deltaWidth,
+          width: initialStyle.width + deltaWidth,
+        });
         return;
       }
       if (event.horizontalPositiveDeltaDirection === 'right') {
-        setWidth(initialStyle.width + deltaWidth);
-        console.log('right', initialStyle.width, deltaWidth);
+        onStyleChange({
+          width: initialStyle.width + deltaWidth,
+        });
       }
     })();
     (() => {
@@ -68,14 +60,16 @@ export function WindowResizer({ children }: { children?: ReactNode }) {
       }
 
       if (event.verticalPositiveDeltaDirection === 'top') {
-        setY(initialStyle.y - deltaHeight);
-        setHeight(initialStyle.height + deltaHeight);
-        console.log('top', initialStyle.y, deltaHeight);
+        onStyleChange({
+          y: initialStyle.y - deltaHeight,
+          height: initialStyle.height + deltaHeight,
+        });
         return;
       }
       if (event.verticalPositiveDeltaDirection === 'bottom') {
-        setHeight(initialStyle.height + deltaHeight);
-        console.log('bottom', initialStyle.height, deltaHeight);
+        onStyleChange({
+          height: initialStyle.height + deltaHeight,
+        });
       }
     })();
   };
@@ -84,12 +78,7 @@ export function WindowResizer({ children }: { children?: ReactNode }) {
 
   const handleResizeStart: WindowResizeHandlerBaseProps['onResizeStart'] =
     () => {
-      initialStyleRef.current = {
-        x,
-        y,
-        width,
-        height,
-      };
+      initialStyleRef.current = style;
     };
 
   const handleResizeEnd: WindowResizeHandlerBaseProps['onResizeEnd'] = () => {
