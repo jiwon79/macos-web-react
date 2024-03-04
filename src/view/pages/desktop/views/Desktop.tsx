@@ -45,41 +45,9 @@ export function Desktop() {
           <WindowRenderer
             key={window.id}
             id={window.id}
-            x={window.style.x}
-            y={window.style.y}
-            width={window.style.width}
-            height={window.style.height}
-            setX={(newX: number) => {
-              updateWindow(window.id, {
-                style: {
-                  ...window.style,
-                  x: newX,
-                },
-              });
-            }}
-            setY={(newY: number) => {
-              updateWindow(window.id, {
-                style: {
-                  ...window.style,
-                  y: newY,
-                },
-              });
-            }}
-            setWidth={(newWidth: number) => {
-              updateWindow(window.id, {
-                style: {
-                  ...window.style,
-                  width: newWidth,
-                },
-              });
-            }}
-            setHeight={(newHeight: number) => {
-              updateWindow(window.id, {
-                style: {
-                  ...window.style,
-                  height: newHeight,
-                },
-              });
+            style={window.style}
+            onStyleChange={(style) => {
+              updateWindow(window.id, { style });
             }}
           >
             {window.content}

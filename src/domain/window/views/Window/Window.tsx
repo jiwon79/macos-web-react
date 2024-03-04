@@ -1,5 +1,6 @@
 import { WindowControl } from '../WindoeControl';
 import { WindowMovableArea } from '../WindowMovableArea';
+import { WindowResize } from '../WindowResize';
 import { container } from './Window.css.ts';
 
 interface WindowProps {
@@ -7,7 +8,11 @@ interface WindowProps {
 }
 
 export function Window({ children }: WindowProps) {
-  return <div className={container}>{children}</div>;
+  return (
+    <div className={container}>
+      <WindowResize>{children}</WindowResize>
+    </div>
+  );
 }
 
 Window.Control = WindowControl;

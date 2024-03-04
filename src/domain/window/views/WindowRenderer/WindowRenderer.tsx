@@ -1,33 +1,29 @@
 import { createContext, useContext, useMemo } from 'react';
 import { renderer } from './WindowRenderer.css.ts';
+import { WindowStyle } from '../../interface/WindowState.ts';
 
 export interface WindowRendererProps {
   id: string;
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-  setX: (x: number) => void;
-  setY: (y: number) => void;
-  setWidth: (width: number) => void;
-  setHeight: (height: number) => void;
+  style: WindowStyle;
+  onStyleChange: (style: Partial<WindowStyle>) => void;
   children: React.ReactNode;
 }
 
 interface WindowContextProps {
   id: string;
-  setX: (x: number) => void;
-  setY: (y: number) => void;
-  setWidth: (width: number) => void;
-  setHeight: (height: number) => void;
+  style: WindowStyle;
+  onStyleChange: (style: Partial<WindowStyle>) => void;
 }
 
 const WindowContext = createContext<WindowContextProps>({
   id: '',
-  setX: () => {},
-  setY: () => {},
-  setWidth: () => {},
-  setHeight: () => {},
+  style: {
+    x: 0,
+    y: 0,
+    width: 0,
+    height: 0,
+  },
+  onStyleChange: () => {},
 });
 
 export function useWindowContext() {
@@ -36,26 +32,19 @@ export function useWindowContext() {
 
 export function WindowRenderer({
   id,
-  x,
-  y,
-  width,
-  height,
-  setX,
-  setY,
-  setWidth,
-  setHeight,
+  style,
+  onStyleChange,
   children,
 }: WindowRendererProps) {
   const context = useMemo(
     () => ({
       id,
-      setX,
-      setY,
-      setWidth,
-      setHeight,
+      style,
+      onStyleChange,
     }),
-    [id, setX, setY, setWidth, setHeight]
+    [id, style, onStyleChange]
   );
+  const { x, y, width, height } = style;
 
   return (
     <WindowContext.Provider value={context}>

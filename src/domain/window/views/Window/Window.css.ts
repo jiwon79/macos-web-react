@@ -5,4 +5,5 @@ export const container = style({
   width: '100%',
   height: '100%',
   backgroundColor: 'black',
+  boxSizing: 'border-box',
 });

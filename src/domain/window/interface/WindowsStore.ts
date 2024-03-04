@@ -1,3 +1,4 @@
+import { DeepPartial } from '../../../utils/type/DeepPartial.ts';
 import { WindowState } from './WindowState.ts';
 
 export interface WindowsState {
@@ -9,5 +10,5 @@ export interface WindowsAction {
   setFocusedWindowID: (id: string) => void;
   addWindow: (window: WindowState) => void;
   removeWindow: (id: string) => void;
-  updateWindow: (id: string, data: Partial<WindowState>) => void;
+  updateWindow: (id: string, data: DeepPartial<WindowState>) => void;
 }
