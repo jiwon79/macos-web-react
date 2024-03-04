@@ -1,9 +1,13 @@
 import { useRef } from 'react';
-import { WindowResizeHandlerBase } from '../WindowResizeHandlerBase';
-import { type WindowResizeHandler } from '../../interfaces';
-import { mergeRefs, usePreservedCallback } from '../../../../../../utils/react';
-import { ResizableResizeEvent } from '../../../../../../module/resizable';
-import { line } from './WindowLineResizeHandler.css';
+import { ResizeHandlerBase } from '../ResizeHandlerBase';
+import {
+  LineResizeHandlerPosition,
+  type ResizeHandler,
+} from '../../interfaces';
+import { mergeRefs, usePreservedCallback } from '../../../../utils/react';
+import { ResizableResizeEvent } from '../../../resizable';
+import { line } from './LineResizeHandler.css';
+import { cn } from '../../../../third-parties/classnames';
 
 const directionsByPosition = {
   top: {
@@ -24,21 +28,18 @@ const directionsByPosition = {
   },
 } as const;
 
-export type WindowLineResizeHandlerPosition =
-  | 'top'
-  | 'bottom'
-  | 'left'
-  | 'right';
-
-export const WindowLineResizeHandler: WindowResizeHandler<{
-  position: WindowLineResizeHandlerPosition;
+export const LineResizeHandler: ResizeHandler<{
+  position: LineResizeHandlerPosition;
+  classNameByPosition?: (variants: {
+    position: LineResizeHandlerPosition | undefined;
+  }) => string;
 }> = ({
   frameRef,
   onResize,
   onResizeStart,
   onResizeEnd,
   position,
-  className,
+  classNameByPosition,
 }) => {
   const lineRef = useRef<HTMLDivElement>(null);
 
@@ -53,12 +54,11 @@ export const WindowLineResizeHandler: WindowResizeHandler<{
   );
 
   return (
-    <WindowResizeHandlerBase
+    <ResizeHandlerBase
       frameRef={frameRef}
       onResize={handleResizeByDirection}
       onResizeStart={onResizeStart}
       onResizeEnd={onResizeEnd}
-      className={className}
       horizontalPositiveDeltaDirection={
         directionsByPosition[position].horizontal
       }
@@ -66,11 +66,15 @@ export const WindowLineResizeHandler: WindowResizeHandler<{
     >
       {(ref, { className, ...restProps }) => (
         <div
-          className={line({ position }) + ' ' + className}
+          className={cn(
+            line({ position }),
+            classNameByPosition?.({ position }),
+            className
+          )}
           ref={mergeRefs([ref, lineRef])}
           {...restProps}
         />
       )}
-    </WindowResizeHandlerBase>
+    </ResizeHandlerBase>
   );
 };

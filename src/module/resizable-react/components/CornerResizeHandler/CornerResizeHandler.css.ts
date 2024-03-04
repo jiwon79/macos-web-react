@@ -8,7 +8,7 @@ export const point = recipe({
     borderRadius: '50%',
     border: '1px solid $blue',
     background: '$grey0',
-    zIndex: 8888,
+    zIndex: 100,
     pointerEvents: 'all',
   },
   variants: {

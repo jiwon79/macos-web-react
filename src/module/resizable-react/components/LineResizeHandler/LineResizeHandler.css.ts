@@ -2,13 +2,13 @@ import { CSSProperties } from '@vanilla-extract/css';
 import { recipe } from '@vanilla-extract/recipes';
 
 const verticalLineStyle: CSSProperties = {
-  height: 12,
+  height: 8,
   width: '100%',
   cursor: 'ns-resize',
 };
 
 const horizontalLineStyle: CSSProperties = {
-  width: 12,
+  width: 8,
   height: '100%',
   cursor: 'ew-resize',
 };
@@ -20,19 +20,19 @@ export const line = recipe({
   variants: {
     position: {
       top: {
-        top: 0,
+        top: -2,
         ...verticalLineStyle,
       },
       right: {
-        right: 0,
+        right: -2,
         ...horizontalLineStyle,
       },
       bottom: {
-        bottom: 0,
+        bottom: -2,
         ...verticalLineStyle,
       },
       left: {
-        left: 0,
+        left: -2,
         ...horizontalLineStyle,
       },
     },

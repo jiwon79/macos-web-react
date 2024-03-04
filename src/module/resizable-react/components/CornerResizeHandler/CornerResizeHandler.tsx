@@ -1,8 +1,12 @@
 import { useRef } from 'react';
-import { WindowResizeHandlerBase } from '../WindowResizeHandlerBase';
-import { type WindowResizeHandler } from '../../interfaces';
-import { mergeRefs } from '../../../../../../utils/react';
-import { point } from './WindowCornerResizeHandler.css';
+import { ResizeHandlerBase } from '../ResizeHandlerBase';
+import {
+  CornerResizeHandlerPosition,
+  type ResizeHandler,
+} from '../../interfaces';
+import { mergeRefs } from '../../../../utils/react';
+import { point } from './CornerResizeHandler.css';
+import { cn } from '../../../../third-parties/classnames';
 
 const directionsByPosition = {
   'top-left': {
@@ -23,43 +27,44 @@ const directionsByPosition = {
   },
 } as const;
 
-export type WindowCornerResizeHandlerPosition =
-  | 'top-left'
-  | 'top-right'
-  | 'bottom-left'
-  | 'bottom-right';
-
-export const WindowCornerResizeHandler: WindowResizeHandler<{
-  position: WindowCornerResizeHandlerPosition;
+export const CornerResizeHandler: ResizeHandler<{
+  position: CornerResizeHandlerPosition;
+  classNameByPosition?: (variants: {
+    position: CornerResizeHandlerPosition | undefined;
+  }) => string;
+  keepRatio?: boolean;
 }> = ({
   position,
   frameRef,
   onResize,
   onResizeStart,
   onResizeEnd,
-  className,
+  classNameByPosition,
+  keepRatio,
 }) => {
   const pointRef = useRef<HTMLDivElement>(null);
   return (
-    <WindowResizeHandlerBase
+    <ResizeHandlerBase
       frameRef={frameRef}
       onResize={onResize}
       onResizeStart={onResizeStart}
       onResizeEnd={onResizeEnd}
-      className={className}
       horizontalPositiveDeltaDirection={
         directionsByPosition[position].horizontal
       }
       verticalPositiveDeltaDirection={directionsByPosition[position].vertical}
-      // keepRatio={isShiftKey}
+      keepRatio={keepRatio}
     >
       {(ref, { className, ...restProps }) => (
         <div
-          className={point({ position }) + ' ' + className}
+          className={cn(
+            point({ position }),
+            classNameByPosition?.({ position })
+          )}
           ref={mergeRefs([ref, pointRef])}
           {...restProps}
         />
       )}
-    </WindowResizeHandlerBase>
+    </ResizeHandlerBase>
   );
 };

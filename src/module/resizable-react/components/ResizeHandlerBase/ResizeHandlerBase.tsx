@@ -1,11 +1,11 @@
 import { HTMLProps, ReactNode, Ref, useEffect, useRef } from 'react';
-import { type WindowResizeHandler } from '../../interfaces';
-import { Resizable } from '../../../../../../module/resizable';
-import { usePreservedCallback } from '../../../../../../utils/react';
+import { type ResizeHandler } from '../../interfaces';
+import { Resizable } from '../../../resizable';
+import { usePreservedCallback } from '../../../../utils/react';
 
 const noop = () => {};
 
-export const WindowResizeHandlerBase: WindowResizeHandler<{
+export const ResizeHandlerBase: ResizeHandler<{
   horizontalPositiveDeltaDirection?: 'left' | 'right';
   verticalPositiveDeltaDirection?: 'top' | 'bottom';
   keepRatio?: boolean;
