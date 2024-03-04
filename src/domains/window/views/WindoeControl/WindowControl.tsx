@@ -8,7 +8,7 @@ import {
   IconWindowClose,
   IconWindowMaximize,
   IconWindowMinimize,
-} from '../../../../assets';
+} from '../../../../assets/index.ts';
 
 interface WindowControlProps {
   size?: 'standard' | 'mono' | 'withTitle';

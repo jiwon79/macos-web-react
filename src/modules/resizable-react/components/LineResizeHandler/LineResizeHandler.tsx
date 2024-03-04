@@ -1,13 +1,13 @@
+import { ResizableResizeEvent } from 'modules/resizable';
 import { useRef } from 'react';
-import { ResizeHandlerBase } from '../ResizeHandlerBase';
+import { cn } from 'third-parties/classnames';
+import { mergeRefs, usePreservedCallback } from 'utils/react';
 import {
   LineResizeHandlerPosition,
   type ResizeHandler,
 } from '../../interfaces';
-import { mergeRefs, usePreservedCallback } from '../../../../utils/react';
-import { ResizableResizeEvent } from '../../../resizable';
+import { ResizeHandlerBase } from '../ResizeHandlerBase';
 import { line } from './LineResizeHandler.css';
-import { cn } from '../../../../third-parties/classnames';
 
 const directionsByPosition = {
   top: {

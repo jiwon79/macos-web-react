@@ -1,7 +1,7 @@
+import { Resizable } from 'modules/resizable';
+import { ResizeHandler } from 'modules/resizable-react/interfaces';
 import { HTMLProps, ReactNode, Ref, useEffect, useRef } from 'react';
-import { type ResizeHandler } from '../../interfaces';
-import { Resizable } from '../../../resizable';
-import { usePreservedCallback } from '../../../../utils/react';
+import { usePreservedCallback } from 'utils/react';
 
 const noop = () => {};
 
