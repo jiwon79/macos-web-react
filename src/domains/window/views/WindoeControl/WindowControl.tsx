@@ -1,14 +1,14 @@
 import {
+  IconWindowClose,
+  IconWindowMaximize,
+  IconWindowMinimize,
+} from 'assets/icons';
+import {
   closeIcon,
   container,
   maximizeIcon,
   minimizeIcon,
 } from './WindowControl.css.ts';
-import {
-  IconWindowClose,
-  IconWindowMaximize,
-  IconWindowMinimize,
-} from '../../../../assets/index.ts';
 
 interface WindowControlProps {
   size?: 'standard' | 'mono' | 'withTitle';

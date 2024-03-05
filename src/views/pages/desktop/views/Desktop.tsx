@@ -8,7 +8,7 @@ import {
   useFocusedWindowID,
   useWindows,
   useWindowsActions,
-} from '../../../../domains/window/hooks/index.ts';
+} from '../../../../domains/window/store/index.ts';
 
 export function Desktop() {
   const windows = useWindows();
