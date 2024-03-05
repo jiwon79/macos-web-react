@@ -1,7 +1,7 @@
+import { useUserInteractionActions } from 'domains/user-interaction';
+import { useWindowContext } from '..';
 import { container } from './WindowMovableArea.css.ts';
-import { useWindowContext } from '../WindowRenderer';
-import { useWindowsActions } from '../../hooks';
-import { useUserInteractionActions } from '../../../user-interaction';
+import { useWindowsActions } from 'domains/window/store';
 
 interface WindowMovableAreaProps {
   children?: React.ReactNode;

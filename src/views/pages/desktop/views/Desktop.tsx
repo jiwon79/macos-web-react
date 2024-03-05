@@ -1,14 +1,14 @@
 import {
   useUserInteractionActions,
   useUserInteractionStore,
-} from '../../../../domain/user-interaction';
-import { WindowRenderer } from '../../../../domain/window';
+} from '../../../../domains/user-interaction/index.ts';
+import { WindowRenderer } from '../../../../domains/window/index.ts';
 import * as styles from './Desktop.css.ts';
 import {
   useFocusedWindowID,
   useWindows,
   useWindowsActions,
-} from '../../../../domain/window/hooks';
+} from '../../../../domains/window/store/index.ts';
 
 export function Desktop() {
   const windows = useWindows();

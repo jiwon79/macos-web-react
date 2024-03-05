@@ -1,5 +1,5 @@
+import { create } from 'third-parties/zustand';
 import { UserInteractionActions, UserInteractionState } from '../interface';
-import { create } from '../../../third-parties/zustand';
 
 const initialUserInteractionState: UserInteractionState = {
   isDragging: false,

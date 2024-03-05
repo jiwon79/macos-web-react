@@ -1,9 +1,9 @@
+import { WindowStyle } from 'domains/window/interface';
+import { MultiDirectionResizableContainer } from 'modules/resizable-react';
+import { ResizeHandlerBaseProps } from 'modules/resizable-react/interfaces';
+import { ResizableEventByType } from 'modules/resizable/interfaces';
 import { useRef } from 'react';
-import { useWindowContext } from '..';
-import { ResizableEventByType } from '../../../../module/resizable/interfaces';
-import { WindowStyle } from '../../interface';
-import { ResizeHandlerBaseProps } from '../../../../module/resizable-react/interfaces';
-import { MultiDirectionResizableContainer } from '../../../../module/resizable-react';
+import { useWindowContext } from '../WindowRenderer';
 
 interface WindowResizeProps {
   children?: React.ReactNode;

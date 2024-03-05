@@ -1,7 +1,7 @@
-import { create } from '../../../third-parties/zustand';
-import { initialWindowStates } from './initialWindowStatesXX.tsx';
+import { create } from 'third-parties/zustand';
+import { deepMergeObject } from 'utils/object';
 import { WindowsAction, WindowsState } from '../interface/WindowsStore.ts';
-import { deepMergeObject } from '../../../utils/object/deepMergeObject.ts';
+import { initialWindowStates } from './initialWindowStatesXX.tsx';
 
 const initialWindowsState = {
   windows: initialWindowStates,

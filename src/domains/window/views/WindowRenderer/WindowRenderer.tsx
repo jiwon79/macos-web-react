@@ -1,6 +1,6 @@
 import { createContext, useContext, useMemo } from 'react';
 import { renderer } from './WindowRenderer.css.ts';
-import { WindowStyle } from '../../interface/WindowState.ts';
+import { WindowStyle } from 'domains/window/interface';
 
 export interface WindowRendererProps {
   id: string;

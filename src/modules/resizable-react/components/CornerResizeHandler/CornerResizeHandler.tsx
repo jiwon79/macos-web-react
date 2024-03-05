@@ -1,12 +1,12 @@
-import { useRef } from 'react';
-import { ResizeHandlerBase } from '../ResizeHandlerBase';
 import {
   CornerResizeHandlerPosition,
-  type ResizeHandler,
-} from '../../interfaces';
-import { mergeRefs } from '../../../../utils/react';
+  ResizeHandler,
+} from 'modules/resizable-react/interfaces';
+import { useRef } from 'react';
+import { cn } from 'third-parties/classnames';
+import { mergeRefs } from 'utils/react';
+import { ResizeHandlerBase } from '../ResizeHandlerBase';
 import { point } from './CornerResizeHandler.css';
-import { cn } from '../../../../third-parties/classnames';
 
 const directionsByPosition = {
   'top-left': {

@@ -18,7 +18,17 @@
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+
+    "baseUrl": "./",
+    "paths": {
+      "assets/*": ["src/assets/*"],
+      "domains/*": ["src/domains/*"],
+      "modules/*": ["src/modules/*"],
+      "third-parties/*": ["src/third-parties/*"],
+      "utils/*": ["src/utils/*"],
+      "views/*": ["src/views/*"]
+    }
   },
   "include": ["src", "global.d.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
