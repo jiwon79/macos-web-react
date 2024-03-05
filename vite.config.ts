@@ -19,6 +19,7 @@ export default defineConfig({
       modules: resolve(__dirname, 'src/modules/'),
       utils: resolve(__dirname, 'src/utils/'),
       views: resolve(__dirname, 'src/views/'),
+      'third-parties': resolve(__dirname, 'src/third-parties/'),
     },
   },
 });
