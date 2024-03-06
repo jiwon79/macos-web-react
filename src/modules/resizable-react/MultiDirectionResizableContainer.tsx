@@ -5,7 +5,7 @@ import {
   LineResizeHandlerPosition,
   ResizeHandlerBaseProps,
 } from './interfaces';
-import { ResizableEventByType } from '../resizable/interfaces';
+import { ResizableEventMap } from '../resizable/interfaces';
 
 const pointResizeHandlerPositions: CornerResizeHandlerPosition[] = [
   'top-left',
@@ -22,7 +22,7 @@ const lineResizeHandlerPositions: LineResizeHandlerPosition[] = [
 ];
 
 interface MultiResizableContainerProps {
-  onResize?: (event: ResizableEventByType['resize']) => void;
+  onResize?: (event: ResizableEventMap['resize']) => void;
   onResizeStart?: ResizeHandlerBaseProps['onResizeStart'];
   onResizeEnd?: ResizeHandlerBaseProps['onResizeEnd'];
   children?: ReactNode;
