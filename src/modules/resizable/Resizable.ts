@@ -1,14 +1,15 @@
+import { EventManager } from 'modules/event-manager/EventManager';
 import { filterUndefinedFromObject } from '../../utils/object';
-import { ResizableEventManager } from './ResizableEventManager';
 import {
   ResizableEventListener,
+  ResizableEventMap,
   ResizableEventType,
   ResizableOptions,
   ResizableResizeEvent,
 } from './interfaces';
 
 export class Resizable {
-  private eventManager: ResizableEventManager = new ResizableEventManager();
+  private eventManager: EventManager<ResizableEventMap> = new EventManager();
   private isResizing: boolean = false;
 
   private firstMousePosition: Record<'x' | 'y', number> | undefined;

@@ -18,16 +18,16 @@ export interface ResizableEndResizeEvent {
   nativeEvent: MouseEvent;
 }
 
-export type ResizableEventByType = {
+export type ResizableEventMap = {
   resize: ResizableResizeEvent;
   startResize: ResizableStartResizeEvent;
   endResize: ResizableEndResizeEvent;
 };
 
-export type ResizableEventType = keyof ResizableEventByType;
+export type ResizableEventType = keyof ResizableEventMap;
 
-export type ResizableEvent = ResizableEventByType[ResizableEventType];
+export type ResizableEvent = ResizableEventMap[ResizableEventType];
 
 export type ResizableEventListener<K extends ResizableEventType> = (
-  e: ResizableEventByType[K]
+  e: ResizableEventMap[K]
 ) => void;
