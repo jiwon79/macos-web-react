@@ -1,5 +1,5 @@
 import { EventManager } from 'modules/event-manager';
-import { MovableEventMap } from './interface';
+import { MovableEventMap, MovableOptions } from './interface';
 import { assert } from 'utils/functions';
 
 export class Movable {
@@ -8,7 +8,10 @@ export class Movable {
 
   private firstMousePosition: Record<'x' | 'y', number> | undefined;
 
-  constructor(protected handlerElement: HTMLElement) {
+  constructor(
+    protected handlerElement: HTMLElement,
+    private options: MovableOptions = { manual: false }
+  ) {
     this.onMouseDown = this.onMouseDown.bind(this);
     this.onMouseMove = this.onMouseMove.bind(this);
     this.onMouseUp = this.onMouseUp.bind(this);
@@ -34,7 +37,7 @@ export class Movable {
     this.detachEventListeners();
   }
 
-  private onMouseDown = (event: MouseEvent) => {
+  public onMouseDown = (event: MouseEvent) => {
     this.eventManager.emit('startMove', { nativeEvent: event });
     this.firstMousePosition = { x: event.clientX, y: event.clientY };
     this.isMoving = true;
@@ -78,11 +81,13 @@ export class Movable {
   };
 
   private attachEventListeners() {
-    this.handlerElement.addEventListener('mousedown', this.onMouseDown);
+    this.options?.manual &&
+      this.handlerElement.addEventListener('mousedown', this.onMouseDown);
   }
 
   private detachEventListeners() {
-    this.handlerElement.removeEventListener('mousedown', this.onMouseDown);
+    this.options?.manual &&
+      this.handlerElement.removeEventListener('mousedown', this.onMouseDown);
     document.removeEventListener('mousemove', this.onMouseMove);
     document.removeEventListener('mouseup', this.onMouseUp);
   }

@@ -19,3 +19,7 @@ export type MovableEventMap = {
   startMove: MovableStartMoveEvent;
   endMove: MovableEndMoveEvent;
 };
+
+export interface MovableOptions {
+  manual?: boolean;
+}

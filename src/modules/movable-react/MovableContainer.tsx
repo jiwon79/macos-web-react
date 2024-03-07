@@ -29,7 +29,7 @@ export function MovableContainer({
       return;
     }
 
-    movable.current = new Movable(handlerRef.current);
+    movable.current = new Movable(handlerRef.current, { manual: false });
 
     movable.current.on('move', preservedOnMove);
     movable.current.on('startMove', preservedOnStartMove);
@@ -41,7 +41,11 @@ export function MovableContainer({
   }, [preservedOnMove, preservedOnEndMove, preservedOnStartMove]);
 
   return (
-    <div ref={handlerRef} {...restProps}>
+    <div
+      ref={handlerRef}
+      onMouseDown={(event) => movable.current?.onMouseDown(event.nativeEvent)}
+      {...restProps}
+    >
       {children}
     </div>
   );

@@ -15,15 +15,19 @@ interface WindowControlProps {
 }
 
 export function WindowControl({ size }: WindowControlProps) {
+  const onControlButtonMouseDown = (event: React.MouseEvent) => {
+    event.stopPropagation();
+  };
+
   return (
     <div className={container({ size })}>
-      <button className={closeIcon}>
+      <button className={closeIcon} onMouseDown={onControlButtonMouseDown}>
         <IconWindowClose />
       </button>
-      <button className={minimizeIcon}>
+      <button className={minimizeIcon} onMouseDown={onControlButtonMouseDown}>
         <IconWindowMinimize />
       </button>
-      <button className={maximizeIcon}>
+      <button className={maximizeIcon} onMouseDown={onControlButtonMouseDown}>
         <IconWindowMaximize />
       </button>
     </div>
