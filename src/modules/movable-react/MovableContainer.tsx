@@ -1,9 +1,9 @@
 import { Movable, MovableEventMap } from 'modules/movable';
-import { ReactNode, useEffect, useRef } from 'react';
+import { HTMLProps, ReactNode, useEffect, useRef } from 'react';
 import { noop } from 'utils/functions';
 import { usePreservedCallback } from 'utils/react';
 
-interface MovableContainerProps {
+interface MovableContainerProps extends HTMLProps<HTMLDivElement> {
   onMove?: (event: MovableEventMap['move']) => void;
   onStartMove?: (event: MovableEventMap['startMove']) => void;
   onEndMove?: (event: MovableEventMap['endMove']) => void;
@@ -15,6 +15,7 @@ export function MovableContainer({
   onStartMove,
   onEndMove,
   children,
+  ...restProps
 }: MovableContainerProps) {
   const movable = useRef<Movable>();
   const handlerRef = useRef<HTMLDivElement>(null);
@@ -39,5 +40,9 @@ export function MovableContainer({
     };
   }, [preservedOnMove, preservedOnEndMove, preservedOnStartMove]);
 
-  return <div ref={handlerRef}>{children}</div>;
+  return (
+    <div ref={handlerRef} {...restProps}>
+      {children}
+    </div>
+  );
 }
