@@ -11,7 +11,22 @@ const initialWindowsState = {
 export const useWindowsStore = create<WindowsState, WindowsAction>((set) => ({
   ...initialWindowsState,
   actions: {
-    setFocusedWindowID: (id: string) => set({ focusedWindowID: id }),
+    setFocusedWindowID: (id: string) =>
+      set((state) => {
+        const index = state.windows.findIndex((window) => window.id === id);
+        if (index === -1) {
+          return state;
+        }
+        const focusedWdindow = state.windows[index];
+        return {
+          focusedWindowID: id,
+          windows: [
+            ...state.windows.slice(0, index),
+            ...state.windows.slice(index + 1),
+            focusedWdindow,
+          ],
+        };
+      }),
     addWindow: (window) =>
       set((state) => ({ windows: [...state.windows, window] })),
     removeWindow: (id) =>
