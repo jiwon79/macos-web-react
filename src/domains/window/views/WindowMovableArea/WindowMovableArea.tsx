@@ -1,23 +1,20 @@
-import { useWindowContext } from '..';
-import { container } from './WindowMovableArea.css.ts';
-import { useWindowsActions } from 'domains/window/store';
 import { MovableEventMap } from 'modules/movable';
 import { MovableContainer } from 'modules/movable-react';
 import { useRef } from 'react';
+import { useWindowContext } from '..';
+import { container } from './WindowMovableArea.css.ts';
 
 interface WindowMovableAreaProps {
   children?: React.ReactNode;
 }
 
 export function WindowMovableArea({ children }: WindowMovableAreaProps) {
-  const { id: windowID, style, onStyleChange } = useWindowContext();
-  const { setFocusedWindowID } = useWindowsActions();
+  const { style, onStyleChange } = useWindowContext();
 
   const initialPosition = useRef<{ x: number; y: number }>();
 
   const onStartMove = () => {
     initialPosition.current = { x: style.x, y: style.y };
-    setFocusedWindowID(windowID);
   };
 
   const monMove = (event: MovableEventMap['move']) => {

@@ -37,7 +37,7 @@ export function MultiDirectionResizableContainer({
   const frameRef = useRef<HTMLDivElement>(null);
 
   return (
-    <div ref={frameRef}>
+    <div ref={frameRef} style={{ width: '100%', height: '100%' }}>
       {lineResizeHandlerPositions.map((position) => (
         <LineResizeHandler
           frameRef={frameRef}

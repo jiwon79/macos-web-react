@@ -1,6 +1,8 @@
 import { createContext, useContext, useMemo } from 'react';
 import { renderer } from './WindowRenderer.css.ts';
 import { WindowStyle } from 'domains/window/interface';
+import { useWindowsActions } from 'domains/window/store';
+import { WindowResize } from '../WindowResize';
 
 export interface WindowRendererProps {
   id: string;
@@ -36,6 +38,7 @@ export function WindowRenderer({
   onStyleChange,
   children,
 }: WindowRendererProps) {
+  const { setFocusedWindowID } = useWindowsActions();
   const context = useMemo(
     () => ({
       id,
@@ -55,9 +58,10 @@ export function WindowRenderer({
           height: `${height}px`,
           transform: `translate(${x}px, ${y}px)`,
         }}
+        onMouseDown={() => setFocusedWindowID(id)}
         className={renderer}
       >
-        {children}
+        <WindowResize>{children}</WindowResize>
       </div>
     </WindowContext.Provider>
   );
