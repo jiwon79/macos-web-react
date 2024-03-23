@@ -1,6 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
-
-let i = 0;
+import { useCallback, useState } from 'react';
 
 /**
  * @returns [isDarkMode, setIsDarkMode]
@@ -16,7 +14,6 @@ export function useDarkMode() {
   if (colorThmeFromDocument == null) {
     setDarkModeToDocument(darkMode);
   }
-  console.log('@useDarkMode', i++);
 
   const setDarkMode = useCallback(
     (newDarkMode: boolean) => {
