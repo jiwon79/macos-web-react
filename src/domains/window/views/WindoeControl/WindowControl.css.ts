@@ -25,7 +25,7 @@ export const container = recipe({
   },
 });
 
-globalStyle(`${container().split(' ')[0]}:hover svg`, {
+globalStyle(`${container.classNames.base}:hover svg`, {
   display: 'block',
 });
 

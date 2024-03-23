@@ -1,28 +1,32 @@
-import { WindowRenderer } from 'domains/window';
-import { useWindows, useWindowsActions } from 'domains/window/store';
+import { Dock } from 'domains/dock/views';
+import { useDarkMode } from 'utils/broswer';
 import * as styles from './Desktop.css.ts';
+import { Windows } from './Windows';
 
 export function Desktop() {
-  const windows = useWindows();
-  const { updateWindow } = useWindowsActions();
+  const [darkMode] = useDarkMode();
 
   return (
-    <div className={styles.desktop}>
+    <div
+      className={styles.desktop}
+      style={{
+        backgroundImage: `url(/src/assets/wallpapers/wallpaper_${darkMode ? 'dark' : 'light'}.png)`,
+      }}
+    >
+      <DarkModeButtonXX />
       <p>MENU</p>
-      {windows &&
-        windows.map((window) => (
-          <WindowRenderer
-            key={window.id}
-            id={window.id}
-            style={window.style}
-            onStyleChange={(style) => {
-              updateWindow(window.id, { style });
-            }}
-          >
-            {window.content}
-          </WindowRenderer>
-        ))}
-      <p>DOCK</p>
+      <Windows />
+      <Dock />
     </div>
+  );
+}
+
+function DarkModeButtonXX() {
+  const [darkMode, setDarkMode] = useDarkMode();
+
+  return (
+    <button onClick={() => setDarkMode(!darkMode)}>
+      {darkMode ? '🌙' : '☀️'}
+    </button>
   );
 }
