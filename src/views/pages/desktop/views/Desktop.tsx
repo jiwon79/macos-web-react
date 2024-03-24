@@ -4,15 +4,8 @@ import * as styles from './Desktop.css.ts';
 import { Windows } from './Windows';
 
 export function Desktop() {
-  const [darkMode] = useDarkMode();
-
   return (
-    <div
-      className={styles.desktop}
-      style={{
-        backgroundImage: `url(/src/assets/wallpapers/wallpaper_${darkMode ? 'dark' : 'light'}.png)`,
-      }}
-    >
+    <div className={styles.desktop}>
       <DarkModeButtonXX />
       <p>MENU</p>
       <Windows />
