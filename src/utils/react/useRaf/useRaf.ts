@@ -1,5 +1,5 @@
-import { usePreservedCallback } from 'src/utils/react';
 import { useEffect, useRef } from 'react';
+import { usePreservedCallback } from '../usePreservedCallback';
 
 interface UseRequestAnimationFrameOptions {
   enabled?: boolean;
