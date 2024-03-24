@@ -21,7 +21,6 @@ export function useDarkMode() {
       if (colorThemeFromDocument === getColorTheme(newDarkMode)) {
         return;
       }
-      console.log('@cur', colorThemeFromDocument, newDarkMode);
       setUncontrolledDarkMode(newDarkMode);
       setDarkModeToDocument(newDarkMode);
     },
