@@ -1,3 +1,4 @@
+import { CalculatorWindow } from 'domains/apps/calculator/CalculatorWindow';
 import { WindowState } from '../interface';
 import { Window } from '../views';
 
@@ -60,12 +61,12 @@ export const initialWindowStates: WindowState[] = [
   {
     id: '3',
     title: 'WindowState 3',
-    content: <Window3 />,
+    content: <CalculatorWindow />,
     style: {
       x: 30,
-      y: 250,
+      y: 280,
       width: 200,
-      height: 80,
+      height: 300,
     },
   },
 ];
