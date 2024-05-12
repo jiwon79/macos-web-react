@@ -65,8 +65,8 @@ export const initialWindowStates: WindowState[] = [
     style: {
       x: 30,
       y: 280,
-      width: 200,
-      height: 300,
+      width: 232,
+      height: 321,
     },
   },
 ];

@@ -7,6 +7,7 @@ export const keypad = recipe({
     alignItems: 'center',
     outline: 'none',
     border: 'none',
+    fontSize: 20,
   },
   variants: {
     type: {
