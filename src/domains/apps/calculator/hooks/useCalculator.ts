@@ -5,7 +5,7 @@ export function useCalculator() {
   const lastOperator = useRef<string | null>(null);
   const isOperatorClicked = useRef<boolean>(false);
   const lastValue = useRef<number | null>(null);
-  const currentValue = useRef<number | null>(null);
+  //   const currentValue = useRef<number | null>(null);
   const lastOperatorFunction = useRef<((num: number) => number) | null>(null);
 
   const onNumberClick = (num: string) => {
