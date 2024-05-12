@@ -1,4 +1,5 @@
 import { recipe } from '@vanilla-extract/recipes';
+import { calcColorTokens } from '../Calculator/calcTheme.css';
 
 export const keypad = recipe({
   base: {
@@ -7,37 +8,37 @@ export const keypad = recipe({
     alignItems: 'center',
     outline: 'none',
     border: 'none',
-    fontSize: 20,
+    fontSize: 21,
   },
   variants: {
     type: {
       number: {
-        backgroundColor: 'gray',
+        backgroundColor: calcColorTokens.grey500,
 
         '&:active': {
-          backgroundColor: 'darkgray',
+          backgroundColor: calcColorTokens.grey300,
         },
       },
       number_wide: {
-        backgroundColor: 'gray',
+        backgroundColor: calcColorTokens.grey500,
         gridColumn: 'span 2',
 
         '&:active': {
-          backgroundColor: 'darkgray',
+          backgroundColor: calcColorTokens.grey300,
         },
       },
       operator: {
-        backgroundColor: 'orange',
+        backgroundColor: calcColorTokens.orange,
 
         '&:active': {
-          backgroundColor: 'darkorange',
+          backgroundColor: calcColorTokens.darkOrange,
         },
       },
       function: {
-        backgroundColor: 'green',
+        backgroundColor: calcColorTokens.grey600,
 
         '&:active': {
-          backgroundColor: 'darkgreen',
+          backgroundColor: calcColorTokens.grey500,
         },
       },
     },

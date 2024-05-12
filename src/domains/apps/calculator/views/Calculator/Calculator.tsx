@@ -7,6 +7,7 @@ import {
   movableArea,
 } from './Calculator.css';
 import { useCalculator } from '../../hooks/useCalculator';
+import { calcThemeClass } from './calcTheme.css';
 
 export function Calculator() {
   const {
@@ -20,7 +21,7 @@ export function Calculator() {
   } = useCalculator();
 
   return (
-    <Window>
+    <Window className={calcThemeClass}>
       <Window.MovableArea className={movableArea}>
         <Window.Control size="withTitle" />
         <div className={displayContainer}>
