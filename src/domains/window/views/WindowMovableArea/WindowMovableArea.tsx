@@ -3,12 +3,17 @@ import { MovableContainer } from 'modules/movable-react';
 import { useRef } from 'react';
 import { useWindowContext } from '..';
 import { container } from './WindowMovableArea.css.ts';
+import { cn } from 'third-parties/classnames';
 
 interface WindowMovableAreaProps {
   children?: React.ReactNode;
+  className?: string;
 }
 
-export function WindowMovableArea({ children }: WindowMovableAreaProps) {
+export function WindowMovableArea({
+  children,
+  className,
+}: WindowMovableAreaProps) {
   const { style, onStyleChange } = useWindowContext();
 
   const initialPosition = useRef<{ x: number; y: number }>();
@@ -29,7 +34,7 @@ export function WindowMovableArea({ children }: WindowMovableAreaProps) {
 
   return (
     <MovableContainer
-      className={container}
+      className={cn(container, className)}
       onStartMove={onStartMove}
       onMove={monMove}
     >
