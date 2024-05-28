@@ -1,36 +1,52 @@
 import { useRef, useState } from 'react';
+import { flushSync } from 'react-dom';
+import { round } from '../utils';
+
+type Operator = '+' | '-' | '*' | '/';
+
+function calculatorRound(num: number) {
+  return round(num, 10);
+}
 
 export function useCalculator() {
   const [display, setDisplay] = useState<string>('0');
-  const lastOperator = useRef<string | null>(null);
-  const isOperatorClicked = useRef<boolean>(false);
+  const lastOperator = useRef<Operator | null>(null);
   const lastValue = useRef<number | null>(null);
-  //   const currentValue = useRef<number | null>(null);
+  const currentValue = useRef<number | null>(0);
   const lastOperatorFunction = useRef<((num: number) => number) | null>(null);
 
+  const blinkDisplay = () => {
+    let prevDisplay: string;
+    flushSync(() =>
+      setDisplay((prev) => {
+        prevDisplay = prev;
+        return '';
+      })
+    );
+    setTimeout(() => {
+      setDisplay(prevDisplay);
+    }, 40);
+  };
+
   const onNumberClick = (num: string) => {
-    if (display === '0' || isOperatorClicked.current) {
+    if (display === '0' || currentValue.current === null) {
       setDisplay(num);
-      isOperatorClicked.current = false;
+      currentValue.current = parseDisplayStr(num);
       return;
     }
 
-    isOperatorClicked.current = false;
-    if (display === '0') {
-      setDisplay(num);
-      return;
-    }
-    setDisplay(display + num);
+    const newDisplay = display + num;
+    setDisplay(newDisplay);
+    currentValue.current = parseDisplayStr(newDisplay);
   };
 
   const onDotClick = () => {
-    if (isOperatorClicked.current) {
+    if (display === '0' || currentValue.current === null) {
       setDisplay('0.');
-      isOperatorClicked.current = false;
+      currentValue.current = 0;
       return;
     }
 
-    isOperatorClicked.current = false;
     if (display.includes('.')) {
       return;
     }
@@ -38,11 +54,12 @@ export function useCalculator() {
   };
 
   const onClearClick = () => {
-    isOperatorClicked.current = false;
     lastValue.current = null;
+    currentValue.current = null;
     lastOperator.current = null;
     lastOperatorFunction.current = null;
     setDisplay('0');
+    blinkDisplay();
   };
 
   const onPlusMinusClick = () => {
@@ -50,30 +67,51 @@ export function useCalculator() {
     setDisplay((parsedDisplay * -1).toString());
   };
 
-  const onPlustClick = () => {
-    isOperatorClicked.current = true;
-    lastOperatorFunction.current = null;
+  const onOperatorClick = (operator: Operator) => {
     const parsedDisplay = parseDisplayStr(display);
     lastValue.current = parsedDisplay;
-    lastOperator.current = '+';
+    currentValue.current = null;
+    lastOperator.current = operator;
+    lastOperatorFunction.current = null;
+    blinkDisplay();
   };
 
   const onEqualClick = () => {
     const parsedDisplay = parseDisplayStr(display);
-    if (lastValue.current === null) {
-      lastValue.current = parsedDisplay;
-      return;
-    }
 
-    if (lastOperatorFunction.current) {
-      setDisplay(lastOperatorFunction.current(parsedDisplay).toString());
-      return;
-    }
+    (() => {
+      if (lastValue.current === null) {
+        lastValue.current = parsedDisplay;
+        currentValue.current = null;
+        return;
+      }
 
-    if (lastOperator.current === '+') {
-      lastOperatorFunction.current = (num: number) => num + parsedDisplay;
-      setDisplay((lastValue.current + parsedDisplay).toString());
-    }
+      if (lastOperatorFunction.current) {
+        const result = lastOperatorFunction.current(parsedDisplay);
+        setDisplay(calculatorRound(result).toString());
+        return;
+      }
+
+      if (lastOperator.current === '+') {
+        lastOperatorFunction.current = (num: number) => num + parsedDisplay;
+        const result = calculatorRound(lastValue.current + parsedDisplay);
+        lastValue.current = result;
+        currentValue.current = null;
+        setDisplay(result.toString());
+        return;
+      }
+
+      if (lastOperator.current === '-') {
+        lastOperatorFunction.current = (num: number) => num - parsedDisplay;
+        const result = calculatorRound(lastValue.current - parsedDisplay);
+        lastValue.current = result;
+        currentValue.current = null;
+        setDisplay(result.toString());
+        return;
+      }
+    })();
+
+    blinkDisplay();
   };
 
   return {
@@ -82,10 +120,7 @@ export function useCalculator() {
     onDotClick,
     onClearClick,
     onPlusMinusClick,
-    onPlustClick,
-    onMinusClick: () => {},
-    onMultiplyClick: () => {},
-    onDivideClick: () => {},
+    onOperatorClick,
     onPercentClick: () => {},
     onEqualClick,
   };
