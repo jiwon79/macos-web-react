@@ -6,10 +6,10 @@ const operators: Record<
   Operator,
   (currentNum: number) => (num: number) => number
 > = {
-  '+': (currentNum) => (num) => currentNum + num,
-  '-': (currentNum) => (num) => currentNum - num,
-  '*': (currentNum) => (num) => currentNum * num,
-  '/': (currentNum) => (num) => currentNum / num,
+  '+': (num) => (prevNum) => prevNum + num,
+  '-': (num) => (prevNum) => prevNum - num,
+  '*': (num) => (prevNum) => prevNum * num,
+  '/': (num) => (prevNum) => prevNum / num,
 };
 
 export class CalculatorStore {
@@ -93,8 +93,8 @@ export class CalculatorStore {
     }
 
     const operator = operators[this.lastOperator];
-    this.lastOperatorFunction = operator(this.lastValue);
-    const result = this.lastOperatorFunction(this.parsedDisplay);
+    this.lastOperatorFunction = operator(this.parsedDisplay);
+    const result = this.lastOperatorFunction(this.lastValue);
 
     this.lastValue = result;
     this.currentValue = null;
@@ -102,6 +102,6 @@ export class CalculatorStore {
   }
 
   private _round(num: number) {
-    return round(num, 10);
+    return round(num, 12);
   }
 }

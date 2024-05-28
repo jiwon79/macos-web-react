@@ -287,6 +287,27 @@ describe('plus button', () => {
 
     await waitFor(() => expect(result.current.display).toBe('0.'));
   });
+
+  test('1 + 2 = = ==> 5', async () => {
+    const { result } = renderHook(() => useCalculator());
+    act(() => {
+      result.current.onNumberClick(1);
+    });
+    act(() => {
+      result.current.onOperatorClick('+');
+    });
+    act(() => {
+      result.current.onNumberClick(2);
+    });
+    act(() => {
+      result.current.onEqualClick();
+    });
+    act(() => {
+      result.current.onEqualClick();
+    });
+
+    await waitFor(() => expect(result.current.display).toBe('5'));
+  });
 });
 
 describe('minus button', () => {
@@ -355,6 +376,27 @@ describe('minus button', () => {
 
     await waitFor(() => expect(result.current.display).toBe('-5'));
   });
+
+  test('9 - 4 = = >> 1', async () => {
+    const { result } = renderHook(() => useCalculator());
+    act(() => {
+      result.current.onNumberClick(9);
+    });
+    act(() => {
+      result.current.onOperatorClick('-');
+    });
+    act(() => {
+      result.current.onNumberClick(4);
+    });
+    act(() => {
+      result.current.onEqualClick();
+    });
+    act(() => {
+      result.current.onEqualClick();
+    });
+
+    await waitFor(() => expect(result.current.display).toBe('1'));
+  });
 });
 
 describe('multiply button', () => {
@@ -416,6 +458,27 @@ describe('multiply button', () => {
     });
 
     await waitFor(() => expect(result.current.display).toBe('7.2'));
+  });
+
+  test('4 * 3 = = >> 36', async () => {
+    const { result } = renderHook(() => useCalculator());
+    act(() => {
+      result.current.onNumberClick(4);
+    });
+    act(() => {
+      result.current.onOperatorClick('*');
+    });
+    act(() => {
+      result.current.onNumberClick(3);
+    });
+    act(() => {
+      result.current.onEqualClick();
+    });
+    act(() => {
+      result.current.onEqualClick();
+    });
+
+    await waitFor(() => expect(result.current.display).toBe('36'));
   });
 });
 
@@ -521,6 +584,30 @@ describe('divide button', () => {
 
     await waitFor(() => expect(result.current.display).toBe('-3'));
   });
+
+  test('12 / 4 = = >> 0.75', async () => {
+    const { result } = renderHook(() => useCalculator());
+    act(() => {
+      result.current.onNumberClick(1);
+    });
+    act(() => {
+      result.current.onNumberClick(2);
+    });
+    act(() => {
+      result.current.onOperatorClick('/');
+    });
+    act(() => {
+      result.current.onNumberClick(4);
+    });
+    act(() => {
+      result.current.onEqualClick();
+    });
+    act(() => {
+      result.current.onEqualClick();
+    });
+
+    await waitFor(() => expect(result.current.display).toBe('0.75'));
+  });
 });
 
 describe('percent button', () => {
@@ -606,6 +693,21 @@ describe('percent button', () => {
     });
 
     await waitFor(() => expect(result.current.display).toBe('2.02'));
+  });
+
+  test('2 % % >> 0.0002', async () => {
+    const { result } = renderHook(() => useCalculator());
+    act(() => {
+      result.current.onNumberClick(2);
+    });
+    act(() => {
+      result.current.onPercentClick();
+    });
+    act(() => {
+      result.current.onPercentClick();
+    });
+
+    await waitFor(() => expect(result.current.display).toBe('0.0002'));
   });
 
   test('2 (+/-) * 2 % = >> -0.04', async () => {
