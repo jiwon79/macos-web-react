@@ -1,79 +1,60 @@
-import { useRef, useState } from 'react';
+import { useState } from 'react';
+import { flushSync } from 'react-dom';
+import { CalculatorStore, Operator } from '../store';
 
 export function useCalculator() {
-  const [display, setDisplay] = useState<string>('0');
-  const lastOperator = useRef<string | null>(null);
-  const isOperatorClicked = useRef<boolean>(false);
-  const lastValue = useRef<number | null>(null);
-  //   const currentValue = useRef<number | null>(null);
-  const lastOperatorFunction = useRef<((num: number) => number) | null>(null);
+  const [store] = useState(() => new CalculatorStore());
 
-  const onNumberClick = (num: string) => {
-    if (display === '0' || isOperatorClicked.current) {
-      setDisplay(num);
-      isOperatorClicked.current = false;
-      return;
-    }
+  const [display, setDisplay] = useState<string>(store.display);
 
-    isOperatorClicked.current = false;
-    if (display === '0') {
-      setDisplay(num);
-      return;
-    }
-    setDisplay(display + num);
+  const blinkDisplay = () => {
+    let prevDisplay: string;
+    flushSync(() =>
+      setDisplay((prev) => {
+        prevDisplay = prev;
+        return '';
+      })
+    );
+    setTimeout(() => {
+      setDisplay(prevDisplay);
+    }, 40);
+  };
+
+  const onNumberClick = (num: number) => {
+    store.number(num);
+    setDisplay(store.display);
   };
 
   const onDotClick = () => {
-    if (isOperatorClicked.current) {
-      setDisplay('0.');
-      isOperatorClicked.current = false;
-      return;
-    }
-
-    isOperatorClicked.current = false;
-    if (display.includes('.')) {
-      return;
-    }
-    setDisplay(display + '.');
+    store.dot();
+    setDisplay(store.display);
   };
 
   const onClearClick = () => {
-    isOperatorClicked.current = false;
-    lastValue.current = null;
-    lastOperator.current = null;
-    lastOperatorFunction.current = null;
-    setDisplay('0');
+    store.clear();
+    setDisplay(store.display);
+    blinkDisplay();
   };
 
   const onPlusMinusClick = () => {
-    const parsedDisplay = parseDisplayStr(display);
-    setDisplay((parsedDisplay * -1).toString());
+    store.plusMinus();
+    setDisplay(store.display);
   };
 
-  const onPlustClick = () => {
-    isOperatorClicked.current = true;
-    lastOperatorFunction.current = null;
-    const parsedDisplay = parseDisplayStr(display);
-    lastValue.current = parsedDisplay;
-    lastOperator.current = '+';
+  const onOperatorClick = (operator: Operator) => {
+    store.operator(operator);
+    blinkDisplay();
   };
 
   const onEqualClick = () => {
-    const parsedDisplay = parseDisplayStr(display);
-    if (lastValue.current === null) {
-      lastValue.current = parsedDisplay;
-      return;
-    }
+    store.equal();
+    setDisplay(store.display);
+    blinkDisplay();
+  };
 
-    if (lastOperatorFunction.current) {
-      setDisplay(lastOperatorFunction.current(parsedDisplay).toString());
-      return;
-    }
-
-    if (lastOperator.current === '+') {
-      lastOperatorFunction.current = (num: number) => num + parsedDisplay;
-      setDisplay((lastValue.current + parsedDisplay).toString());
-    }
+  const onPercentClick = () => {
+    store.percent();
+    setDisplay(store.display);
   };
 
   return {
@@ -82,18 +63,8 @@ export function useCalculator() {
     onDotClick,
     onClearClick,
     onPlusMinusClick,
-    onPlustClick,
-    onMinusClick: () => {},
-    onMultiplyClick: () => {},
-    onDivideClick: () => {},
-    onPercentClick: () => {},
+    onOperatorClick,
+    onPercentClick,
     onEqualClick,
   };
-}
-
-function parseDisplayStr(displayStr: string) {
-  if (displayStr === '') {
-    return 0;
-  }
-  return parseFloat(displayStr);
 }

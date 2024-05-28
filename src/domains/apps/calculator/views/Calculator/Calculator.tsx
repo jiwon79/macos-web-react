@@ -16,8 +16,9 @@ export function Calculator() {
     onNumberClick,
     onDotClick,
     onEqualClick,
-    onPlustClick,
+    onOperatorClick,
     onPlusMinusClick,
+    onPercentClick,
   } = useCalculator();
 
   return (
@@ -35,41 +36,49 @@ export function Calculator() {
         <Keypad type="function" onClick={onPlusMinusClick}>
           +/-
         </Keypad>
-        <Keypad type="function">%</Keypad>
-        <Keypad type="operator">/</Keypad>
-        <Keypad type="number" onClick={() => onNumberClick('7')}>
+        <Keypad type="function" onClick={onPercentClick}>
+          %
+        </Keypad>
+        <Keypad type="operator" onClick={() => onOperatorClick('/')}>
+          ÷
+        </Keypad>
+        <Keypad type="number" onClick={() => onNumberClick(7)}>
           7
         </Keypad>
-        <Keypad type="number" onClick={() => onNumberClick('8')}>
+        <Keypad type="number" onClick={() => onNumberClick(8)}>
           8
         </Keypad>
-        <Keypad type="number" onClick={() => onNumberClick('9')}>
+        <Keypad type="number" onClick={() => onNumberClick(9)}>
           9
         </Keypad>
-        <Keypad type="operator">x</Keypad>
-        <Keypad type="number" onClick={() => onNumberClick('4')}>
+        <Keypad type="operator" onClick={() => onOperatorClick('*')}>
+          x
+        </Keypad>
+        <Keypad type="number" onClick={() => onNumberClick(4)}>
           4
         </Keypad>
-        <Keypad type="number" onClick={() => onNumberClick('5')}>
+        <Keypad type="number" onClick={() => onNumberClick(5)}>
           5
         </Keypad>
-        <Keypad type="number" onClick={() => onNumberClick('6')}>
+        <Keypad type="number" onClick={() => onNumberClick(6)}>
           6
         </Keypad>
-        <Keypad type="operator">-</Keypad>
-        <Keypad type="number" onClick={() => onNumberClick('1')}>
+        <Keypad type="operator" onClick={() => onOperatorClick('-')}>
+          -
+        </Keypad>
+        <Keypad type="number" onClick={() => onNumberClick(1)}>
           1
         </Keypad>
-        <Keypad type="number" onClick={() => onNumberClick('2')}>
+        <Keypad type="number" onClick={() => onNumberClick(2)}>
           2
         </Keypad>
-        <Keypad type="number" onClick={() => onNumberClick('3')}>
+        <Keypad type="number" onClick={() => onNumberClick(3)}>
           3
         </Keypad>
-        <Keypad type="operator" onClick={onPlustClick}>
+        <Keypad type="operator" onClick={() => onOperatorClick('+')}>
           +
         </Keypad>
-        <Keypad type="number_wide" onClick={() => onNumberClick('0')}>
+        <Keypad type="number_wide" onClick={() => onNumberClick(0)}>
           0
         </Keypad>
         <Keypad type="number" onClick={onDotClick}>
