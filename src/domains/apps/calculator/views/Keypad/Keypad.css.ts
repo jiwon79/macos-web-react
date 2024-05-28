@@ -1,5 +1,5 @@
 import { recipe } from '@vanilla-extract/recipes';
-import { calcColorTokens } from '../Calculator/calcTheme.css';
+import { calcColorTokens } from '../theme.css';
 
 export const keypad = recipe({
   base: {
