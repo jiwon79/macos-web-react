@@ -109,9 +109,32 @@ export function useCalculator() {
         setDisplay(result.toString());
         return;
       }
+
+      if (lastOperator.current === '*') {
+        lastOperatorFunction.current = (num: number) => num * parsedDisplay;
+        const result = calculatorRound(lastValue.current * parsedDisplay);
+        lastValue.current = result;
+        currentValue.current = null;
+        setDisplay(result.toString());
+        return;
+      }
+
+      if (lastOperator.current === '/') {
+        lastOperatorFunction.current = (num: number) => num / parsedDisplay;
+        const result = calculatorRound(lastValue.current / parsedDisplay);
+        lastValue.current = result;
+        currentValue.current = null;
+        setDisplay(result.toString());
+        return;
+      }
     })();
 
     blinkDisplay();
+  };
+
+  const onPercentClick = () => {
+    const parsedDisplay = parseDisplayStr(display);
+    setDisplay(calculatorRound(parsedDisplay / 100).toString());
   };
 
   return {
@@ -121,7 +144,7 @@ export function useCalculator() {
     onClearClick,
     onPlusMinusClick,
     onOperatorClick,
-    onPercentClick: () => {},
+    onPercentClick,
     onEqualClick,
   };
 }

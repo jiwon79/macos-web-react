@@ -415,6 +415,220 @@ describe('multiply button', () => {
       result.current.onEqualClick();
     });
 
-    await waitFor(() => expect(result.current.display).toBe('-8'));
+    await waitFor(() => expect(result.current.display).toBe('7.2'));
+  });
+});
+
+describe('divide button', () => {
+  test('6 / 3 = >> 2', async () => {
+    const { result } = renderHook(() => useCalculator());
+    act(() => {
+      result.current.onNumberClick('6');
+    });
+    act(() => {
+      result.current.onOperatorClick('/');
+    });
+    act(() => {
+      result.current.onNumberClick('3');
+    });
+    act(() => {
+      result.current.onEqualClick();
+    });
+
+    await waitFor(() => expect(result.current.display).toBe('2'));
+  });
+
+  test('6 / 0 = >> Infinity', async () => {
+    const { result } = renderHook(() => useCalculator());
+    act(() => {
+      result.current.onNumberClick('6');
+    });
+    act(() => {
+      result.current.onOperatorClick('/');
+    });
+    act(() => {
+      result.current.onNumberClick('0');
+    });
+    act(() => {
+      result.current.onEqualClick();
+    });
+
+    await waitFor(() => expect(result.current.display).toBe('Infinity'));
+  });
+
+  test('6 / .5 = >> 12', async () => {
+    const { result } = renderHook(() => useCalculator());
+    act(() => {
+      result.current.onNumberClick('6');
+    });
+    act(() => {
+      result.current.onOperatorClick('/');
+    });
+    act(() => {
+      result.current.onDotClick();
+    });
+    act(() => {
+      result.current.onNumberClick('5');
+    });
+    act(() => {
+      result.current.onEqualClick();
+    });
+
+    await waitFor(() => expect(result.current.display).toBe('12'));
+  });
+
+  test('6 / 2 = 3 . >> 0.', async () => {
+    const { result } = renderHook(() => useCalculator());
+    act(() => {
+      result.current.onNumberClick('6');
+    });
+    act(() => {
+      result.current.onOperatorClick('/');
+    });
+    act(() => {
+      result.current.onNumberClick('2');
+    });
+    act(() => {
+      result.current.onEqualClick();
+    });
+    act(() => {
+      result.current.onDotClick();
+    });
+
+    await waitFor(() => expect(result.current.display).toBe('0.'));
+  });
+
+  test('12 / 4 (+/-) = >> -3', async () => {
+    const { result } = renderHook(() => useCalculator());
+    act(() => {
+      result.current.onNumberClick('1');
+    });
+    act(() => {
+      result.current.onNumberClick('2');
+    });
+    act(() => {
+      result.current.onOperatorClick('/');
+    });
+    act(() => {
+      result.current.onNumberClick('4');
+    });
+    act(() => {
+      result.current.onPlusMinusClick();
+    });
+    act(() => {
+      result.current.onEqualClick();
+    });
+
+    await waitFor(() => expect(result.current.display).toBe('-3'));
+  });
+});
+
+describe('percent button', () => {
+  test('100 % = >> 1', async () => {
+    const { result } = renderHook(() => useCalculator());
+    act(() => {
+      result.current.onNumberClick('1');
+    });
+    act(() => {
+      result.current.onNumberClick('0');
+    });
+    act(() => {
+      result.current.onNumberClick('0');
+    });
+    act(() => {
+      result.current.onPercentClick();
+    });
+
+    await waitFor(() => expect(result.current.display).toBe('1'));
+  });
+
+  test('100 + 100 % = >> 101', async () => {
+    const { result } = renderHook(() => useCalculator());
+    act(() => {
+      result.current.onNumberClick('1');
+    });
+    act(() => {
+      result.current.onNumberClick('0');
+    });
+    act(() => {
+      result.current.onNumberClick('0');
+    });
+    act(() => {
+      result.current.onOperatorClick('+');
+    });
+    act(() => {
+      result.current.onNumberClick('1');
+    });
+    act(() => {
+      result.current.onNumberClick('0');
+    });
+    act(() => {
+      result.current.onNumberClick('0');
+    });
+    act(() => {
+      result.current.onPercentClick();
+    });
+    act(() => {
+      result.current.onEqualClick();
+    });
+
+    await waitFor(() => expect(result.current.display).toBe('101'));
+  });
+
+  test('2 % = >> 0.02', async () => {
+    const { result } = renderHook(() => useCalculator());
+    act(() => {
+      result.current.onNumberClick('2');
+    });
+    act(() => {
+      result.current.onPercentClick();
+    });
+
+    await waitFor(() => expect(result.current.display).toBe('0.02'));
+  });
+
+  test('2 + 2 % = >> 2.02', async () => {
+    const { result } = renderHook(() => useCalculator());
+    act(() => {
+      result.current.onNumberClick('2');
+    });
+    act(() => {
+      result.current.onOperatorClick('+');
+    });
+    act(() => {
+      result.current.onNumberClick('2');
+    });
+    act(() => {
+      result.current.onPercentClick();
+    });
+    act(() => {
+      result.current.onEqualClick();
+    });
+
+    await waitFor(() => expect(result.current.display).toBe('2.02'));
+  });
+
+  test('2 (+/-) * 2 % = >> -0.04', async () => {
+    const { result } = renderHook(() => useCalculator());
+    act(() => {
+      result.current.onNumberClick('2');
+    });
+    act(() => {
+      result.current.onPlusMinusClick();
+    });
+    act(() => {
+      result.current.onOperatorClick('*');
+    });
+    act(() => {
+      result.current.onNumberClick('2');
+    });
+    act(() => {
+      result.current.onPercentClick();
+    });
+    act(() => {
+      result.current.onEqualClick();
+    });
+
+    await waitFor(() => expect(result.current.display).toBe('-0.04'));
   });
 });

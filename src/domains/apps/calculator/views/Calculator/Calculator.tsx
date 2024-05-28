@@ -18,6 +18,7 @@ export function Calculator() {
     onEqualClick,
     onOperatorClick,
     onPlusMinusClick,
+    onPercentClick,
   } = useCalculator();
 
   return (
@@ -35,7 +36,9 @@ export function Calculator() {
         <Keypad type="function" onClick={onPlusMinusClick}>
           +/-
         </Keypad>
-        <Keypad type="function">%</Keypad>
+        <Keypad type="function" onClick={onPercentClick}>
+          %
+        </Keypad>
         <Keypad type="operator" onClick={() => onOperatorClick('/')}>
           ÷
         </Keypad>
