@@ -8,7 +8,7 @@ export const calculatorConfig: AppConfig = {
   menus: [
     {
       name: 'Calculator',
-      submenus: [
+      submenuGroups: [
         [
           {
             name: 'About Calculator',
@@ -27,7 +27,7 @@ export const calculatorConfig: AppConfig = {
     },
     {
       name: 'File',
-      submenus: [
+      submenuGroups: [
         [
           {
             name: 'New',

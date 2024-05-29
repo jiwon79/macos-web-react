@@ -1,6 +1,6 @@
 export interface Menu {
   name: string;
-  submenus: Submenu[][];
+  submenuGroups: Submenu[][];
 }
 
 interface Submenu {

@@ -38,7 +38,7 @@ export const Window3 = () => {
 export const initialWindowStates: WindowState[] = [
   {
     id: '1',
-    title: 'WindowState 1',
+    appID: '1',
     content: <Window1 />,
     style: {
       x: 10,
@@ -49,7 +49,7 @@ export const initialWindowStates: WindowState[] = [
   },
   {
     id: '2',
-    title: 'WindowState 2',
+    appID: '2',
     content: <Window2 />,
     style: {
       x: 200,
@@ -60,7 +60,7 @@ export const initialWindowStates: WindowState[] = [
   },
   {
     id: '3',
-    title: 'WindowState 3',
+    appID: 'calculator',
     content: <Calculator />,
     style: {
       x: 30,

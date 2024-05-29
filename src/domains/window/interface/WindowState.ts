@@ -1,9 +1,9 @@
-export type WindowState = {
+export interface WindowState {
   id: string;
-  title: string;
+  appID: string;
   content: React.ReactNode;
   style: WindowStyle;
-};
+}
 
 export interface WindowStyle {
   x: number;
