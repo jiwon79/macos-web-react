@@ -6,7 +6,7 @@ type UnionToIntersection<U> =
     ? I
     : never;
 
-export function deepMergeObject<T extends Record<string, unknown>[]>(
+export function deepMergeObject<T extends Record<string, any>[]>(
   ...objects: T
 ): UnionToIntersection<T[number]> {
   return objects.reduce((result, current) => {
