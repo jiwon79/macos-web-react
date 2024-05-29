@@ -1,4 +1,4 @@
-import { AppConfig } from '../interface';
+import { AppConfig } from '../../interface';
 import { Calculator } from './views/Calculator';
 
 export const calculatorConfig: AppConfig = {

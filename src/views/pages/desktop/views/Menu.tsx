@@ -1,18 +1,23 @@
-import { applications } from 'domains/apps/apps';
+import { applications } from 'domains/app/applications';
 import { useFocusedWindow } from 'domains/window/store';
 import { Fragment, memo } from 'react';
 
 export function Menu() {
   const focusedWindow = useFocusedWindow();
 
-  return <InnerMenu appID={focusedWindow?.appID || ''} />;
+  return <InnerMenu appID={focusedWindow?.appID || 'Finder'} />;
 }
 
 const InnerMenu = memo(({ appID }: { appID: string }) => {
-  const menus = applications.get(appID)?.menus;
+  const app = applications.get(appID);
+
+  if (app == null) {
+    return;
+  }
+
   return (
     <div>
-      {menus?.map((menu) => (
+      {app.menus.map((menu) => (
         <Fragment key={menu.name}>
           <p>{menu.name}</p>
           {menu.submenuGroups.map((submenuGroup, index) => (

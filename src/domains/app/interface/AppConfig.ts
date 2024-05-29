@@ -5,7 +5,7 @@ export interface Menu {
 
 interface Submenu {
   name: string;
-  shortcut: string;
+  shortcut?: string;
   disabled?: boolean;
 }
 
