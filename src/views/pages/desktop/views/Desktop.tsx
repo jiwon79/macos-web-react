@@ -2,12 +2,13 @@ import { Dock } from 'domains/dock/views';
 import { useDarkMode } from 'utils/broswer';
 import * as styles from './Desktop.css.ts';
 import { Windows } from './Windows';
+import { Menu } from './Menu';
 
 export function Desktop() {
   return (
     <div className={styles.desktop}>
       <DarkModeButtonXX />
-      <p>MENU</p>
+      <Menu />
       <Windows />
       <Dock />
     </div>
