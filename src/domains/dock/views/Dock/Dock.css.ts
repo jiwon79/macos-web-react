@@ -1,5 +1,5 @@
-import { globalStyle, style } from '@vanilla-extract/css';
-import { darkModeSelector } from 'utils/broswer';
+import { style } from '@vanilla-extract/css';
+import { darkModeStyle } from 'third-parties/vanilla-extract';
 
 export const container = style({
   position: 'absolute',
@@ -20,7 +20,7 @@ export const container = style({
   backdropFilter: 'blur(12px)',
 });
 
-globalStyle(`${darkModeSelector} ${container}`, {
+darkModeStyle(container, {
   backgroundColor: 'rgba(75, 75, 75, 0.4)',
   boxShadow: `
     0 0 0 1px rgba(0, 0, 0, 0.2),

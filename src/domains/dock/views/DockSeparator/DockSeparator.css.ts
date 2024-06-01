@@ -1,5 +1,5 @@
-import { globalStyle, style } from '@vanilla-extract/css';
-import { darkModeSelector } from 'utils/broswer';
+import { style } from '@vanilla-extract/css';
+import { darkModeStyle } from 'third-parties/vanilla-extract';
 
 export const separator_container = style({
   width: 22,
@@ -16,6 +16,6 @@ export const separator = style({
   backgroundColor: '#E8E8E8',
 });
 
-globalStyle(`${darkModeSelector} ${separator}`, {
+darkModeStyle(separator, {
   backgroundColor: '#B5B5B5',
 });

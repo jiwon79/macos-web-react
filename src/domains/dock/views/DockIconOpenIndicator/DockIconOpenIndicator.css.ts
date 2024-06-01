@@ -1,6 +1,5 @@
-import { globalStyle } from '@vanilla-extract/css';
 import { recipe } from '@vanilla-extract/recipes';
-import { darkModeSelector } from 'utils/broswer';
+import { darkModeStyle } from 'third-parties/vanilla-extract';
 
 export const dockIcon = recipe({
   base: {
@@ -20,6 +19,6 @@ export const dockIcon = recipe({
   },
 });
 
-globalStyle(`${darkModeSelector} ${dockIcon.classNames.variants.open.true}`, {
+darkModeStyle(dockIcon.classNames.variants.open.true, {
   backgroundColor: '#FFFFFF',
 });
