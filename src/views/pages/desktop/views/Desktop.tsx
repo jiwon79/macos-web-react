@@ -1,9 +1,9 @@
 import { Dock } from 'domains/dock/views';
 import { useDarkMode } from 'utils/broswer';
-import * as styles from './Desktop.css.ts';
-import { Windows } from './Windows';
-import { Menu } from './Menu';
 import { useWindowsAction } from 'domains/window/store';
+import { Windows } from './Windows';
+import * as styles from './Desktop.css.ts';
+import { DesktopMenu } from './DesktopMenu';
 
 export function Desktop() {
   const setFocusedWindowID = useWindowsAction(
@@ -19,8 +19,8 @@ export function Desktop() {
         setFocusedWindowID(null);
       }}
     >
+      <DesktopMenu />
       <DarkModeButtonXX />
-      <Menu />
       <Windows />
       <Dock />
     </div>
