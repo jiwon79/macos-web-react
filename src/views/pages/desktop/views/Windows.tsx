@@ -1,9 +1,10 @@
-import { WindowRenderer } from 'domains/window';
-import { useWindows, useWindowsActions } from 'domains/window/store';
+import { WindowRenderer } from 'domains/window/views/WindowRenderer/WindowRenderer';
+import { useWindows, useWindowsAction } from 'domains/window/store';
 
 export function Windows() {
   const windows = useWindows();
-  const { updateWindow } = useWindowsActions();
+  const updateWindow = useWindowsAction((actions) => actions.updateWindow);
+
   return (
     <>
       {windows &&

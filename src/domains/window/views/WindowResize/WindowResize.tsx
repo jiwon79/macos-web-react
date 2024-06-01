@@ -3,7 +3,7 @@ import { MultiDirectionResizableContainer } from 'modules/resizable-react';
 import { ResizeHandlerBaseProps } from 'modules/resizable-react/interfaces';
 import { ResizableEventMap } from 'modules/resizable/interfaces';
 import { useRef } from 'react';
-import { useWindowContext } from '../WindowRenderer';
+import { useWindowContext } from '../WindowContext';
 
 interface WindowResizeProps {
   children?: React.ReactNode;

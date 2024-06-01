@@ -1,3 +1,2 @@
-export * from './useWindowsActions.ts';
-export * from './useWindowsStore.ts';
+export * from './store.ts';
 export * from './states';

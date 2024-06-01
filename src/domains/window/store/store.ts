@@ -1,23 +1,38 @@
 import { create } from 'third-parties/zustand';
 import { deepMergeObject } from 'utils/object';
-import { WindowsAction, WindowsState } from '../interface/WindowsStore.ts';
 import { initialWindowStates } from './initialWindowStatesXX.tsx';
+import { WindowState } from '../interface/index.ts';
+import { DeepPartial } from 'utils/type';
 
-const initialWindowsState = {
-  windows: initialWindowStates,
-  focusedWindowID: undefined,
-};
+export interface WindowsState {
+  windows: WindowState[];
+  focusedWindowID: string | null;
+}
+
+export interface WindowsAction {
+  setFocusedWindowID: (id: string | null) => void;
+  addWindow: (window: WindowState) => void;
+  removeWindow: (id: string) => void;
+  updateWindow: (id: string, data: DeepPartial<WindowState>) => void;
+}
 
 export const useWindowsStore = create<WindowsState, WindowsAction>((set) => ({
-  ...initialWindowsState,
+  windows: initialWindowStates,
+  focusedWindowID: null,
   actions: {
-    setFocusedWindowID: (id: string) =>
+    setFocusedWindowID: (id: string | null) =>
       set((state) => {
+        if (id === null) {
+          return { focusedWindowID: id, windows: state.windows };
+        }
+
         const index = state.windows.findIndex((window) => window.id === id);
         if (index === -1) {
           return state;
         }
+
         const focusedWdindow = state.windows[index];
+
         return {
           focusedWindowID: id,
           windows: [
@@ -27,12 +42,15 @@ export const useWindowsStore = create<WindowsState, WindowsAction>((set) => ({
           ],
         };
       }),
+
     addWindow: (window) =>
       set((state) => ({ windows: [...state.windows, window] })),
+
     removeWindow: (id) =>
       set((state) => ({
         windows: state.windows.filter((window) => window.id !== id),
       })),
+
     updateWindow: (id, data) => {
       set((state) => ({
         windows: state.windows.map((window) =>
@@ -42,3 +60,9 @@ export const useWindowsStore = create<WindowsState, WindowsAction>((set) => ({
     },
   },
 }));
+
+export function useWindowsAction<
+  TAction extends WindowsAction[keyof WindowsAction],
+>(selector: (action: WindowsAction) => TAction): TAction {
+  return useWindowsStore((state) => selector(state.actions));
+}

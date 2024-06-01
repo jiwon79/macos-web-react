@@ -1,9 +1,9 @@
 import { MovableEventMap } from 'modules/movable';
 import { MovableContainer } from 'modules/movable-react';
 import { useRef } from 'react';
-import { useWindowContext } from '..';
 import { container } from './WindowMovableArea.css.ts';
 import { cn } from 'third-parties/classnames';
+import { useWindowContext } from '../WindowContext.ts';
 
 interface WindowMovableAreaProps {
   children?: React.ReactNode;
