@@ -1,8 +1,9 @@
-import { createContext, useContext, useMemo } from 'react';
+import { useMemo } from 'react';
 import { renderer } from './WindowRenderer.css.ts';
 import { WindowStyle } from 'domains/window/interface';
-import { useWindowsActions } from 'domains/window/store';
+import { useWindowsAction } from 'domains/window/store';
 import { WindowResize } from '../WindowResize';
+import { WindowContext } from '../WindowContext.ts';
 
 export interface WindowRendererProps {
   id: string;
@@ -11,34 +12,16 @@ export interface WindowRendererProps {
   children: React.ReactNode;
 }
 
-interface WindowContextProps {
-  id: string;
-  style: WindowStyle;
-  onStyleChange: (style: Partial<WindowStyle>) => void;
-}
-
-const WindowContext = createContext<WindowContextProps>({
-  id: '',
-  style: {
-    x: 0,
-    y: 0,
-    width: 0,
-    height: 0,
-  },
-  onStyleChange: () => {},
-});
-
-export function useWindowContext() {
-  return useContext(WindowContext);
-}
-
 export function WindowRenderer({
   id,
   style,
   onStyleChange,
   children,
 }: WindowRendererProps) {
-  const { setFocusedWindowID } = useWindowsActions();
+  const setFocusedWindowID = useWindowsAction(
+    (action) => action.setFocusedWindowID
+  );
+
   const context = useMemo(
     () => ({
       id,
@@ -58,7 +41,12 @@ export function WindowRenderer({
           height: `${height}px`,
           transform: `translate(${x}px, ${y}px)`,
         }}
-        onMouseDown={() => setFocusedWindowID(id)}
+        onMouseDown={(event) => {
+          console.log(1);
+          event.preventDefault();
+          event.stopPropagation();
+          setFocusedWindowID(id);
+        }}
         className={renderer}
       >
         <WindowResize>{children}</WindowResize>

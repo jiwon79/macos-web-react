@@ -1,4 +1,4 @@
-import { Window } from 'domains/window';
+import { Window } from 'domains/window/views';
 import { displayText, displayContainer, movableArea } from './Calculator.css';
 import { useCalculator } from '../../hooks';
 import { calcThemeClass } from '../theme.css';
