@@ -1,4 +1,5 @@
 import { recipe } from '@vanilla-extract/recipes';
+import { font } from 'third-parties/vanilla-extract';
 
 export const container = recipe({
   base: {
@@ -14,6 +15,23 @@ export const container = recipe({
         // TODO: blend로 변경
         backgroundColor: 'rgba(0, 0, 0, 0.5)',
       },
+    },
+    type: {
+      'apple-logo': {
+        padding: '2px 11px',
+      },
+      'app-name': [
+        font.headline.regular,
+        {
+          padding: '4px 11px',
+        },
+      ],
+      item: [
+        font.body.emphasized,
+        {
+          padding: '4px 11px',
+        },
+      ],
     },
   },
 });

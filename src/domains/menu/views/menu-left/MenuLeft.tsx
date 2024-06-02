@@ -1,4 +1,4 @@
-import { MenuAppName, MenuAppleLogo } from './components';
+import { MenuAppleLogo } from './components';
 import { MenuItem } from '../menu-item';
 import { contianer } from './MenuLeft.css';
 import { MenuConfig } from 'domains/app/interface';
@@ -30,20 +30,9 @@ export function MenuLeft({ menus }: MenuLeftProps) {
         onSelectedChange={(selected) => onSelectedChange(selected, 'Apple')}
       />
       {menus.map((menu, index) => {
-        if (index === 0) {
-          return (
-            <MenuAppName
-              key={menu.name + index}
-              menu={menu}
-              selected={menu.name === selectedMenu}
-              onSelectedChange={(selected) =>
-                onSelectedChange(selected, menu.name)
-              }
-            />
-          );
-        }
         return (
           <MenuItem
+            type={index === 0 ? 'app-name' : 'item'}
             key={menu.name + index}
             menu={menu}
             focused={focused}

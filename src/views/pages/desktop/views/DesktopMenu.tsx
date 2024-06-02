@@ -4,14 +4,12 @@ import { useFocusedWindow } from 'domains/window/store';
 import { memo } from 'react';
 
 export function DesktopMenu() {
-  console.log('RENDER DesktopMenu');
   const focusedWindow = useFocusedWindow();
 
   return <InnerMenu appID={focusedWindow?.appID || 'Finder'} />;
 }
 
 const InnerMenu = memo(({ appID }: { appID: string }) => {
-  console.log('RENDER InnerMenu');
   const app = applications.get(appID);
   const menus = app?.menus;
 
@@ -20,22 +18,4 @@ const InnerMenu = memo(({ appID }: { appID: string }) => {
   }
 
   return <Menu menus={menus} />;
-
-  // return (
-  //   <div>
-  //     {app.menus.map((menu) => (
-  //       <Fragment key={menu.name}>
-  //         <p>{menu.name}</p>
-  //         {menu.submenuGroups.map((submenuGroup, index) => (
-  //           <div key={index}>
-  //             {submenuGroup.map((submenu) => (
-  //               <button key={submenu.name}>{submenu.name}</button>
-  //             ))}
-  //           </div>
-  //         ))}
-  //       </Fragment>
-  //     ))}
-  //     <p>menus</p>
-  //   </div>
-  // );
 });

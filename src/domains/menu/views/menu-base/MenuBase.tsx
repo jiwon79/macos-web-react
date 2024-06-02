@@ -5,7 +5,7 @@ import { useHoverState } from 'domains/menu/hooks/useHoverState';
 
 export interface MenuBaseProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
-  name: string;
+  type: 'apple-logo' | 'app-name' | 'item';
   focused?: boolean;
   className?: string;
   selected: boolean;
@@ -15,8 +15,8 @@ export interface MenuBaseProps extends React.HTMLAttributes<HTMLDivElement> {
 function _MenuBase(
   {
     children,
+    type,
     className,
-    name,
     focused = false,
     selected,
     onSelectedChange,
@@ -35,7 +35,7 @@ function _MenuBase(
   return (
     <div
       ref={ref}
-      className={cn(container({ selected }), className)}
+      className={cn(container({ selected, type }), className)}
       {...rest}
       {...targetProps}
     >

@@ -13,8 +13,8 @@ export function MenuAppleLogo({
 }: MenuAppleLogoProps) {
   return (
     <MenuBase
+      type="apple-logo"
       className={logoContainer}
-      name="Apple"
       selected={selected}
       onSelectedChange={onSelectedChange}
     >
