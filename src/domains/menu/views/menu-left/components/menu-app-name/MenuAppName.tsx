@@ -1,10 +1,11 @@
+import { MenuConfig } from 'domains/app/interface';
 import { MenuBase } from '../../../menu-base';
 import { container } from './MenuAppName.css';
 
 interface MenuAppNameProps {
-  name: string;
+  menu: MenuConfig;
 }
 
-export function MenuAppName({ name }: MenuAppNameProps) {
-  return <MenuBase className={container}>{name}</MenuBase>;
+export function MenuAppName({ menu }: MenuAppNameProps) {
+  return <MenuBase className={container}>{menu.name}</MenuBase>;
 }

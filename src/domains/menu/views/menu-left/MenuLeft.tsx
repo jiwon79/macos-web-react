@@ -11,10 +11,12 @@ export function MenuLeft({ menus }: MenuLeftProps) {
   return (
     <div className={contianer}>
       <MenuAppleLogo />
-      <MenuAppName name="Apple" />
-      <MenuItem>File</MenuItem>
-      <MenuItem>Edit</MenuItem>
-      <MenuItem>View</MenuItem>
+      {menus.map((menu, index) => {
+        if (index === 0) {
+          return <MenuAppName key={menu.name} menu={menu} />;
+        }
+        return <MenuItem key={menu.name} menu={menu} />;
+      })}
     </div>
   );
 }
