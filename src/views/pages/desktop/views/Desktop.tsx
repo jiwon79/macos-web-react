@@ -13,11 +13,7 @@ export function Desktop() {
   return (
     <div
       className={styles.desktop}
-      onMouseDown={(event) => {
-        event.preventDefault();
-        event.stopPropagation();
-        setFocusedWindowID(null);
-      }}
+      onMouseDown={() => setFocusedWindowID(null)}
     >
       <DesktopMenu />
       <DarkModeButtonXX />
@@ -31,7 +27,10 @@ function DarkModeButtonXX() {
   const [darkMode, setDarkMode] = useDarkMode();
 
   return (
-    <button onClick={() => setDarkMode(!darkMode)}>
+    <button
+      onClick={() => setDarkMode(!darkMode)}
+      style={{ position: 'absolute', top: 40 }}
+    >
       {darkMode ? '🌙' : '☀️'}
     </button>
   );

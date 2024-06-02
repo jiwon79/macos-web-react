@@ -8,7 +8,10 @@ interface MenuProps {
 
 export function Menu({ menus }: MenuProps) {
   return (
-    <div className={container}>
+    <div
+      className={container}
+      onMouseDownCapture={(event) => event.stopPropagation()}
+    >
       <MenuLeft menus={menus} />
       <p>RIGHT</p>
     </div>

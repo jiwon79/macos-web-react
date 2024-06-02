@@ -54,6 +54,64 @@ export const calculatorConfig: AppConfig = {
         ],
       ],
     },
+    {
+      name: 'File-1',
+      submenuGroups: [
+        [
+          {
+            name: 'New',
+            shortcut: 'Ctrl+N',
+          },
+          {
+            name: 'Open',
+            shortcut: 'Ctrl+O',
+          },
+        ],
+        [
+          {
+            name: 'Save',
+            shortcut: 'Ctrl+S',
+          },
+          {
+            name: 'Save As',
+            shortcut: 'Ctrl+Shift+S',
+          },
+          {
+            name: 'Close',
+            shortcut: 'Ctrl+W',
+          },
+        ],
+      ],
+    },
+    {
+      name: 'File-2',
+      submenuGroups: [
+        [
+          {
+            name: 'New',
+            shortcut: 'Ctrl+N',
+          },
+          {
+            name: 'Open',
+            shortcut: 'Ctrl+O',
+          },
+        ],
+        [
+          {
+            name: 'Save',
+            shortcut: 'Ctrl+S',
+          },
+          {
+            name: 'Save As',
+            shortcut: 'Ctrl+Shift+S',
+          },
+          {
+            name: 'Close',
+            shortcut: 'Ctrl+W',
+          },
+        ],
+      ],
+    },
   ],
   initialStyle: {
     width: 300,

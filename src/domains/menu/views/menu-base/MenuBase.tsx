@@ -1,43 +1,47 @@
 import { cn } from 'third-parties/classnames';
 import { container } from './MenuBase.css';
-import { useState } from 'react';
+import { forwardRef, useEffect } from 'react';
+import { useHoverState } from 'domains/menu/hooks/useHoverState';
 
-export interface MenuBaseProps {
+export interface MenuBaseProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
-  selected?: boolean;
-  selectOnHover?: boolean;
+  name: string;
+  focused?: boolean;
   className?: string;
+  selected: boolean;
+  onSelectedChange: (selected: boolean) => void;
 }
 
-export function MenuBase({
-  children,
-  className,
-  selected: givenSelected = false,
-  selectOnHover = false,
-}: MenuBaseProps) {
-  const [isHovered, setIsHovered] = useState(false);
+function _MenuBase(
+  {
+    children,
+    className,
+    name,
+    focused = false,
+    selected,
+    onSelectedChange,
+    ...rest
+  }: MenuBaseProps,
+  ref: React.Ref<HTMLDivElement>
+) {
+  const { hovered, targetProps } = useHoverState();
 
-  const onMouseEnter = () => {
-    if (selectOnHover) {
-      setIsHovered(true);
+  useEffect(() => {
+    if (focused && hovered) {
+      onSelectedChange(true);
     }
-  };
-
-  const onMouseLeave = () => {
-    if (selectOnHover) {
-      setIsHovered(false);
-    }
-  };
-
-  const selected = givenSelected || (selectOnHover && isHovered);
+  }, [focused, hovered]);
 
   return (
     <div
+      ref={ref}
       className={cn(container({ selected }), className)}
-      onMouseEnter={onMouseEnter}
-      onMouseLeave={onMouseLeave}
+      {...rest}
+      {...targetProps}
     >
       {children}
     </div>
   );
 }
+
+export const MenuBase = forwardRef(_MenuBase);
