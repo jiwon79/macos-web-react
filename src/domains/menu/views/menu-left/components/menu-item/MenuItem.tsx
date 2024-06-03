@@ -1,5 +1,7 @@
 import { MenuConfig } from 'domains/app/interface';
-import { FloatingMenu } from '../floating-menu/FloatingMenu';
+import { FloatingMenu } from '../../../floating-menu/FloatingMenu';
+import { SubmenuGroups } from '../submenu-groups/SubMenus';
+import { MenuBase } from 'domains/menu/views/menu-base';
 
 interface MenuItemProps {
   menu: MenuConfig;
@@ -22,15 +24,13 @@ export function MenuItem({
       selected={selected}
       onSelectedChange={onSelectedChange}
     >
-      <FloatingMenu.Trigger type={type}>{menu.name}</FloatingMenu.Trigger>
+      <FloatingMenu.Trigger type={type}>
+        <MenuBase selected={selected} type={type}>
+          {menu.name}
+        </MenuBase>
+      </FloatingMenu.Trigger>
       <FloatingMenu.Content>
-        {menu.submenuGroups.map((submenuGroup, index) => (
-          <div key={index} style={{ display: 'flex', flexDirection: 'column' }}>
-            {submenuGroup.map((submenu) => (
-              <button key={submenu.name}>{submenu.name}</button>
-            ))}
-          </div>
-        ))}
+        <SubmenuGroups submenuGroups={menu.submenuGroups} />
       </FloatingMenu.Content>
     </FloatingMenu>
   );

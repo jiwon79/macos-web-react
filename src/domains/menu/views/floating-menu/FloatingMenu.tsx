@@ -1,6 +1,12 @@
 import { useFloatingMenu } from 'domains/menu/hooks/useFloatingMenu';
-import { HTMLAttributes, createContext, useContext } from 'react';
-import { MenuBase } from '../menu-base';
+import {
+  HTMLAttributes,
+  cloneElement,
+  createContext,
+  useContext,
+  useEffect,
+} from 'react';
+import { useHoverState } from 'domains/menu/hooks/useHoverState';
 
 interface FloatingMenuProps {
   focused: boolean;
@@ -62,7 +68,7 @@ export function FloatingMenu({
 }
 
 interface FloatingMenuTriggerProps extends HTMLAttributes<HTMLDivElement> {
-  children: React.ReactNode;
+  children: React.ReactElement;
   type: 'app-name' | 'item';
 }
 
@@ -71,30 +77,35 @@ export function FloatingMenuTrigger({
   type,
   ...rest
 }: FloatingMenuTriggerProps) {
-  const {
-    onSelectedChange,
-    refs,
-    open,
-    onOpenChange,
-    reference,
-    focused,
-    selected,
-  } = useFloatingMenuContext();
+  const { onSelectedChange, refs, open, onOpenChange, reference, focused } =
+    useFloatingMenuContext();
 
-  return (
-    <MenuBase
-      ref={refs.setReference}
-      type={type}
-      focused={focused}
-      onClick={() => onOpenChange(!open)}
-      selected={selected}
-      onSelectedChange={onSelectedChange}
-      {...reference}
-      {...rest}
-    >
-      {children}
-    </MenuBase>
-  );
+  const { hovered, targetProps } = useHoverState();
+
+  useEffect(() => {
+    if (focused && hovered) {
+      onSelectedChange(true);
+    }
+  }, [focused, hovered]);
+
+  return cloneElement(children, {
+    ref: refs.setReference,
+    onClick: () => onOpenChange(!open),
+    ...reference,
+    onMouseEnter: (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
+      targetProps.onMouseEnter();
+      reference.onMouseEnter?.(e);
+    },
+    onMouseLeave: (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
+      targetProps.onMouseLeave();
+      reference.onMouseLeave?.(e);
+    },
+    onMouseMove: (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
+      targetProps.onMouseMove();
+      reference.onMouseMove?.(e);
+    },
+    ...rest,
+  });
 }
 
 interface FloatingMenuContentProps extends HTMLAttributes<HTMLDivElement> {

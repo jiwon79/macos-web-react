@@ -1,5 +1,5 @@
 import { MenuAppleLogo } from './components';
-import { MenuItem } from '../menu-item';
+import { MenuItem } from './components/menu-item';
 import { contianer } from './MenuLeft.css';
 import { MenuConfig } from 'domains/app/interface';
 import useFocusMenu from 'domains/menu/hooks/useFocusMenu';
@@ -26,6 +26,7 @@ export function MenuLeft({ menus }: MenuLeftProps) {
   return (
     <div ref={menuRef} className={contianer}>
       <MenuAppleLogo
+        focused={focused}
         selected={selectedMenu === 'Apple'}
         onSelectedChange={(selected) => onSelectedChange(selected, 'Apple')}
       />

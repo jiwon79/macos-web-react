@@ -3,7 +3,7 @@ export interface MenuConfig {
   submenuGroups: SubmenuConfig[][];
 }
 
-interface SubmenuConfig {
+export interface SubmenuConfig {
   name: string;
   shortcut?: string;
   disabled?: boolean;
