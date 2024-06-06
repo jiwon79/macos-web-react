@@ -1,6 +1,4 @@
 import { IconAppleLogo } from 'assets/icons';
-import { logoContainer } from './MenuAppleLogo.css';
-import { MenuBase } from '../../../menu-base';
 import { FloatingMenu } from 'domains/menu/views/floating-menu/FloatingMenu';
 import { SubmenuGroups } from 'domains/menu/views/menu-left/components/submenu-groups/SubMenus';
 
@@ -21,10 +19,8 @@ export function MenuAppleLogo({
       selected={selected}
       onSelectedChange={onSelectedChange}
     >
-      <FloatingMenu.Trigger type="app-name">
-        <MenuBase type="apple-logo" selected={selected}>
-          <IconAppleLogo />
-        </MenuBase>
+      <FloatingMenu.Trigger type="icon">
+        <IconAppleLogo />
       </FloatingMenu.Trigger>
       <FloatingMenu.Content>
         <SubmenuGroups submenuGroups={[]} />

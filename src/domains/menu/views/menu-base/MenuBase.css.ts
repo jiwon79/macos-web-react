@@ -18,16 +18,16 @@ export const container = recipe({
       },
     },
     type: {
-      'apple-logo': {
+      icon: {
         padding: '2px 11px',
       },
-      'app-name': [
+      'text-bold': [
         font.headline.regular,
         {
           padding: '4px 11px',
         },
       ],
-      item: [
+      text: [
         font.body.emphasized,
         {
           padding: '4px 11px',
