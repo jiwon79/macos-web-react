@@ -1,6 +1,6 @@
 import { MenuConfig } from 'domains/app/interface';
 import { FloatingMenu } from '../../../floating-menu/FloatingMenu';
-import { SubmenuGroup } from '../submenu-groups/SubmenuGroup';
+import { SubmenuGroup } from '../submenu-group/SubmenuGroup';
 
 interface MenuItemProps {
   menu: MenuConfig;
