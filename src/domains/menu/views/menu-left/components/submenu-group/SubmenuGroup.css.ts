@@ -1,6 +1,5 @@
-import { globalStyle, style } from '@vanilla-extract/css';
-import { recipe } from '@vanilla-extract/recipes';
-import { darkModeStyle, font } from 'third-parties/vanilla-extract';
+import { style } from '@vanilla-extract/css';
+import { darkModeStyle } from 'third-parties/vanilla-extract';
 import { hexAlpha } from 'utils/style';
 
 export const container = style({
