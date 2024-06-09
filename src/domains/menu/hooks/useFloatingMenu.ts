@@ -3,6 +3,7 @@ import {
   useHover,
   useDismiss,
   useInteractions,
+  offset,
 } from '@floating-ui/react';
 import { useCallback, useState } from 'react';
 
@@ -12,6 +13,7 @@ export function useFloatingMenu({ focused }: { focused: boolean }) {
     open,
     onOpenChange: setOpen,
     placement: 'bottom-start',
+    middleware: [offset({ mainAxis: 2 })],
   });
 
   const hover = useHover(context, { enabled: focused });

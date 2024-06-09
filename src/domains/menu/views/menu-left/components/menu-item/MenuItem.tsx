@@ -1,6 +1,6 @@
 import { MenuConfig } from 'domains/app/interface';
 import { FloatingMenu } from '../../../floating-menu/FloatingMenu';
-import { SubmenuGroups } from '../submenu-groups/SubMenus';
+import { SubmenuGroup } from '../submenu-groups/SubmenuGroup';
 
 interface MenuItemProps {
   menu: MenuConfig;
@@ -25,7 +25,7 @@ export function MenuItem({
     >
       <FloatingMenu.Trigger type={type}>{menu.name}</FloatingMenu.Trigger>
       <FloatingMenu.Content>
-        <SubmenuGroups submenuGroups={menu.submenuGroups} />
+        <SubmenuGroup submenuGroup={menu.submenuGroups} />
       </FloatingMenu.Content>
     </FloatingMenu>
   );

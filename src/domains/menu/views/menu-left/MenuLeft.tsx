@@ -33,7 +33,7 @@ export function MenuLeft({ menus }: MenuLeftProps) {
       {menus.map((menu, index) => {
         return (
           <MenuItem
-            type={index === 0 ? 'app-name' : 'item'}
+            type={index === 0 ? 'text-bold' : 'text'}
             key={menu.name + index}
             menu={menu}
             focused={focused}

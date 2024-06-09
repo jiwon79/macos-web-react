@@ -12,15 +12,26 @@ export const calculatorConfig: AppConfig = {
         [
           {
             name: 'About Calculator',
-            shortcut: 'Ctrl+Shift+A',
           },
+        ],
+        [
           {
             name: 'Hide Calculator',
-            shortcut: 'Ctrl+Shift+H',
+            shortcut: '⌘H',
           },
           {
+            name: 'Hide Others',
+            shortcut: '⌥⌘H',
+          },
+          {
+            name: 'Show All',
+            disabled: true,
+          },
+        ],
+        [
+          {
             name: 'Quit Calculator',
-            shortcut: 'Ctrl+Shift+Q',
+            shortcut: '⌘Q',
           },
         ],
       ],
@@ -30,84 +41,228 @@ export const calculatorConfig: AppConfig = {
       submenuGroups: [
         [
           {
-            name: 'New',
-            shortcut: 'Ctrl+N',
+            name: 'Close',
+            shortcut: '⌘W',
           },
           {
-            name: 'Open',
-            shortcut: 'Ctrl+O',
+            name: 'Save Tape As…',
+            shortcut: '⇧⌘S',
           },
         ],
         [
           {
-            name: 'Save',
-            shortcut: 'Ctrl+S',
+            name: 'Page Setup…',
+            shortcut: '⇧⌘P',
           },
           {
-            name: 'Save As',
-            shortcut: 'Ctrl+Shift+S',
-          },
-          {
-            name: 'Close',
-            shortcut: 'Ctrl+W',
+            name: 'Print Tape…',
+            shortcut: '⌘P',
           },
         ],
       ],
     },
     {
-      name: 'File-1',
+      name: 'Edit',
       submenuGroups: [
         [
           {
-            name: 'New',
-            shortcut: 'Ctrl+N',
+            name: 'Undo',
+            shortcut: '⌘Z',
+            disabled: true,
           },
           {
-            name: 'Open',
-            shortcut: 'Ctrl+O',
+            name: 'Redo',
+            shortcut: '⇧⌘Z',
+            disabled: true,
           },
         ],
         [
           {
-            name: 'Save',
-            shortcut: 'Ctrl+S',
+            name: 'Cut',
+            shortcut: '⌘X',
+            disabled: true,
           },
           {
-            name: 'Save As',
-            shortcut: 'Ctrl+Shift+S',
+            name: 'Copy',
+            shortcut: '⌘C',
           },
           {
-            name: 'Close',
-            shortcut: 'Ctrl+W',
+            name: 'Paste',
+            shortcut: '⌘V',
+          },
+          {
+            name: 'Clear',
+            disabled: true,
+          },
+          {
+            name: 'Select All',
+            shortcut: '⌘A',
+            disabled: true,
+          },
+        ],
+        [
+          {
+            name: 'Auto Fill',
+          },
+          {
+            name: 'Start Dictation…',
+          },
+          {
+            name: 'Emoji & Symbols',
           },
         ],
       ],
     },
     {
-      name: 'File-2',
+      name: 'View',
       submenuGroups: [
         [
           {
-            name: 'New',
-            shortcut: 'Ctrl+N',
+            name: 'Basic(selected)',
+            shortcut: '⌘1',
           },
           {
-            name: 'Open',
-            shortcut: 'Ctrl+O',
+            name: 'Scientific',
+            shortcut: '⌘2',
+          },
+          {
+            name: 'Programmer',
+            shortcut: '⌘3',
           },
         ],
         [
           {
-            name: 'Save',
-            shortcut: 'Ctrl+S',
+            name: 'Show Thousands Separators',
+          },
+        ],
+        [
+          {
+            name: 'RPN Mode',
+            shortcut: '⌘R',
+          },
+        ],
+        [
+          {
+            name: 'Decimal Places',
           },
           {
-            name: 'Save As',
-            shortcut: 'Ctrl+Shift+S',
+            name: 'Enter Full Screen',
+            shortcut: '⌥F',
+            disabled: true,
+          },
+        ],
+      ],
+    },
+    {
+      name: 'Convert',
+      submenuGroups: [
+        [
+          {
+            name: 'Recent Conversions',
+          },
+        ],
+        [
+          {
+            name: 'Area…',
           },
           {
-            name: 'Close',
-            shortcut: 'Ctrl+W',
+            name: 'Currency…',
+          },
+          {
+            name: 'Energy or Work…',
+          },
+          {
+            name: 'Length…',
+          },
+          {
+            name: 'Power…',
+          },
+          {
+            name: 'Pressure…',
+          },
+          {
+            name: 'Speed…',
+          },
+          {
+            name: 'Temperature…',
+          },
+          {
+            name: 'Time…',
+          },
+          {
+            name: 'Volume…',
+          },
+          {
+            name: 'Weights and Masses…',
+          },
+        ],
+      ],
+    },
+    {
+      name: 'Speech',
+      submenuGroups: [
+        [
+          {
+            name: 'Speak Button Pressed',
+          },
+          {
+            name: 'Speak Result',
+          },
+        ],
+      ],
+    },
+    {
+      name: 'Window',
+      submenuGroups: [
+        [
+          {
+            name: 'Move Window to Left Side of Screen',
+          },
+          {
+            name: 'Move Window to Right Side of Screen',
+          },
+          {
+            name: 'Replace Tiled Window',
+            disabled: true,
+          },
+        ],
+        [
+          {
+            name: 'Remove Window from Set',
+            disabled: true,
+          },
+          {
+            name: 'Minimize',
+            shortcut: '⌘M',
+            disabled: true,
+          },
+          {
+            name: 'Zoom',
+            disabled: true,
+          },
+        ],
+        [
+          {
+            name: 'Show Paper Tape',
+            shortcut: '⌘T',
+          },
+        ],
+        [
+          {
+            name: 'Bring All to Front',
+          },
+        ],
+      ],
+    },
+    {
+      name: 'Help',
+      submenuGroups: [
+        [
+          {
+            name: 'Search(input)',
+          },
+          {
+            name: 'Calculator Help',
           },
         ],
       ],

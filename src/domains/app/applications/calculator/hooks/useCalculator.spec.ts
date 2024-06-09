@@ -7,29 +7,13 @@ describe('input number', () => {
     const { result } = renderHook(() => useCalculator());
     act(() => {
       result.current.onNumberClick(1);
-    });
-    act(() => {
       result.current.onNumberClick(2);
-    });
-    act(() => {
       result.current.onNumberClick(3);
-    });
-    act(() => {
       result.current.onNumberClick(4);
-    });
-    act(() => {
       result.current.onNumberClick(5);
-    });
-    act(() => {
       result.current.onNumberClick(6);
-    });
-    act(() => {
       result.current.onNumberClick(7);
-    });
-    act(() => {
       result.current.onNumberClick(8);
-    });
-    act(() => {
       result.current.onNumberClick(9);
     });
 
@@ -40,14 +24,8 @@ describe('input number', () => {
     const { result } = renderHook(() => useCalculator());
     act(() => {
       result.current.onNumberClick(0);
-    });
-    act(() => {
       result.current.onNumberClick(0);
-    });
-    act(() => {
       result.current.onNumberClick(2);
-    });
-    act(() => {
       result.current.onNumberClick(3);
     });
 
@@ -58,11 +36,7 @@ describe('input number', () => {
     const { result } = renderHook(() => useCalculator());
     act(() => {
       result.current.onNumberClick(1);
-    });
-    act(() => {
       result.current.onDotClick();
-    });
-    act(() => {
       result.current.onNumberClick(2);
     });
 
@@ -73,20 +47,10 @@ describe('input number', () => {
     const { result } = renderHook(() => useCalculator());
     act(() => {
       result.current.onNumberClick(1);
-    });
-    act(() => {
       result.current.onDotClick();
-    });
-    act(() => {
       result.current.onDotClick();
-    });
-    act(() => {
       result.current.onNumberClick(2);
-    });
-    act(() => {
       result.current.onDotClick();
-    });
-    act(() => {
       result.current.onNumberClick(3);
     });
 
@@ -99,11 +63,7 @@ describe('input number after operator', () => {
     const { result } = renderHook(() => useCalculator());
     act(() => {
       result.current.onNumberClick(1);
-    });
-    act(() => {
       result.current.onOperatorClick('+');
-    });
-    act(() => {
       result.current.onNumberClick(2);
     });
 
@@ -114,17 +74,9 @@ describe('input number after operator', () => {
     const { result } = renderHook(() => useCalculator());
     act(() => {
       result.current.onNumberClick(1);
-    });
-    act(() => {
       result.current.onOperatorClick('+');
-    });
-    act(() => {
       result.current.onNumberClick(2);
-    });
-    act(() => {
       result.current.onDotClick();
-    });
-    act(() => {
       result.current.onNumberClick(3);
     });
 
@@ -135,14 +87,8 @@ describe('input number after operator', () => {
     const { result } = renderHook(() => useCalculator());
     act(() => {
       result.current.onNumberClick(1);
-    });
-    act(() => {
       result.current.onOperatorClick('+');
-    });
-    act(() => {
       result.current.onDotClick();
-    });
-    act(() => {
       result.current.onNumberClick(3);
     });
 
@@ -153,14 +99,8 @@ describe('input number after operator', () => {
     const { result } = renderHook(() => useCalculator());
     act(() => {
       result.current.onNumberClick(1);
-    });
-    act(() => {
       result.current.onEqualClick();
-    });
-    act(() => {
       result.current.onDotClick();
-    });
-    act(() => {
       result.current.onNumberClick(3);
     });
 
@@ -171,20 +111,10 @@ describe('input number after operator', () => {
     const { result } = renderHook(() => useCalculator());
     act(() => {
       result.current.onNumberClick(1);
-    });
-    act(() => {
       result.current.onDotClick();
-    });
-    act(() => {
       result.current.onNumberClick(2);
-    });
-    act(() => {
       result.current.onEqualClick();
-    });
-    act(() => {
       result.current.onDotClick();
-    });
-    act(() => {
       result.current.onNumberClick(3);
     });
 
@@ -197,8 +127,6 @@ describe('clear button', () => {
     const { result } = renderHook(() => useCalculator());
     act(() => {
       result.current.onNumberClick(1);
-    });
-    act(() => {
       result.current.onClearClick();
     });
 
@@ -211,14 +139,8 @@ describe('plus button', () => {
     const { result } = renderHook(() => useCalculator());
     act(() => {
       result.current.onNumberClick(1);
-    });
-    act(() => {
       result.current.onOperatorClick('+');
-    });
-    act(() => {
       result.current.onNumberClick(2);
-    });
-    act(() => {
       result.current.onEqualClick();
     });
 
@@ -229,17 +151,9 @@ describe('plus button', () => {
     const { result } = renderHook(() => useCalculator());
     act(() => {
       result.current.onDotClick();
-    });
-    act(() => {
       result.current.onNumberClick(3);
-    });
-    act(() => {
       result.current.onOperatorClick('+');
-    });
-    act(() => {
       result.current.onNumberClick(2);
-    });
-    act(() => {
       result.current.onEqualClick();
     });
 
@@ -250,17 +164,9 @@ describe('plus button', () => {
     const { result } = renderHook(() => useCalculator());
     act(() => {
       result.current.onNumberClick(1);
-    });
-    act(() => {
       result.current.onOperatorClick('+');
-    });
-    act(() => {
       result.current.onDotClick();
-    });
-    act(() => {
       result.current.onNumberClick(2);
-    });
-    act(() => {
       result.current.onEqualClick();
     });
 
@@ -271,17 +177,9 @@ describe('plus button', () => {
     const { result } = renderHook(() => useCalculator());
     act(() => {
       result.current.onNumberClick(1);
-    });
-    act(() => {
       result.current.onOperatorClick('+');
-    });
-    act(() => {
       result.current.onNumberClick(2);
-    });
-    act(() => {
       result.current.onEqualClick();
-    });
-    act(() => {
       result.current.onDotClick();
     });
 
@@ -292,17 +190,9 @@ describe('plus button', () => {
     const { result } = renderHook(() => useCalculator());
     act(() => {
       result.current.onNumberClick(1);
-    });
-    act(() => {
       result.current.onOperatorClick('+');
-    });
-    act(() => {
       result.current.onNumberClick(2);
-    });
-    act(() => {
       result.current.onEqualClick();
-    });
-    act(() => {
       result.current.onEqualClick();
     });
 
@@ -315,14 +205,8 @@ describe('minus button', () => {
     const { result } = renderHook(() => useCalculator());
     act(() => {
       result.current.onNumberClick(4);
-    });
-    act(() => {
       result.current.onOperatorClick('-');
-    });
-    act(() => {
       result.current.onNumberClick(2);
-    });
-    act(() => {
       result.current.onEqualClick();
     });
 
@@ -333,26 +217,12 @@ describe('minus button', () => {
     const { result } = renderHook(() => useCalculator());
     act(() => {
       result.current.onNumberClick(0);
-    });
-    act(() => {
       result.current.onDotClick();
-    });
-    act(() => {
       result.current.onNumberClick(9);
-    });
-    act(() => {
       result.current.onOperatorClick('-');
-    });
-    act(() => {
       result.current.onNumberClick(0);
-    });
-    act(() => {
       result.current.onDotClick();
-    });
-    act(() => {
       result.current.onNumberClick(3);
-    });
-    act(() => {
       result.current.onEqualClick();
     });
 
@@ -363,14 +233,8 @@ describe('minus button', () => {
     const { result } = renderHook(() => useCalculator());
     act(() => {
       result.current.onNumberClick(4);
-    });
-    act(() => {
       result.current.onOperatorClick('-');
-    });
-    act(() => {
       result.current.onNumberClick(9);
-    });
-    act(() => {
       result.current.onEqualClick();
     });
 
@@ -381,17 +245,9 @@ describe('minus button', () => {
     const { result } = renderHook(() => useCalculator());
     act(() => {
       result.current.onNumberClick(9);
-    });
-    act(() => {
       result.current.onOperatorClick('-');
-    });
-    act(() => {
       result.current.onNumberClick(4);
-    });
-    act(() => {
       result.current.onEqualClick();
-    });
-    act(() => {
       result.current.onEqualClick();
     });
 
@@ -404,14 +260,8 @@ describe('multiply button', () => {
     const { result } = renderHook(() => useCalculator());
     act(() => {
       result.current.onNumberClick(2);
-    });
-    act(() => {
       result.current.onOperatorClick('*');
-    });
-    act(() => {
       result.current.onNumberClick(5);
-    });
-    act(() => {
       result.current.onEqualClick();
     });
 
@@ -422,17 +272,9 @@ describe('multiply button', () => {
     const { result } = renderHook(() => useCalculator());
     act(() => {
       result.current.onNumberClick(2);
-    });
-    act(() => {
       result.current.onPlusMinusClick();
-    });
-    act(() => {
       result.current.onOperatorClick('*');
-    });
-    act(() => {
       result.current.onNumberClick(4);
-    });
-    act(() => {
       result.current.onEqualClick();
     });
 
@@ -443,17 +285,9 @@ describe('multiply button', () => {
     const { result } = renderHook(() => useCalculator());
     act(() => {
       result.current.onNumberClick(8);
-    });
-    act(() => {
       result.current.onOperatorClick('*');
-    });
-    act(() => {
       result.current.onDotClick();
-    });
-    act(() => {
       result.current.onNumberClick(9);
-    });
-    act(() => {
       result.current.onEqualClick();
     });
 
@@ -464,17 +298,9 @@ describe('multiply button', () => {
     const { result } = renderHook(() => useCalculator());
     act(() => {
       result.current.onNumberClick(4);
-    });
-    act(() => {
       result.current.onOperatorClick('*');
-    });
-    act(() => {
       result.current.onNumberClick(3);
-    });
-    act(() => {
       result.current.onEqualClick();
-    });
-    act(() => {
       result.current.onEqualClick();
     });
 
@@ -487,14 +313,8 @@ describe('divide button', () => {
     const { result } = renderHook(() => useCalculator());
     act(() => {
       result.current.onNumberClick(6);
-    });
-    act(() => {
       result.current.onOperatorClick('/');
-    });
-    act(() => {
       result.current.onNumberClick(3);
-    });
-    act(() => {
       result.current.onEqualClick();
     });
 
@@ -505,14 +325,8 @@ describe('divide button', () => {
     const { result } = renderHook(() => useCalculator());
     act(() => {
       result.current.onNumberClick(6);
-    });
-    act(() => {
       result.current.onOperatorClick('/');
-    });
-    act(() => {
       result.current.onNumberClick(0);
-    });
-    act(() => {
       result.current.onEqualClick();
     });
 
@@ -523,17 +337,9 @@ describe('divide button', () => {
     const { result } = renderHook(() => useCalculator());
     act(() => {
       result.current.onNumberClick(6);
-    });
-    act(() => {
       result.current.onOperatorClick('/');
-    });
-    act(() => {
       result.current.onDotClick();
-    });
-    act(() => {
       result.current.onNumberClick(5);
-    });
-    act(() => {
       result.current.onEqualClick();
     });
 
@@ -544,17 +350,9 @@ describe('divide button', () => {
     const { result } = renderHook(() => useCalculator());
     act(() => {
       result.current.onNumberClick(6);
-    });
-    act(() => {
       result.current.onOperatorClick('/');
-    });
-    act(() => {
       result.current.onNumberClick(2);
-    });
-    act(() => {
       result.current.onEqualClick();
-    });
-    act(() => {
       result.current.onDotClick();
     });
 
@@ -565,20 +363,10 @@ describe('divide button', () => {
     const { result } = renderHook(() => useCalculator());
     act(() => {
       result.current.onNumberClick(1);
-    });
-    act(() => {
       result.current.onNumberClick(2);
-    });
-    act(() => {
       result.current.onOperatorClick('/');
-    });
-    act(() => {
       result.current.onNumberClick(4);
-    });
-    act(() => {
       result.current.onPlusMinusClick();
-    });
-    act(() => {
       result.current.onEqualClick();
     });
 
@@ -589,20 +377,10 @@ describe('divide button', () => {
     const { result } = renderHook(() => useCalculator());
     act(() => {
       result.current.onNumberClick(1);
-    });
-    act(() => {
       result.current.onNumberClick(2);
-    });
-    act(() => {
       result.current.onOperatorClick('/');
-    });
-    act(() => {
       result.current.onNumberClick(4);
-    });
-    act(() => {
       result.current.onEqualClick();
-    });
-    act(() => {
       result.current.onEqualClick();
     });
 
@@ -615,14 +393,8 @@ describe('percent button', () => {
     const { result } = renderHook(() => useCalculator());
     act(() => {
       result.current.onNumberClick(1);
-    });
-    act(() => {
       result.current.onNumberClick(0);
-    });
-    act(() => {
       result.current.onNumberClick(0);
-    });
-    act(() => {
       result.current.onPercentClick();
     });
 
@@ -633,29 +405,13 @@ describe('percent button', () => {
     const { result } = renderHook(() => useCalculator());
     act(() => {
       result.current.onNumberClick(1);
-    });
-    act(() => {
       result.current.onNumberClick(0);
-    });
-    act(() => {
       result.current.onNumberClick(0);
-    });
-    act(() => {
       result.current.onOperatorClick('+');
-    });
-    act(() => {
       result.current.onNumberClick(1);
-    });
-    act(() => {
       result.current.onNumberClick(0);
-    });
-    act(() => {
       result.current.onNumberClick(0);
-    });
-    act(() => {
       result.current.onPercentClick();
-    });
-    act(() => {
       result.current.onEqualClick();
     });
 
@@ -666,8 +422,6 @@ describe('percent button', () => {
     const { result } = renderHook(() => useCalculator());
     act(() => {
       result.current.onNumberClick(2);
-    });
-    act(() => {
       result.current.onPercentClick();
     });
 
@@ -678,17 +432,9 @@ describe('percent button', () => {
     const { result } = renderHook(() => useCalculator());
     act(() => {
       result.current.onNumberClick(2);
-    });
-    act(() => {
       result.current.onOperatorClick('+');
-    });
-    act(() => {
       result.current.onNumberClick(2);
-    });
-    act(() => {
       result.current.onPercentClick();
-    });
-    act(() => {
       result.current.onEqualClick();
     });
 
@@ -699,11 +445,7 @@ describe('percent button', () => {
     const { result } = renderHook(() => useCalculator());
     act(() => {
       result.current.onNumberClick(2);
-    });
-    act(() => {
       result.current.onPercentClick();
-    });
-    act(() => {
       result.current.onPercentClick();
     });
 
@@ -714,20 +456,10 @@ describe('percent button', () => {
     const { result } = renderHook(() => useCalculator());
     act(() => {
       result.current.onNumberClick(2);
-    });
-    act(() => {
       result.current.onPlusMinusClick();
-    });
-    act(() => {
       result.current.onOperatorClick('*');
-    });
-    act(() => {
       result.current.onNumberClick(2);
-    });
-    act(() => {
       result.current.onPercentClick();
-    });
-    act(() => {
       result.current.onEqualClick();
     });
 

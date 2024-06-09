@@ -1,6 +1,6 @@
-import { IconAppleLogo } from 'assets/icons';
-import { FloatingMenu } from 'domains/menu/views/floating-menu/FloatingMenu';
-import { SubmenuGroups } from 'domains/menu/views/menu-left/components/submenu-groups/SubMenus';
+import { FloatingMenu } from 'domains/menu/views/floating-menu';
+import { SubmenuGroup } from 'domains/menu/views/menu-left/components/submenu-groups';
+import { menuAppleconfig } from './menuAppleConfig';
 
 interface MenuAppleLogoProps {
   focused: boolean;
@@ -19,11 +19,9 @@ export function MenuAppleLogo({
       selected={selected}
       onSelectedChange={onSelectedChange}
     >
-      <FloatingMenu.Trigger type="icon">
-        <IconAppleLogo />
-      </FloatingMenu.Trigger>
+      <FloatingMenu.Trigger type="icon"></FloatingMenu.Trigger>
       <FloatingMenu.Content>
-        <SubmenuGroups submenuGroups={[]} />
+        <SubmenuGroup submenuGroup={menuAppleconfig.submenuGroups} />
       </FloatingMenu.Content>
     </FloatingMenu>
   );

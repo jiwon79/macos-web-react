@@ -1,5 +1,6 @@
 import { recipe } from '@vanilla-extract/recipes';
 import { darkModeStyle, font } from 'third-parties/vanilla-extract';
+import { hexAlpha } from 'utils/style';
 
 export const container = recipe({
   base: {
@@ -8,19 +9,24 @@ export const container = recipe({
     height: 24,
     boxSizing: 'border-box',
     borderRadius: 4,
-    color: '#000',
+    color: hexAlpha('#FFFFFF', 0.9),
+    textShadow:
+      '0px 1px 4px rgba(0, 0, 0, 0.20), 0px 36px 100px rgba(0, 0, 0, 0.70)',
     textAlign: 'center',
   },
   variants: {
     selected: {
       true: {
-        backgroundColor: 'rgba(255, 255, 255, 0.35)',
+        backgroundColor: hexAlpha('#FFFFFF', 0.2),
       },
     },
     type: {
-      icon: {
-        padding: '2px 11px',
-      },
+      icon: [
+        font.icon,
+        {
+          padding: '2px 11px',
+        },
+      ],
       'text-bold': [
         font.headline.regular,
         {
@@ -41,8 +47,4 @@ darkModeStyle(container.classNames.base, {
   color: '#FFF',
   textShadow:
     '0px 36px 100px rgba(0, 0, 0, 0.70), 0px 1px 4px rgba(0, 0, 0, 0.20)',
-});
-
-darkModeStyle(container.classNames.variants.selected.true, {
-  background: 'rgba(0, 0, 0, 0.35)',
 });
