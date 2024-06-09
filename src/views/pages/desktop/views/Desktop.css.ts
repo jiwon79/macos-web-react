@@ -1,5 +1,5 @@
-import { globalStyle, style } from '@vanilla-extract/css';
-import { darkModeSelector } from 'utils/broswer';
+import { style } from '@vanilla-extract/css';
+import { darkModeStyle } from 'third-parties/vanilla-extract';
 
 export const desktop = style({
   position: 'relative',
@@ -8,6 +8,6 @@ export const desktop = style({
   backgroundImage: 'url(/src/assets/wallpapers/wallpaper_light.png)',
 });
 
-globalStyle(`${darkModeSelector} ${desktop}`, {
+darkModeStyle(desktop, {
   backgroundImage: 'url(/src/assets/wallpapers/wallpaper_dark.png)',
 });

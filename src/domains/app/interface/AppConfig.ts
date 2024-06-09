@@ -1,9 +1,9 @@
-export interface Menu {
+export interface MenuConfig {
   name: string;
-  submenuGroups: Submenu[][];
+  submenuGroups: SubmenuConfig[][];
 }
 
-interface Submenu {
+export interface SubmenuConfig {
   name: string;
   shortcut?: string;
   disabled?: boolean;
@@ -13,7 +13,7 @@ export interface AppConfig {
   id: string;
   app: () => React.ReactElement;
   icon: string;
-  menus: Menu[];
+  menus: MenuConfig[];
   resize?: {
     minWidth?: number;
     minHeight?: number;

@@ -42,7 +42,6 @@ export function WindowRenderer({
           transform: `translate(${x}px, ${y}px)`,
         }}
         onMouseDown={(event) => {
-          console.log(1);
           event.preventDefault();
           event.stopPropagation();
           setFocusedWindowID(id);
