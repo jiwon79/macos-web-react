@@ -1,9 +1,9 @@
-import { useMemo } from 'react';
-import { renderer } from './WindowRenderer.css.ts';
 import { WindowStyle } from 'domains/window/interface';
 import { useWindowsAction } from 'domains/window/store';
-import { WindowResize } from '../WindowResize';
+import { useMemo } from 'react';
 import { WindowContext } from '../WindowContext.ts';
+import { WindowResize } from '../WindowResize';
+import { renderer } from './WindowRenderer.css.ts';
 
 export interface WindowRendererProps {
   id: string;

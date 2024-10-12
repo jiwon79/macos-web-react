@@ -1,5 +1,5 @@
 import { act, renderHook, waitFor } from '@testing-library/react';
-import { expect, test, describe } from 'vitest';
+import { describe,expect, test } from 'vitest';
 import { useCalculator } from './useCalculator';
 
 describe('input number', () => {

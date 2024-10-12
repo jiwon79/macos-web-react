@@ -1,5 +1,5 @@
-import { WindowRenderer } from 'domains/window/views/WindowRenderer/WindowRenderer';
 import { useWindows, useWindowsAction } from 'domains/window/store';
+import { WindowRenderer } from 'domains/window/views/WindowRenderer/WindowRenderer';
 
 export function Windows() {
   const windows = useWindows();

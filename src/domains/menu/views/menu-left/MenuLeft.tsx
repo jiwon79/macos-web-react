@@ -1,9 +1,9 @@
-import { MenuAppleLogo } from './components';
-import { MenuItem } from './components/menu-item';
-import { contianer } from './MenuLeft.css';
 import { MenuConfig } from 'domains/app/interface';
 import useFocusMenu from 'domains/menu/hooks/useFocusMenu';
 import { useState } from 'react';
+import { MenuAppleLogo } from './components';
+import { MenuItem } from './components/menu-item';
+import { contianer } from './MenuLeft.css';
 
 interface MenuLeftProps {
   menus: MenuConfig[];

@@ -1,7 +1,7 @@
 import { WindowStyle } from 'domains/window/interface';
+import { ResizableEventMap } from 'modules/resizable/interfaces';
 import { MultiDirectionResizableContainer } from 'modules/resizable-react';
 import { ResizeHandlerBaseProps } from 'modules/resizable-react/interfaces';
-import { ResizableEventMap } from 'modules/resizable/interfaces';
 import { useRef } from 'react';
 import { useWindowContext } from '../WindowContext';
 

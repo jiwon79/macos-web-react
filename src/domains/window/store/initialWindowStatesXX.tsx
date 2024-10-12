@@ -1,6 +1,6 @@
+import { Calculator } from 'domains/app/applications/calculator/views/Calculator';
 import { WindowState } from '../interface';
 import { Window } from '../views';
-import { Calculator } from 'domains/app/applications/calculator/views/Calculator';
 
 export const Window1 = () => {
   return (

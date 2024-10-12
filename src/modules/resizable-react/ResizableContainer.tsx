@@ -1,11 +1,10 @@
 import { useEffect, useRef } from 'react';
-
-import {
-  ResizableResizeEvent,
-  ResizableOptions,
-  Resizable,
-} from '../resizable';
 import { usePreservedCallback } from 'utils/react';
+import {
+  Resizable,
+  ResizableOptions,
+  ResizableResizeEvent,
+} from '../resizable';
 
 interface Props {
   onResize?: (event: ResizableResizeEvent) => void;

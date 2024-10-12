@@ -64,9 +64,12 @@ export const ResizeHandlerBase: ResizeHandler<{
     };
   }, [
     frameRef,
+    horizontalPositiveDeltaDirection,
+    keepRatio,
     onResizeEndPreserved,
     onResizePreserved,
     onResizeStartPreserved,
+    verticalPositiveDeltaDirection,
   ]);
 
   return children(handlerRef, restProps);

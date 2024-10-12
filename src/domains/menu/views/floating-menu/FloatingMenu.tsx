@@ -1,8 +1,8 @@
 import { useFloatingMenu } from 'domains/menu/hooks/useFloatingMenu';
+import { ReactNode } from 'react';
+import { FloatingMenuContent } from './FloatingMenuContent';
 import { FloatingMenuContext } from './FloatingMenuContext';
 import { FloatingMenuTrigger } from './FloatingMenuTrigger';
-import { FloatingMenuContent } from './FloatingMenuContent';
-import { ReactNode } from 'react';
 
 interface FloatingMenuProps {
   focused: boolean;

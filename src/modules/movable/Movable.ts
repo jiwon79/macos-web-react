@@ -1,6 +1,6 @@
 import { EventManager } from 'modules/event-manager';
-import { MovableEventMap, MovableOptions } from './interface';
 import { assert } from 'utils/functions';
+import { MovableEventMap, MovableOptions } from './interface';
 
 export class Movable {
   private eventManager: EventManager<MovableEventMap> = new EventManager();
@@ -18,26 +18,26 @@ export class Movable {
     this.attachEventListeners();
   }
 
-  public on<K extends keyof MovableEventMap>(
+  on<K extends keyof MovableEventMap>(
     type: K,
     listener: (e: MovableEventMap[K]) => void
   ) {
     this.eventManager.on(type, listener);
   }
 
-  public off<K extends keyof MovableEventMap>(
+  off<K extends keyof MovableEventMap>(
     type: K,
     listener: (e: MovableEventMap[K]) => void
   ) {
     this.eventManager.off(type, listener);
   }
 
-  public destroy() {
+  destroy() {
     this.eventManager.destroy();
     this.detachEventListeners();
   }
 
-  public onMouseDown = (event: MouseEvent) => {
+  onMouseDown = (event: MouseEvent) => {
     this.eventManager.emit('startMove', { nativeEvent: event });
     this.firstMousePosition = { x: event.clientX, y: event.clientY };
     this.isMoving = true;

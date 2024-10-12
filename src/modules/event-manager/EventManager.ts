@@ -13,7 +13,7 @@ export class EventManager<
   private listeners: EventListenerMap<EventMap> =
     {} as EventListenerMap<EventMap>;
 
-  public on<T extends EventType>(
+  on<T extends EventType>(
     type: T,
     listener: EventListener<EventMap, T>
   ) {
@@ -24,20 +24,20 @@ export class EventManager<
     this.listeners[type].add(listener);
   }
 
-  public off<T extends EventType>(
+  off<T extends EventType>(
     type: T,
     listener: EventListener<EventMap, T>
   ) {
-    if (!this.listeners[type]) return;
+    if (!this.listeners[type]) {return;}
     this.listeners[type].delete(listener);
   }
 
-  public emit<T extends EventType>(type: T, event: EventMap[T]) {
-    if (!this.listeners[type]) return;
+  emit<T extends EventType>(type: T, event: EventMap[T]) {
+    if (!this.listeners[type]) {return;}
     this.listeners[type].forEach((listener) => listener(event));
   }
 
-  public destroy() {
+  destroy() {
     this.listeners = {} as EventListenerMap<EventMap>;
   }
 }

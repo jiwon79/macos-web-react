@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 function useFocusMenu({
   onFocusChange: givenOnFocusChange,
@@ -16,7 +16,9 @@ function useFocusMenu({
 
   const handleMouseDown = useCallback(
     (event: MouseEvent) => {
-      if (menuRef.current === null) return;
+      if (menuRef.current === null) {
+        return;
+      }
 
       if (menuRef.current.contains(event.target as Node)) {
         onFocusChange(!focused);
@@ -25,7 +27,7 @@ function useFocusMenu({
 
       onFocusChange(false);
     },
-    [focused, onFocusChange, menuRef.current]
+    [focused, onFocusChange]
   );
 
   useEffect(() => {
