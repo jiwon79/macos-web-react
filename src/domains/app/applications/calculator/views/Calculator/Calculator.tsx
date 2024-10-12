@@ -1,8 +1,8 @@
 import { Window } from 'domains/window/views';
-import { displayText, displayContainer, movableArea } from './Calculator.css';
 import { useCalculator } from '../../hooks';
-import { calcThemeClass } from '../theme.css';
 import { KeypadWrapper } from '../KeypadWrapper';
+import { calcThemeClass } from '../theme.css';
+import { displayContainer, displayText, movableArea } from './Calculator.css';
 
 export function Calculator() {
   const { display, ...handlers } = useCalculator();

@@ -1,6 +1,6 @@
+import { forwardRef } from 'react';
 import { cn } from 'third-parties/classnames';
 import { container } from './MenuBase.css';
-import { forwardRef } from 'react';
 
 export type MenuType = 'icon' | 'text' | 'text-bold';
 

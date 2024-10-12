@@ -1,11 +1,11 @@
 import { ReactNode, useRef } from 'react';
-import { LineResizeHandler, CornerResizeHandler } from './components';
+import { ResizableEventMap } from '../resizable/interfaces';
+import { CornerResizeHandler,LineResizeHandler } from './components';
 import {
   CornerResizeHandlerPosition,
   LineResizeHandlerPosition,
   ResizeHandlerBaseProps,
 } from './interfaces';
-import { ResizableEventMap } from '../resizable/interfaces';
 
 const pointResizeHandlerPositions: CornerResizeHandlerPosition[] = [
   'top-left',

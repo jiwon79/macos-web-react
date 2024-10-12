@@ -1,4 +1,4 @@
-import { HTMLAttributes, createContext, useContext } from 'react';
+import { createContext, HTMLAttributes, useContext } from 'react';
 
 type FloatingMenuContext = {
   focused: boolean;

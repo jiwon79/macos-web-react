@@ -1,9 +1,9 @@
 import { SubmenuConfig } from 'domains/app/interface';
 import {
-  submenuContainer,
   submenuButton,
-  submenuText,
+  submenuContainer,
   submenuShortcutText,
+  submenuText,
 } from './Submenus.css';
 
 interface SubmnuesProps {

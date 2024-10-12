@@ -1,8 +1,8 @@
 import { create } from 'third-parties/zustand';
 import { deepMergeObject } from 'utils/object';
-import { initialWindowStates } from './initialWindowStatesXX.tsx';
-import { WindowState } from '../interface/index.ts';
 import { DeepPartial } from 'utils/type';
+import { WindowState } from '../interface/index.ts';
+import { initialWindowStates } from './initialWindowStatesXX.tsx';
 
 export interface WindowsState {
   windows: WindowState[];

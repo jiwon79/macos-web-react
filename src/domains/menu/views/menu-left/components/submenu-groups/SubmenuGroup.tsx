@@ -1,4 +1,5 @@
 import { SubmenuConfig } from 'domains/app/interface';
+import { Fragment } from 'react/jsx-runtime';
 import {
   container,
   divider,
@@ -7,7 +8,6 @@ import {
   submenuShortcutText,
   submenuText,
 } from './SubmenuGroup.css';
-import { Fragment } from 'react/jsx-runtime';
 
 interface SubMenusProps {
   submenuGroup: SubmenuConfig[][];

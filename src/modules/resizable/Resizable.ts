@@ -39,14 +39,14 @@ export class Resizable {
     this.attachEventListeners();
   }
 
-  public on<T extends ResizableEventType>(
+  on<T extends ResizableEventType>(
     type: T,
     listener: ResizableEventListener<T>
   ) {
     this.eventManager.on(type, listener);
   }
 
-  public off<T extends ResizableEventType>(
+  off<T extends ResizableEventType>(
     type: T,
     listener: ResizableEventListener<T>
   ) {
@@ -299,7 +299,9 @@ export class Resizable {
   }
 
   private async onMouseMove(e: MouseEvent) {
-    if (!this.isResizing) return;
+    if (!this.isResizing) {
+      return;
+    }
 
     e.preventDefault();
     e.stopPropagation();
@@ -346,11 +348,11 @@ export class Resizable {
     document.removeEventListener('mouseup', this.onMouseUp);
   }
 
-  public updateOptions(options: Partial<ResizableOptions>) {
+  updateOptions(options: Partial<ResizableOptions>) {
     this.options = { ...this.options, ...options };
   }
 
-  public destroy(): void {
+  destroy(): void {
     this.detachEventListeners();
     this.eventManager.destroy();
   }

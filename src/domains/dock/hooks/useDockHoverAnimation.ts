@@ -1,6 +1,6 @@
 import {
-  useMotionValue,
   MotionValue,
+  useMotionValue,
   useSpring,
   useTransform,
 } from 'framer-motion';
