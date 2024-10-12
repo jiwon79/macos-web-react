@@ -1,3 +1,4 @@
+import { IconAppCalculator } from 'assets/app-icons/index.ts';
 import { useState } from 'react';
 import { DockItem } from '../DockItem';
 import { DockSeparator } from '../DockSeparator';
@@ -12,45 +13,17 @@ export function Dock() {
       onMouseMove={(event) => setMouseX(event.clientX)}
       onMouseLeave={() => setMouseX(null)}
     >
-      <DockItem
-        mouseX={mouseX}
-        src="src/assets/app-icons/ic_app_calculator.png"
-        open
-      />
+      <DockItem mouseX={mouseX} src={IconAppCalculator} open />
       <DockSeparator />
-      <DockItem
-        mouseX={mouseX}
-        src="src/assets/app-icons/ic_app_calculator.png"
-      />
-      <DockItem
-        mouseX={mouseX}
-        src="src/assets/app-icons/ic_app_calculator.png"
-      />
-      <DockItem
-        mouseX={mouseX}
-        src="src/assets/app-icons/ic_app_calculator.png"
-      />
-      <DockItem
-        mouseX={mouseX}
-        src="src/assets/app-icons/ic_app_calculator.png"
-      />
-      <DockItem
-        mouseX={mouseX}
-        src="src/assets/app-icons/ic_app_calculator.png"
-      />
-      <DockItem
-        mouseX={mouseX}
-        src="src/assets/app-icons/ic_app_calculator.png"
-      />
+      <DockItem mouseX={mouseX} src={IconAppCalculator} />
+      <DockItem mouseX={mouseX} src={IconAppCalculator} />
+      <DockItem mouseX={mouseX} src={IconAppCalculator} />
+      <DockItem mouseX={mouseX} src={IconAppCalculator} />
+      <DockItem mouseX={mouseX} src={IconAppCalculator} />
+      <DockItem mouseX={mouseX} src={IconAppCalculator} />
       <DockSeparator />
-      <DockItem
-        mouseX={mouseX}
-        src="src/assets/app-icons/ic_app_calculator.png"
-      />
-      <DockItem
-        mouseX={mouseX}
-        src="src/assets/app-icons/ic_app_calculator.png"
-      />
+      <DockItem mouseX={mouseX} src={IconAppCalculator} />
+      <DockItem mouseX={mouseX} src={IconAppCalculator} />
     </div>
   );
 }

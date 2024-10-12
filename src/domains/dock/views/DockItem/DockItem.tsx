@@ -1,8 +1,8 @@
-import { useRef } from 'react';
-import { DockIconOpenIndicator } from '../DockIconOpenIndicator';
-import { item, icon, openIndicator } from './DockItem.css';
 import { useDockHoverAnimation } from 'domains/dock/hooks';
 import { motion } from 'framer-motion';
+import { useRef } from 'react';
+import { DockIconOpenIndicator } from '../DockIconOpenIndicator';
+import { icon, item, openIndicator } from './DockItem.css';
 
 interface DockItemProps {
   src: string;
