@@ -18,9 +18,7 @@ export function WindowRenderer({
   onStyleChange,
   children,
 }: WindowRendererProps) {
-  const setFocusedWindowID = useWindowsAction(
-    (action) => action.setFocusedWindowID
-  );
+  const { setFocusedWindowID } = useWindowsAction();
 
   const context = useMemo(
     () => ({

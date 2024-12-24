@@ -6,9 +6,7 @@ import { DesktopMenu } from './DesktopMenu';
 import { Windows } from './Windows';
 
 export function Desktop() {
-  const setFocusedWindowID = useWindowsAction(
-    (actions) => actions.setFocusedWindowID
-  );
+  const { setFocusedWindowID } = useWindowsAction();
 
   return (
     <div

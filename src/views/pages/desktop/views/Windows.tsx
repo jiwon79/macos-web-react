@@ -3,7 +3,7 @@ import { WindowRenderer } from 'domains/window/views/WindowRenderer/WindowRender
 
 export function Windows() {
   const windows = useWindows();
-  const updateWindow = useWindowsAction((actions) => actions.updateWindow);
+  const { updateWindow } = useWindowsAction();
 
   return (
     <>

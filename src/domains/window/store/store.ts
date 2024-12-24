@@ -61,8 +61,6 @@ export const useWindowsStore = create<WindowsState, WindowsAction>((set) => ({
   },
 }));
 
-export function useWindowsAction<
-  TAction extends WindowsAction[keyof WindowsAction],
->(selector: (action: WindowsAction) => TAction): TAction {
-  return useWindowsStore((state) => selector(state.actions));
+export function useWindowsAction() {
+  return useWindowsStore((state) => state.actions);
 }
