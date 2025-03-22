@@ -10,7 +10,7 @@ export function DesktopMenu() {
 }
 
 const InnerMenu = memo(({ appID }: { appID: string }) => {
-  const app = applications.get(appID);
+  const app = applications[appID];
   const menus = app?.menus;
 
   if (menus == null) {

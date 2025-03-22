@@ -1,6 +1,6 @@
 import { Dock } from 'domains/dock/views';
 import { useWindowsAction } from 'domains/window/store';
-import { useDarkMode } from 'utils/broswer';
+import { useDarkMode } from 'utils/browser/index.ts';
 import * as styles from './Desktop.css.ts';
 import { DesktopMenu } from './DesktopMenu';
 import { Windows } from './Windows';

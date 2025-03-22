@@ -8,9 +8,10 @@ interface DockItemProps {
   src: string;
   mouseX: number | null;
   open?: boolean;
+  onClick?: () => void;
 }
 
-export function DockItem({ open, mouseX, src }: DockItemProps) {
+export function DockItem({ open, mouseX, src, onClick }: DockItemProps) {
   const ref = useRef<HTMLImageElement>(null);
   const { size } = useDockHoverAnimation(mouseX, ref);
 
@@ -22,6 +23,7 @@ export function DockItem({ open, mouseX, src }: DockItemProps) {
         src={src}
         draggable={false}
         style={{ width: size, height: size }}
+        onClick={onClick}
       />
       <DockIconOpenIndicator className={openIndicator} open={open} />
     </div>

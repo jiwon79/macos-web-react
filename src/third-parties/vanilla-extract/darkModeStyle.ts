@@ -1,5 +1,5 @@
-import { globalStyle,GlobalStyleRule } from '@vanilla-extract/css';
-import { darkModeSelector } from 'utils/broswer';
+import { globalStyle, GlobalStyleRule } from '@vanilla-extract/css';
+import { darkModeSelector } from 'utils/browser';
 
 export function darkModeStyle(selector: string, rule: GlobalStyleRule) {
   globalStyle(`${darkModeSelector} ${selector}`, rule);
