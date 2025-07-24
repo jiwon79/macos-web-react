@@ -8,7 +8,7 @@ import { WindowRenderer } from 'domains/window/views/WindowRenderer/WindowRender
 export function Windows() {
   const windows = useWindows();
   const minimizedWindowIds = useMinimizedWindowIds();
-  const { updateWindow } = useWindowsAction();
+  const { updateWindow, setWindowElement: setWindowRef } = useWindowsAction();
 
   const notMinimizedWindows = windows.filter(
     (window) => !minimizedWindowIds.includes(window.id)
@@ -20,6 +20,11 @@ export function Windows() {
         notMinimizedWindows.map((window) => (
           <WindowRenderer
             key={window.id}
+            ref={(element) => {
+              if (element != null) {
+                setWindowRef(window.id, element);
+              }
+            }}
             id={window.id}
             style={window.style}
             onStyleChange={(style) => {

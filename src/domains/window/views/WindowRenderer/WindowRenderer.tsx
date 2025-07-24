@@ -1,6 +1,6 @@
 import { WindowStyle } from 'domains/window/interface';
 import { useWindowsAction } from 'domains/window/store';
-import { useMemo } from 'react';
+import { forwardRef, useMemo } from 'react';
 import { WindowContext } from '../WindowContext.ts';
 import { WindowResize } from '../WindowResize';
 import { renderer } from './WindowRenderer.css.ts';
@@ -12,12 +12,10 @@ export interface WindowRendererProps {
   children: React.ReactNode;
 }
 
-export function WindowRenderer({
-  id,
-  style,
-  onStyleChange,
-  children,
-}: WindowRendererProps) {
+function _WindowRenderer(
+  { id, style, onStyleChange, children }: WindowRendererProps,
+  ref: React.Ref<HTMLDivElement>
+) {
   const { setFocusedWindowID } = useWindowsAction();
 
   const context = useMemo(
@@ -34,6 +32,7 @@ export function WindowRenderer({
     <WindowContext.Provider value={context}>
       <div
         id={id}
+        ref={ref}
         style={{
           width: `${width}px`,
           height: `${height}px`,
@@ -51,3 +50,5 @@ export function WindowRenderer({
     </WindowContext.Provider>
   );
 }
+
+export const WindowRenderer = forwardRef(_WindowRenderer);

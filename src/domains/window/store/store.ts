@@ -8,6 +8,7 @@ import { initialWindowStates } from './initialWindowStatesXX';
 
 export interface WindowsState {
   windows: WindowState[];
+  windowElements: Record<string, HTMLDivElement>;
   minimizedWindowIds: string[];
   focusedWindowID: string | null;
 }
@@ -20,10 +21,12 @@ export interface WindowsAction {
   updateWindow: (id: string, data: DeepPartial<WindowState>) => void;
   minimizeWindow: (id: string) => void;
   restoreWindow: (id: string) => void;
+  setWindowElement: (id: string, element: HTMLDivElement) => void;
 }
 
 export const useWindowsStore = create<WindowsState, WindowsAction>((set) => ({
   windows: initialWindowStates,
+  windowElements: {},
   minimizedWindowIds: [],
   focusedWindowID: null,
   actions: {
@@ -49,7 +52,6 @@ export const useWindowsStore = create<WindowsState, WindowsAction>((set) => ({
           ],
         };
       }),
-
     openApplication: (appID) =>
       set((state) => {
         const app = applications[appID];
@@ -71,15 +73,12 @@ export const useWindowsStore = create<WindowsState, WindowsAction>((set) => ({
 
         return { windows: [...state.windows, window] };
       }),
-
     addWindow: (window) =>
       set((state) => ({ windows: [...state.windows, window] })),
-
     removeWindow: (id) =>
       set((state) => ({
         windows: state.windows.filter((window) => window.id !== id),
       })),
-
     updateWindow: (id, data) => {
       set((state) => ({
         windows: state.windows.map((window) =>
@@ -87,17 +86,19 @@ export const useWindowsStore = create<WindowsState, WindowsAction>((set) => ({
         ),
       }));
     },
-
     minimizeWindow: (id) =>
       set((state) => ({
         minimizedWindowIds: uniq([...state.minimizedWindowIds, id]),
       })),
-
     restoreWindow: (id) =>
       set((state) => ({
         minimizedWindowIds: state.minimizedWindowIds.filter(
           (minimizedId) => minimizedId !== id
         ),
+      })),
+    setWindowElement: (id, element) =>
+      set((state) => ({
+        windowElements: { ...state.windowElements, [id]: element },
       })),
   },
 }));

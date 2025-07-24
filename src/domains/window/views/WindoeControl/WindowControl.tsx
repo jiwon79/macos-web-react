@@ -7,7 +7,7 @@ import {
   useWindowsAction,
   useWindowsStore,
 } from 'domains/window/store/store.ts';
-import imageSrc from '../../../../assets/app-icons/ic-app-calculator.png';
+import html2canvas from 'html2canvas';
 import { useWindowContext } from '../WindowContext.ts';
 import {
   closeIcon,
@@ -23,8 +23,9 @@ interface WindowControlProps {
 export function WindowControl({ size }: WindowControlProps) {
   const { id } = useWindowContext();
   const { removeWindow, minimizeWindow } = useWindowsAction();
-  const { windows } = useWindowsStore();
-  const windowwindow = windows.find((window) => window.id === id);
+  const { windows, windowElements } = useWindowsStore();
+  const curWindow = windows.find((window) => window.id === id);
+  const curWindowElement = windowElements[id];
 
   const onCloseMouseDown = (event: React.MouseEvent) => {
     event.stopPropagation();
@@ -42,73 +43,70 @@ export function WindowControl({ size }: WindowControlProps) {
     document.body.appendChild(canvas);
 
     const ctx = canvas.getContext('2d');
-    if (ctx == null || windowwindow == null) {
+    if (ctx == null || curWindow == null || !curWindowElement) {
       return;
     }
 
-    const imageElement = await loadImage(imageSrc);
-    const { x, y, width, height } = windowwindow.style;
+    const windowCanvas = await html2canvas(curWindowElement, {
+      backgroundColor: null,
+      logging: false,
+      useCORS: true,
+    });
+
+    const { x, y, width, height } = curWindow.style;
+    ctx.drawImage(windowCanvas, x, y, width, height);
+    const image = ctx.getImageData(x, y, width, height);
 
     const animate = (startTime: number) => {
       const currentTime = Date.now();
-      const progress = Math.min((currentTime - startTime) / 1000, 1); // 1000ms = 1초
+      const t = Math.min((currentTime - startTime) / 1500, 1);
 
-      // 1.0에서 0.5로 변화하는 압축 비율 계산
-      const compressionRatio = 1 - progress * 0.5; // 1.0 -> 0.5
-
+      // Clear the canvas
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.drawImage(imageElement, x, y, width, height);
 
-      const image = ctx.getImageData(x, y, width, height);
+      // 압축 이미지는 항상 캔버스 크기로 생성
+      const compressedImage = ctx.createImageData(canvas.width, canvas.height);
+      const srcData = image.data;
+      const dstData = compressedImage.data;
+      for (let yIdx = 0; yIdx < height; yIdx++) {
+        const ratio = yIdx / height;
+        const scaleX = 1 - ratio * t;
+        const rowTargetWidth = Math.max(1, Math.floor(width * scaleX));
 
-      for (let i = 0; i < image.data.length; i += 4) {
-        const index = Math.floor(i / 4);
-        const pixelX = index % width;
-        const pixelY = Math.floor(index / width);
+        const startX = 0 + Math.floor(t * ratio * 200);
+        const dstY = y + yIdx;
 
-        // 현재 압축 비율에 따른 경계선 계산
-        const boundary = width * compressionRatio;
-
-        if (pixelX <= boundary) {
-          // 압축되는 영역
-          const sourceX = Math.floor(pixelX * (width / boundary));
-          const sourceIndex = (pixelY * width + sourceX) * 4;
-
-          image.data[i] = image.data[sourceIndex];
-          image.data[i + 1] = image.data[sourceIndex + 1];
-          image.data[i + 2] = image.data[sourceIndex + 2];
-          image.data[i + 3] = image.data[sourceIndex + 3];
-        } else {
-          // 투명해지는 영역
-          image.data[i] = 0;
-          image.data[i + 1] = 0;
-          image.data[i + 2] = 0;
-          image.data[i + 3] = 0;
+        for (let xIdx = 0; xIdx < rowTargetWidth; xIdx++) {
+          const srcX = Math.floor(xIdx / scaleX);
+          const srcIndex = (yIdx * width + srcX) * 4;
+          const dstX = x + startX + xIdx;
+          if (
+            dstX >= 0 &&
+            dstX < canvas.width &&
+            dstY >= 0 &&
+            dstY < canvas.height
+          ) {
+            const dstIndex = (dstY * canvas.width + dstX) * 4;
+            dstData[dstIndex] = srcData[srcIndex];
+            dstData[dstIndex + 1] = srcData[srcIndex + 1];
+            dstData[dstIndex + 2] = srcData[srcIndex + 2];
+            dstData[dstIndex + 3] = srcData[srcIndex + 3];
+          }
         }
       }
+      ctx.putImageData(compressedImage, 0, 0);
 
-      ctx.putImageData(image, x, y);
-
-      if (progress < 1) {
+      if (t < 1) {
         requestAnimationFrame(() => animate(startTime));
       } else {
-        // 애니메이션 완료 후 정리
         document.body.removeChild(canvas);
-        minimizeWindow(id);
       }
     };
 
-    // 애니메이션 시작
     animate(Date.now());
-  };
 
-  const loadImage = (src: string) =>
-    new Promise<HTMLImageElement>((resolve, reject) => {
-      const image = new Image();
-      image.src = src;
-      image.onload = () => resolve(image);
-      image.onerror = () => reject(new Error('Failed to load image'));
-    });
+    minimizeWindow(id);
+  };
 
   const onControlButtonMouseDown = (event: React.MouseEvent) => {
     event.stopPropagation();
