@@ -57,12 +57,17 @@ export function WindowControl({ size }: WindowControlProps) {
     ctx.drawImage(windowCanvas, x, y, width, height);
     const image = ctx.getImageData(x, y, width, height);
 
-    const animate = (startTime: number) => {
+    // 외부 변수 선언
+    let leftBezierPoints: Point[] = [];
+    let rightBezierPoints: Point[] = [];
+    let compressedImage: ImageData | null = null;
+
+    const animate1 = (startTime: number) => {
       const currentTime = Date.now();
       const t = Math.min((currentTime - startTime) / 1500, 1);
       const mt = 1 - t;
 
-      // TODO: 최종 위치 계산
+      // 베지어 곡선 좌표 계산
       const END_POINT = { x: canvas.width / 2, y: canvas.height };
       const LEFT_END_X = x * mt + END_POINT.x * t;
       const RIGHT_END_X = (x + width) * mt + END_POINT.x * t;
@@ -77,45 +82,37 @@ export function WindowControl({ size }: WindowControlProps) {
       const RIGHT_P2 = { x: RIGHT_END_X, y: canvas.height - 200 };
       const RIGHT_P3 = { x: RIGHT_END_X, y: canvas.height };
 
-      const leftBezierPoints = getInterpolatedBezierPoints(
+      leftBezierPoints = getInterpolatedBezierPoints(
         LEFT_P0,
         LEFT_P1,
         LEFT_P2,
         LEFT_P3
       );
-      const rightBezierPoints = getInterpolatedBezierPoints(
+      rightBezierPoints = getInterpolatedBezierPoints(
         RIGHT_P0,
         RIGHT_P1,
         RIGHT_P2,
         RIGHT_P3
       );
 
-      // Clear the canvas
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       // 베지어 곡선을 사용한 압축 이미지 생성
-      const compressedImage = ctx.createImageData(canvas.width, canvas.height);
+      compressedImage = ctx.createImageData(canvas.width, canvas.height);
       const srcData = image.data;
       const dstData = compressedImage.data;
 
-      // y좌표별로 베지어 곡선의 시작과 끝점 찾기
       for (let yIdx = 0; yIdx < height; yIdx++) {
         const currentY = y + yIdx;
-
-        // leftBezierPoints에서 현재 y좌표에 해당하는 점 찾기
         const leftPoint = leftBezierPoints.find((p) => p.y === currentY);
         const rightPoint = rightBezierPoints.find((p) => p.y === currentY);
-
         if (leftPoint && rightPoint) {
           const startX = leftPoint.x;
           const endX = rightPoint.x;
           const targetWidth = endX - startX;
-
-          // 원본 이미지의 해당 행을 압축하여 베지어 곡선의 시작과 끝점 사이에 그리기
           for (let xIdx = 0; xIdx < targetWidth; xIdx++) {
             const srcX = Math.floor((xIdx / targetWidth) * width);
             const dstX = startX + xIdx;
-
             if (
               srcX >= 0 &&
               srcX < width &&
@@ -126,7 +123,6 @@ export function WindowControl({ size }: WindowControlProps) {
             ) {
               const srcIndex = (yIdx * width + srcX) * 4;
               const dstIndex = (currentY * canvas.width + dstX) * 4;
-
               dstData[dstIndex] = srcData[srcIndex];
               dstData[dstIndex + 1] = srcData[srcIndex + 1];
               dstData[dstIndex + 2] = srcData[srcIndex + 2];
@@ -141,13 +137,71 @@ export function WindowControl({ size }: WindowControlProps) {
       drawCurve(ctx, rightBezierPoints);
 
       if (t < 1) {
-        requestAnimationFrame(() => animate(startTime));
+        requestAnimationFrame(() => animate1(startTime));
+      } else {
+        // animate2 시작
+        animate2(Date.now());
+      }
+    };
+
+    animate1(Date.now());
+
+    // animate2: 베지어 커브를 따라 y축으로 내려가는 애니메이션
+    const animate2 = (startTime: number) => {
+      const currentTime = Date.now();
+      const t = Math.min((currentTime - startTime) / 1500, 1);
+      const mt = 1 - t;
+
+      const moveY = Math.round((canvas.height - height) * t);
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      const compressedImage = ctx.createImageData(canvas.width, canvas.height);
+      const srcData = image.data;
+      const dstData = compressedImage.data;
+
+      const maxHeight = Math.min(height, canvas.height - moveY);
+      for (let yIdx = 0; yIdx < maxHeight; yIdx++) {
+        const currentY = y + yIdx + moveY;
+        const leftPoint = leftBezierPoints.find((p) => p.y === currentY);
+        const rightPoint = rightBezierPoints.find((p) => p.y === currentY);
+        if (leftPoint && rightPoint) {
+          const startX = leftPoint.x;
+          const endX = rightPoint.x;
+          const targetWidth = endX - startX;
+          for (let xIdx = 0; xIdx < targetWidth; xIdx++) {
+            const srcX = Math.floor((xIdx / targetWidth) * width);
+            const dstX = startX + xIdx;
+            if (
+              srcX >= 0 &&
+              srcX < width &&
+              dstX >= 0 &&
+              dstX < canvas.width &&
+              currentY >= 0 &&
+              currentY < canvas.height
+            ) {
+              const srcIndex = (yIdx * width + srcX) * 4;
+              const dstIndex = (currentY * canvas.width + dstX) * 4;
+              dstData[dstIndex] = srcData[srcIndex];
+              dstData[dstIndex + 1] = srcData[srcIndex + 1];
+              dstData[dstIndex + 2] = srcData[srcIndex + 2];
+              dstData[dstIndex + 3] = srcData[srcIndex + 3];
+            }
+          }
+        }
+      }
+      ctx.putImageData(compressedImage, 0, 0);
+
+      // 1. 마지막 베지어 커브 그리기
+      drawCurve(ctx, leftBezierPoints);
+      drawCurve(ctx, rightBezierPoints);
+
+      if (t < 1) {
+        requestAnimationFrame(() => animate2(startTime));
       } else {
         document.body.removeChild(canvas);
       }
     };
-
-    animate(Date.now());
 
     minimizeWindow(id);
   };
