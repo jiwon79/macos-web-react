@@ -62,6 +62,34 @@ export function WindowControl({ size }: WindowControlProps) {
       const t = Math.min((currentTime - startTime) / 1500, 1);
       const mt = 1 - t;
 
+      // TODO: 최종 위치 계산
+      const END_POINT = { x: canvas.width / 2, y: canvas.height };
+      const LEFT_END_X = x * mt + END_POINT.x * t;
+      const RIGHT_END_X = (x + width) * mt + END_POINT.x * t;
+
+      const LEFT_P0 = { x: x, y: y };
+      const LEFT_P1 = { x: x, y: y + 200 };
+      const LEFT_P2 = { x: LEFT_END_X, y: canvas.height - 200 };
+      const LEFT_P3 = { x: LEFT_END_X, y: canvas.height };
+
+      const RIGHT_P0 = { x: x + width, y: y };
+      const RIGHT_P1 = { x: x + width, y: y + 200 };
+      const RIGHT_P2 = { x: RIGHT_END_X, y: canvas.height - 200 };
+      const RIGHT_P3 = { x: RIGHT_END_X, y: canvas.height };
+
+      const leftBezierPoints = getInterpolatedBezierPoints(
+        LEFT_P0,
+        LEFT_P1,
+        LEFT_P2,
+        LEFT_P3
+      );
+      const rightBezierPoints = getInterpolatedBezierPoints(
+        RIGHT_P0,
+        RIGHT_P1,
+        RIGHT_P2,
+        RIGHT_P3
+      );
+
       // Clear the canvas
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -96,35 +124,6 @@ export function WindowControl({ size }: WindowControlProps) {
         }
       }
       ctx.putImageData(compressedImage, 0, 0);
-
-      // TODO: 최종 위치 계산
-      const END_POINT = { x: canvas.width / 2, y: canvas.height };
-      const LEFT_END_X = x * mt + END_POINT.x * t;
-      const RIGHT_END_X = (x + width) * mt + END_POINT.x * t;
-
-      const LEFT_P0 = { x: x, y: y };
-      const LEFT_P1 = { x: x, y: y + 200 };
-      const LEFT_P2 = { x: LEFT_END_X, y: canvas.height - 200 };
-      const LEFT_P3 = { x: LEFT_END_X, y: canvas.height };
-
-      const RIGHT_P0 = { x: x + width, y: y };
-      const RIGHT_P1 = { x: x + width, y: y + 200 };
-      const RIGHT_P2 = { x: RIGHT_END_X, y: canvas.height - 200 };
-      const RIGHT_P3 = { x: RIGHT_END_X, y: canvas.height };
-
-      const leftBezierPoints = getYSanitizedBezierPoints(
-        LEFT_P0,
-        LEFT_P1,
-        LEFT_P2,
-        LEFT_P3
-      );
-      const rightBezierPoints = getYSanitizedBezierPoints(
-        RIGHT_P0,
-        RIGHT_P1,
-        RIGHT_P2,
-        RIGHT_P3
-      );
-      console.log(leftBezierPoints, rightBezierPoints);
 
       drawCurve(ctx, leftBezierPoints);
       drawCurve(ctx, rightBezierPoints);
@@ -202,7 +201,7 @@ function getBezierPoint(
   };
 }
 
-function getYSanitizedBezierPoints(
+function getInterpolatedBezierPoints(
   P0: Point,
   P1: Point,
   P2: Point,
