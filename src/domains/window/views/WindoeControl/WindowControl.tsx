@@ -93,33 +93,45 @@ export function WindowControl({ size }: WindowControlProps) {
       // Clear the canvas
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // 압축 이미지는 항상 캔버스 크기로 생성
+      // 베지어 곡선을 사용한 압축 이미지 생성
       const compressedImage = ctx.createImageData(canvas.width, canvas.height);
       const srcData = image.data;
       const dstData = compressedImage.data;
+
+      // y좌표별로 베지어 곡선의 시작과 끝점 찾기
       for (let yIdx = 0; yIdx < height; yIdx++) {
-        const ratio = yIdx / height;
-        const scaleX = 1 - ratio * t;
-        const rowTargetWidth = Math.max(1, Math.floor(width * scaleX));
+        const currentY = y + yIdx;
 
-        const startX = 0 + Math.floor(t * ratio * 200);
-        const dstY = y + yIdx;
+        // leftBezierPoints에서 현재 y좌표에 해당하는 점 찾기
+        const leftPoint = leftBezierPoints.find((p) => p.y === currentY);
+        const rightPoint = rightBezierPoints.find((p) => p.y === currentY);
 
-        for (let xIdx = 0; xIdx < rowTargetWidth; xIdx++) {
-          const srcX = Math.floor(xIdx / scaleX);
-          const srcIndex = (yIdx * width + srcX) * 4;
-          const dstX = x + startX + xIdx;
-          if (
-            dstX >= 0 &&
-            dstX < canvas.width &&
-            dstY >= 0 &&
-            dstY < canvas.height
-          ) {
-            const dstIndex = (dstY * canvas.width + dstX) * 4;
-            dstData[dstIndex] = srcData[srcIndex];
-            dstData[dstIndex + 1] = srcData[srcIndex + 1];
-            dstData[dstIndex + 2] = srcData[srcIndex + 2];
-            dstData[dstIndex + 3] = srcData[srcIndex + 3];
+        if (leftPoint && rightPoint) {
+          const startX = leftPoint.x;
+          const endX = rightPoint.x;
+          const targetWidth = endX - startX;
+
+          // 원본 이미지의 해당 행을 압축하여 베지어 곡선의 시작과 끝점 사이에 그리기
+          for (let xIdx = 0; xIdx < targetWidth; xIdx++) {
+            const srcX = Math.floor((xIdx / targetWidth) * width);
+            const dstX = startX + xIdx;
+
+            if (
+              srcX >= 0 &&
+              srcX < width &&
+              dstX >= 0 &&
+              dstX < canvas.width &&
+              currentY >= 0 &&
+              currentY < canvas.height
+            ) {
+              const srcIndex = (yIdx * width + srcX) * 4;
+              const dstIndex = (currentY * canvas.width + dstX) * 4;
+
+              dstData[dstIndex] = srcData[srcIndex];
+              dstData[dstIndex + 1] = srcData[srcIndex + 1];
+              dstData[dstIndex + 2] = srcData[srcIndex + 2];
+              dstData[dstIndex + 3] = srcData[srcIndex + 3];
+            }
           }
         }
       }
@@ -173,13 +185,6 @@ function drawCurve(ctx: CanvasRenderingContext2D, points: Point[]) {
 interface Point {
   x: number;
   y: number;
-}
-
-function getBezierPoints(P0: Point, P1: Point, P2: Point, P3: Point): Point[] {
-  const LENGTH = 100;
-  const times = Array.from({ length: LENGTH + 1 }, (_, i) => i / LENGTH);
-
-  return times.map((t) => getBezierPoint(t, P0, P1, P2, P3));
 }
 
 function getBezierPoint(
