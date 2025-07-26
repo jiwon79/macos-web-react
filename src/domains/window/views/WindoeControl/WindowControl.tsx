@@ -60,6 +60,7 @@ export function WindowControl({ size }: WindowControlProps) {
     const animate = (startTime: number) => {
       const currentTime = Date.now();
       const t = Math.min((currentTime - startTime) / 1500, 1);
+      const mt = 1 - t;
 
       // Clear the canvas
       ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -96,6 +97,38 @@ export function WindowControl({ size }: WindowControlProps) {
       }
       ctx.putImageData(compressedImage, 0, 0);
 
+      // TODO: 최종 위치 계산
+      const END_POINT = { x: canvas.width / 2, y: canvas.height };
+      const LEFT_END_X = x * mt + END_POINT.x * t;
+      const RIGHT_END_X = (x + width) * mt + END_POINT.x * t;
+
+      const LEFT_P0 = { x: x, y: y };
+      const LEFT_P1 = { x: x, y: y + 200 };
+      const LEFT_P2 = { x: LEFT_END_X, y: canvas.height - 200 };
+      const LEFT_P3 = { x: LEFT_END_X, y: canvas.height };
+
+      const RIGHT_P0 = { x: x + width, y: y };
+      const RIGHT_P1 = { x: x + width, y: y + 200 };
+      const RIGHT_P2 = { x: RIGHT_END_X, y: canvas.height - 200 };
+      const RIGHT_P3 = { x: RIGHT_END_X, y: canvas.height };
+
+      const leftBezierPoints = getYSanitizedBezierPoints(
+        LEFT_P0,
+        LEFT_P1,
+        LEFT_P2,
+        LEFT_P3
+      );
+      const rightBezierPoints = getYSanitizedBezierPoints(
+        RIGHT_P0,
+        RIGHT_P1,
+        RIGHT_P2,
+        RIGHT_P3
+      );
+      console.log(leftBezierPoints, rightBezierPoints);
+
+      drawCurve(ctx, leftBezierPoints);
+      drawCurve(ctx, rightBezierPoints);
+
       if (t < 1) {
         requestAnimationFrame(() => animate(startTime));
       } else {
@@ -125,4 +158,105 @@ export function WindowControl({ size }: WindowControlProps) {
       </button>
     </div>
   );
+}
+
+function drawCurve(ctx: CanvasRenderingContext2D, points: Point[]) {
+  ctx.strokeStyle = 'rgba(255, 0, 0, 0.5)';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(points[0].x, points[0].y);
+  for (let i = 0; i < points.length; i++) {
+    ctx.lineTo(points[i].x, points[i].y);
+  }
+  ctx.stroke();
+}
+
+interface Point {
+  x: number;
+  y: number;
+}
+
+function getBezierPoints(P0: Point, P1: Point, P2: Point, P3: Point): Point[] {
+  const LENGTH = 100;
+  const times = Array.from({ length: LENGTH + 1 }, (_, i) => i / LENGTH);
+
+  return times.map((t) => getBezierPoint(t, P0, P1, P2, P3));
+}
+
+function getBezierPoint(
+  t: number,
+  P0: Point,
+  P1: Point,
+  P2: Point,
+  P3: Point
+): Point {
+  const t2 = t * t;
+  const t3 = t2 * t;
+  const mt = 1 - t;
+  const mt2 = mt * mt;
+  const mt3 = mt2 * mt;
+
+  return {
+    x: mt3 * P0.x + 3 * mt2 * t * P1.x + 3 * mt * t2 * P2.x + t3 * P3.x,
+    y: mt3 * P0.y + 3 * mt2 * t * P1.y + 3 * mt * t2 * P2.y + t3 * P3.y,
+  };
+}
+
+function getYSanitizedBezierPoints(
+  P0: Point,
+  P1: Point,
+  P2: Point,
+  P3: Point
+): Point[] {
+  // 1. 기본 베지어 곡선 생성 (LENGTH=100)
+  const LENGTH = 100;
+  const times = Array.from({ length: LENGTH + 1 }, (_, i) => i / LENGTH);
+  const bezierPoints = times.map((t) => getBezierPoint(t, P0, P1, P2, P3));
+
+  // 2. 모든 좌표를 반올림하여 정수로 변환
+  const roundedPoints = bezierPoints.map((point) => ({
+    x: Math.round(point.x),
+    y: Math.round(point.y),
+  }));
+
+  // 3. y값 범위 계산
+  const minY = Math.min(...roundedPoints.map((p) => p.y));
+  const maxY = Math.max(...roundedPoints.map((p) => p.y));
+
+  // 4. y값이 비어있는 구간들을 찾아서 보간
+  const result: Point[] = [];
+
+  for (let y = minY; y <= maxY; y++) {
+    // 현재 y값에 해당하는 점들 찾기
+    const pointsAtY = roundedPoints.filter((p) => p.y === y);
+
+    if (pointsAtY.length > 0) {
+      // 해당 y값에 점이 있으면 추가
+      result.push(...pointsAtY);
+    } else {
+      // 해당 y값에 점이 없으면 양옆 점들을 찾아서 보간
+      const lowerPoints = roundedPoints.filter((p) => p.y < y);
+      const upperPoints = roundedPoints.filter((p) => p.y > y);
+
+      if (lowerPoints.length > 0 && upperPoints.length > 0) {
+        // 가장 가까운 아래쪽과 위쪽 점 찾기
+        const lowerPoint = lowerPoints.reduce((prev, curr) =>
+          prev.y > curr.y ? prev : curr
+        );
+        const upperPoint = upperPoints.reduce((prev, curr) =>
+          prev.y < curr.y ? prev : curr
+        );
+
+        // 선형 보간으로 x값 계산
+        const ratio = (y - lowerPoint.y) / (upperPoint.y - lowerPoint.y);
+        const interpolatedX = Math.round(
+          lowerPoint.x + ratio * (upperPoint.x - lowerPoint.x)
+        );
+
+        result.push({ x: interpolatedX, y });
+      }
+    }
+  }
+
+  return result;
 }
