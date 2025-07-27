@@ -73,13 +73,22 @@ export function WindowControl({ size }: WindowControlProps) {
       const RIGHT_END_X = (x + width) * mt + END_POINT.x * t;
 
       const LEFT_P0 = { x: x, y: y };
-      const LEFT_P1 = { x: x, y: y + 200 };
-      const LEFT_P2 = { x: LEFT_END_X, y: canvas.height - 200 };
+      const LEFT_P1 = { x: x, y: (y * 3) / 4 + (canvas.height * 1) / 4 };
+      const LEFT_P2 = {
+        x: LEFT_END_X,
+        y: (y * 1) / 4 + (canvas.height * 3) / 4,
+      };
       const LEFT_P3 = { x: LEFT_END_X, y: canvas.height };
 
       const RIGHT_P0 = { x: x + width, y: y };
-      const RIGHT_P1 = { x: x + width, y: y + 200 };
-      const RIGHT_P2 = { x: RIGHT_END_X, y: canvas.height - 200 };
+      const RIGHT_P1 = {
+        x: x + width,
+        y: (y * 3) / 4 + (canvas.height * 1) / 4,
+      };
+      const RIGHT_P2 = {
+        x: RIGHT_END_X,
+        y: (y * 1) / 4 + (canvas.height * 3) / 4,
+      };
       const RIGHT_P3 = { x: RIGHT_END_X, y: canvas.height };
 
       leftBezierPoints = getInterpolatedBezierPoints(
@@ -135,6 +144,8 @@ export function WindowControl({ size }: WindowControlProps) {
 
       drawCurve(ctx, leftBezierPoints);
       drawCurve(ctx, rightBezierPoints);
+
+      console.log(leftBezierPoints, rightBezierPoints);
 
       if (t < 1) {
         requestAnimationFrame(() => animate1(startTime));
@@ -285,12 +296,13 @@ function getInterpolatedBezierPoints(
   const result: Point[] = [];
 
   for (let y = minY; y <= maxY; y++) {
+    // TODO: O(n) -> O(1)
     // 현재 y값에 해당하는 점들 찾기
     const pointsAtY = roundedPoints.filter((p) => p.y === y);
 
     if (pointsAtY.length > 0) {
       // 해당 y값에 점이 있으면 추가
-      result.push(...pointsAtY);
+      result.push(pointsAtY[0]);
     } else {
       // 해당 y값에 점이 없으면 양옆 점들을 찾아서 보간
       const lowerPoints = roundedPoints.filter((p) => p.y < y);
