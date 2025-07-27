@@ -60,7 +60,6 @@ export function WindowControl({ size }: WindowControlProps) {
     // 외부 변수 선언
     let leftBezierPoints: Point[] = [];
     let rightBezierPoints: Point[] = [];
-    let compressedImage: ImageData | null = null;
 
     const animate1 = (startTime: number) => {
       const currentTime = Date.now();
@@ -106,46 +105,19 @@ export function WindowControl({ size }: WindowControlProps) {
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // 베지어 곡선을 사용한 압축 이미지 생성
-      compressedImage = ctx.createImageData(canvas.width, canvas.height);
-      const srcData = image.data;
-      const dstData = compressedImage.data;
-
-      for (let yIdx = 0; yIdx < height; yIdx++) {
-        const currentY = y + yIdx;
-        const leftPoint = leftBezierPoints.find((p) => p.y === currentY);
-        const rightPoint = rightBezierPoints.find((p) => p.y === currentY);
-        if (leftPoint && rightPoint) {
-          const startX = leftPoint.x;
-          const endX = rightPoint.x;
-          const targetWidth = endX - startX;
-          for (let xIdx = 0; xIdx < targetWidth; xIdx++) {
-            const srcX = Math.floor((xIdx / targetWidth) * width);
-            const dstX = startX + xIdx;
-            if (
-              srcX >= 0 &&
-              srcX < width &&
-              dstX >= 0 &&
-              dstX < canvas.width &&
-              currentY >= 0 &&
-              currentY < canvas.height
-            ) {
-              const srcIndex = (yIdx * width + srcX) * 4;
-              const dstIndex = (currentY * canvas.width + dstX) * 4;
-              dstData[dstIndex] = srcData[srcIndex];
-              dstData[dstIndex + 1] = srcData[srcIndex + 1];
-              dstData[dstIndex + 2] = srcData[srcIndex + 2];
-              dstData[dstIndex + 3] = srcData[srcIndex + 3];
-            }
-          }
-        }
-      }
-      ctx.putImageData(compressedImage, 0, 0);
+      // 베지어 곡선을 사용한 변형된 이미지 데이터 생성
+      const transformedImage = getTransformedImageData(
+        image,
+        leftBezierPoints,
+        rightBezierPoints,
+        { x, y, width, height },
+        { width: canvas.width, height: canvas.height },
+        0
+      );
+      ctx.putImageData(transformedImage, 0, 0);
 
       drawCurve(ctx, leftBezierPoints);
       drawCurve(ctx, rightBezierPoints);
-
-      console.log(leftBezierPoints, rightBezierPoints);
 
       if (t < 1) {
         requestAnimationFrame(() => animate1(startTime));
@@ -161,47 +133,21 @@ export function WindowControl({ size }: WindowControlProps) {
     const animate2 = (startTime: number) => {
       const currentTime = Date.now();
       const t = Math.min((currentTime - startTime) / 1500, 1);
-      const mt = 1 - t;
 
       const moveY = Math.round((canvas.height - height) * t);
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      const compressedImage = ctx.createImageData(canvas.width, canvas.height);
-      const srcData = image.data;
-      const dstData = compressedImage.data;
-
-      const maxHeight = Math.min(height, canvas.height - moveY);
-      for (let yIdx = 0; yIdx < maxHeight; yIdx++) {
-        const currentY = y + yIdx + moveY;
-        const leftPoint = leftBezierPoints.find((p) => p.y === currentY);
-        const rightPoint = rightBezierPoints.find((p) => p.y === currentY);
-        if (leftPoint && rightPoint) {
-          const startX = leftPoint.x;
-          const endX = rightPoint.x;
-          const targetWidth = endX - startX;
-          for (let xIdx = 0; xIdx < targetWidth; xIdx++) {
-            const srcX = Math.floor((xIdx / targetWidth) * width);
-            const dstX = startX + xIdx;
-            if (
-              srcX >= 0 &&
-              srcX < width &&
-              dstX >= 0 &&
-              dstX < canvas.width &&
-              currentY >= 0 &&
-              currentY < canvas.height
-            ) {
-              const srcIndex = (yIdx * width + srcX) * 4;
-              const dstIndex = (currentY * canvas.width + dstX) * 4;
-              dstData[dstIndex] = srcData[srcIndex];
-              dstData[dstIndex + 1] = srcData[srcIndex + 1];
-              dstData[dstIndex + 2] = srcData[srcIndex + 2];
-              dstData[dstIndex + 3] = srcData[srcIndex + 3];
-            }
-          }
-        }
-      }
-      ctx.putImageData(compressedImage, 0, 0);
+      // 베지어 곡선을 사용한 변형된 이미지 데이터 생성 (yOffset 적용)
+      const transformedImage = getTransformedImageData(
+        image,
+        leftBezierPoints,
+        rightBezierPoints,
+        { x, y, width, height },
+        { width: canvas.width, height: canvas.height },
+        moveY
+      );
+      ctx.putImageData(transformedImage, 0, 0);
 
       // 1. 마지막 베지어 커브 그리기
       drawCurve(ctx, leftBezierPoints);
@@ -234,6 +180,52 @@ export function WindowControl({ size }: WindowControlProps) {
       </button>
     </div>
   );
+}
+
+function getTransformedImageData(
+  image: ImageData,
+  leftCurvePoints: Point[],
+  rightCurvePoints: Point[],
+  windowRect: { x: number; y: number; width: number; height: number },
+  canvasSize: { width: number; height: number },
+  yOffset: number
+): ImageData {
+  const { x, y, width, height } = windowRect;
+  const compressedImage = new ImageData(canvasSize.width, canvasSize.height);
+  const srcData = image.data;
+  const dstData = compressedImage.data;
+
+  const maxHeight = Math.min(height, canvasSize.height - yOffset);
+  for (let yIdx = 0; yIdx < maxHeight; yIdx++) {
+    const currentY = y + yIdx + yOffset;
+    const leftPoint = leftCurvePoints.find((p) => p.y === currentY);
+    const rightPoint = rightCurvePoints.find((p) => p.y === currentY);
+    if (leftPoint && rightPoint) {
+      const startX = leftPoint.x;
+      const endX = rightPoint.x;
+      const targetWidth = endX - startX;
+      for (let xIdx = 0; xIdx < targetWidth; xIdx++) {
+        const srcX = Math.floor((xIdx / targetWidth) * width);
+        const dstX = startX + xIdx;
+        if (
+          srcX >= 0 &&
+          srcX < width &&
+          dstX >= 0 &&
+          dstX < canvasSize.width &&
+          currentY >= 0 &&
+          currentY < canvasSize.height
+        ) {
+          const srcIndex = (yIdx * width + srcX) * 4;
+          const dstIndex = (currentY * canvasSize.width + dstX) * 4;
+          dstData[dstIndex] = srcData[srcIndex];
+          dstData[dstIndex + 1] = srcData[srcIndex + 1];
+          dstData[dstIndex + 2] = srcData[srcIndex + 2];
+          dstData[dstIndex + 3] = srcData[srcIndex + 3];
+        }
+      }
+    }
+  }
+  return compressedImage;
 }
 
 function drawCurve(ctx: CanvasRenderingContext2D, points: Point[]) {
