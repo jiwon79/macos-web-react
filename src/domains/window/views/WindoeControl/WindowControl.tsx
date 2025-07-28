@@ -106,7 +106,7 @@ export function WindowControl({ size }: WindowControlProps) {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       // 베지어 곡선을 사용한 변형된 이미지 데이터 생성
-      const transformedImage = getTransformedImageData(
+      const transformedImage = getTransformedImage(
         image,
         leftBezierPoints,
         rightBezierPoints,
@@ -139,7 +139,7 @@ export function WindowControl({ size }: WindowControlProps) {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       // 베지어 곡선을 사용한 변형된 이미지 데이터 생성 (yOffset 적용)
-      const transformedImage = getTransformedImageData(
+      const transformedImage = getTransformedImage(
         image,
         leftBezierPoints,
         rightBezierPoints,
@@ -182,50 +182,57 @@ export function WindowControl({ size }: WindowControlProps) {
   );
 }
 
-function getTransformedImageData(
+function getTransformedImage(
   image: ImageData,
   leftCurvePoints: Point[],
   rightCurvePoints: Point[],
-  windowRect: { x: number; y: number; width: number; height: number },
-  canvasSize: { width: number; height: number },
+  window: { x: number; y: number; width: number; height: number },
+  screen: { width: number; height: number },
   yOffset: number
 ): ImageData {
-  const { x, y, width, height } = windowRect;
-  const compressedImage = new ImageData(canvasSize.width, canvasSize.height);
-  const srcData = image.data;
-  const dstData = compressedImage.data;
+  const { y, width, height } = window;
+  const transformedImage = new ImageData(screen.width, screen.height);
+  const imageData = image.data;
+  const transformedImageDate = transformedImage.data;
 
-  const maxHeight = Math.min(height, canvasSize.height - yOffset);
+  const maxHeight = Math.min(height, screen.height - yOffset);
   for (let yIdx = 0; yIdx < maxHeight; yIdx++) {
     const currentY = y + yIdx + yOffset;
+    // TODO: O(n) -> O(1)
     const leftPoint = leftCurvePoints.find((p) => p.y === currentY);
     const rightPoint = rightCurvePoints.find((p) => p.y === currentY);
-    if (leftPoint && rightPoint) {
-      const startX = leftPoint.x;
-      const endX = rightPoint.x;
-      const targetWidth = endX - startX;
-      for (let xIdx = 0; xIdx < targetWidth; xIdx++) {
-        const srcX = Math.floor((xIdx / targetWidth) * width);
-        const dstX = startX + xIdx;
-        if (
-          srcX >= 0 &&
-          srcX < width &&
-          dstX >= 0 &&
-          dstX < canvasSize.width &&
-          currentY >= 0 &&
-          currentY < canvasSize.height
-        ) {
-          const srcIndex = (yIdx * width + srcX) * 4;
-          const dstIndex = (currentY * canvasSize.width + dstX) * 4;
-          dstData[dstIndex] = srcData[srcIndex];
-          dstData[dstIndex + 1] = srcData[srcIndex + 1];
-          dstData[dstIndex + 2] = srcData[srcIndex + 2];
-          dstData[dstIndex + 3] = srcData[srcIndex + 3];
-        }
+    if (leftPoint == null || rightPoint == null) {
+      continue;
+    }
+
+    const startX = leftPoint.x;
+    const endX = rightPoint.x;
+    const targetWidth = endX - startX;
+
+    for (let xIdx = 0; xIdx < targetWidth; xIdx++) {
+      const srcX = Math.floor((xIdx / targetWidth) * width);
+      const dstX = startX + xIdx;
+      if (
+        srcX < 0 ||
+        srcX >= width ||
+        dstX < 0 ||
+        dstX >= screen.width ||
+        currentY < 0 ||
+        currentY >= screen.height
+      ) {
+        continue;
       }
+
+      const srcIndex = (yIdx * width + srcX) * 4;
+      const dstIndex = (currentY * screen.width + dstX) * 4;
+      transformedImageDate[dstIndex] = imageData[srcIndex];
+      transformedImageDate[dstIndex + 1] = imageData[srcIndex + 1];
+      transformedImageDate[dstIndex + 2] = imageData[srcIndex + 2];
+      transformedImageDate[dstIndex + 3] = imageData[srcIndex + 3];
     }
   }
-  return compressedImage;
+
+  return transformedImage;
 }
 
 function drawCurve(ctx: CanvasRenderingContext2D, points: Point[]) {
