@@ -23,7 +23,8 @@ interface WindowControlProps {
 export function WindowControl({ size }: WindowControlProps) {
   const { id } = useWindowContext();
   const { removeWindow, minimizeWindow } = useWindowsAction();
-  const { windows, windowElements } = useWindowsStore();
+  const { windows, windowElements, minimizedDockIndicatorRef } =
+    useWindowsStore();
   const curWindow = windows.find((window) => window.id === id);
   const curWindowElement = windowElements[id];
 
@@ -33,6 +34,12 @@ export function WindowControl({ size }: WindowControlProps) {
   };
 
   const onMinimizeMouseDown = async (event: React.MouseEvent) => {
+    const minimizedDockRect =
+      minimizedDockIndicatorRef?.getBoundingClientRect();
+    if (minimizedDockRect == null) {
+      return;
+    }
+
     event.stopPropagation();
     const canvas = document.createElement('canvas');
     canvas.style.position = 'absolute';
@@ -67,28 +74,31 @@ export function WindowControl({ size }: WindowControlProps) {
       const mt = 1 - t;
 
       // 베지어 곡선 좌표 계산
-      const END_POINT = { x: canvas.width / 2, y: canvas.height };
+      const END_POINT = { x: minimizedDockRect.x, y: minimizedDockRect.top };
       const LEFT_END_X = x * mt + END_POINT.x * t;
       const RIGHT_END_X = (x + width) * mt + END_POINT.x * t;
 
       const LEFT_P0 = { x: x, y: y };
-      const LEFT_P1 = { x: x, y: (y * 3) / 4 + (canvas.height * 1) / 4 };
+      const LEFT_P1 = {
+        x: x,
+        y: (y * 3) / 4 + (minimizedDockRect.top * 1) / 4,
+      };
       const LEFT_P2 = {
         x: LEFT_END_X,
-        y: (y * 1) / 4 + (canvas.height * 3) / 4,
+        y: (y * 1) / 4 + (minimizedDockRect.top * 3) / 4,
       };
-      const LEFT_P3 = { x: LEFT_END_X, y: canvas.height };
+      const LEFT_P3 = { x: LEFT_END_X, y: minimizedDockRect.top };
 
       const RIGHT_P0 = { x: x + width, y: y };
       const RIGHT_P1 = {
         x: x + width,
-        y: (y * 3) / 4 + (canvas.height * 1) / 4,
+        y: (y * 3) / 4 + (minimizedDockRect.top * 1) / 4,
       };
       const RIGHT_P2 = {
         x: RIGHT_END_X,
-        y: (y * 1) / 4 + (canvas.height * 3) / 4,
+        y: (y * 1) / 4 + (minimizedDockRect.top * 3) / 4,
       };
-      const RIGHT_P3 = { x: RIGHT_END_X, y: canvas.height };
+      const RIGHT_P3 = { x: RIGHT_END_X, y: minimizedDockRect.top };
 
       leftBezierPoints = getInterpolatedBezierPoints(
         LEFT_P0,

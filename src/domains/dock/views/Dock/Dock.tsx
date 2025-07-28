@@ -18,8 +18,12 @@ export function Dock() {
   const [mouseX, setMouseX] = useState<number | null>(null);
   const windows = useWindows();
   const minimizedWindowIds = useMinimizedWindowIds();
-  const { restoreWindow, openApplication, setFocusedWindowID } =
-    useWindowsAction();
+  const {
+    restoreWindow,
+    openApplication,
+    setFocusedWindowID,
+    setMinimizedDockIndicatorRef,
+  } = useWindowsAction();
 
   const isOpen = (appID: ApplicationID) => {
     return (
@@ -65,6 +69,10 @@ export function Dock() {
           onClick={() => restoreWindow(id)}
         />
       ))}
+      <div
+        className={styles.minimizedDockIndicator}
+        ref={setMinimizedDockIndicatorRef}
+      />
       <DockItem mouseX={mouseX} src={IconAppTrash} />
     </div>
   );

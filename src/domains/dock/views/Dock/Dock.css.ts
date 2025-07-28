@@ -27,3 +27,7 @@ darkModeStyle(container, {
     0 0 0 1px #8A8A8A inset`,
   backdropFilter: 'blur(30px)',
 });
+
+export const minimizedDockIndicator = style({
+  height: '100%',
+});

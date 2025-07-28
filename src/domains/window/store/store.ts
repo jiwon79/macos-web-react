@@ -11,6 +11,7 @@ export interface WindowsState {
   windowElements: Record<string, HTMLDivElement>;
   minimizedWindowIds: string[];
   focusedWindowID: string | null;
+  minimizedDockIndicatorRef: HTMLDivElement | null;
 }
 
 export interface WindowsAction {
@@ -22,6 +23,7 @@ export interface WindowsAction {
   minimizeWindow: (id: string) => void;
   restoreWindow: (id: string) => void;
   setWindowElement: (id: string, element: HTMLDivElement) => void;
+  setMinimizedDockIndicatorRef: (ref: HTMLDivElement) => void;
 }
 
 export const useWindowsStore = create<WindowsState, WindowsAction>((set) => ({
@@ -29,6 +31,7 @@ export const useWindowsStore = create<WindowsState, WindowsAction>((set) => ({
   windowElements: {},
   minimizedWindowIds: [],
   focusedWindowID: null,
+  minimizedDockIndicatorRef: null,
   actions: {
     setFocusedWindowID: (id: string | null) =>
       set((state) => {
@@ -100,6 +103,8 @@ export const useWindowsStore = create<WindowsState, WindowsAction>((set) => ({
       set((state) => ({
         windowElements: { ...state.windowElements, [id]: element },
       })),
+    setMinimizedDockIndicatorRef: (ref) =>
+      set({ minimizedDockIndicatorRef: ref }),
   },
 }));
 
