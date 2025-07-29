@@ -1,15 +1,19 @@
 import { ApplicationID, applications } from 'domains/app/applications';
 import { create } from 'third-parties/zustand';
-import { uniq } from 'utils/array/uniq';
+import { uniqBy } from 'utils/array/uniqBy';
 import { deepMergeObject } from 'utils/object';
 import { DeepPartial } from 'utils/type';
 import { WindowState } from '../interface/index';
 import { initialWindowStates } from './initialWindowStatesXX';
 
+interface MinimizedWindow {
+  id: string;
+}
+
 export interface WindowsState {
   windows: WindowState[];
   windowElements: Record<string, HTMLDivElement>;
-  minimizedWindowIds: string[];
+  minimizedWindows: MinimizedWindow[];
   focusedWindowID: string | null;
   minimizedDockIndicatorRef: HTMLDivElement | null;
 }
@@ -29,7 +33,7 @@ export interface WindowsAction {
 export const useWindowsStore = create<WindowsState, WindowsAction>((set) => ({
   windows: initialWindowStates,
   windowElements: {},
-  minimizedWindowIds: [],
+  minimizedWindows: [],
   focusedWindowID: null,
   minimizedDockIndicatorRef: null,
   actions: {
@@ -91,12 +95,15 @@ export const useWindowsStore = create<WindowsState, WindowsAction>((set) => ({
     },
     minimizeWindow: (id) =>
       set((state) => ({
-        minimizedWindowIds: uniq([...state.minimizedWindowIds, id]),
+        minimizedWindows: uniqBy(
+          [...state.minimizedWindows, { id }],
+          (window) => window.id
+        ),
       })),
     restoreWindow: (id) =>
       set((state) => ({
-        minimizedWindowIds: state.minimizedWindowIds.filter(
-          (minimizedId) => minimizedId !== id
+        minimizedWindows: state.minimizedWindows.filter(
+          (minimizedWindow) => minimizedWindow.id !== id
         ),
       })),
     setWindowElement: (id, element) =>
@@ -108,8 +115,8 @@ export const useWindowsStore = create<WindowsState, WindowsAction>((set) => ({
   },
 }));
 
-export function useMinimizedWindowIds() {
-  return useWindowsStore((state) => state.minimizedWindowIds);
+export function useMinimizedWindows() {
+  return useWindowsStore((state) => state.minimizedWindows);
 }
 
 export function useWindowsAction() {

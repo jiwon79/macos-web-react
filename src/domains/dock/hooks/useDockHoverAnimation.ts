@@ -9,19 +9,28 @@ import { useRaf } from 'utils/react/useRaf';
 
 export const useDockHoverAnimation = (
   mouseX: number | null,
-  ref: RefObject<HTMLImageElement>
+  ref: RefObject<HTMLImageElement>,
+  baseSize: number
 ) => {
-  const distance = useMotionValue(beyondTheDistanceLimit);
+  const DISTANCE_LIMIT = baseSize * 6;
+  const BEYOND_THE_DISTANCE_LIMIT = DISTANCE_LIMIT + 1;
+  const DISTANCE_INPUT = [
+    -DISTANCE_LIMIT,
+    -DISTANCE_LIMIT / 1.25,
+    -DISTANCE_LIMIT / 2,
+    0,
+    DISTANCE_LIMIT / 2,
+    DISTANCE_LIMIT / 1.25,
+    DISTANCE_LIMIT,
+  ];
+  const SCALE_OUTPUT = [1.0, 1.1, 1.414, 2.0, 1.414, 1.1, 1.0];
 
-  const pixelSize: MotionValue<number> = useSpring(
-    useTransform(distance, distanceInput, widthOutput),
-    {
-      stiffness: 1300,
-      damping: 82,
-    }
-  );
-
-  const remSize = useTransform(pixelSize, (width) => `${width / 16}rem`);
+  const distance = useMotionValue(BEYOND_THE_DISTANCE_LIMIT);
+  const rawScale = useTransform(distance, DISTANCE_INPUT, SCALE_OUTPUT);
+  const scale: MotionValue<number> = useSpring(rawScale, {
+    stiffness: 1300,
+    damping: 82,
+  });
 
   useRaf(() => {
     const el = ref.current;
@@ -35,30 +44,8 @@ export const useDockHoverAnimation = (
       return;
     }
 
-    distance.set(beyondTheDistanceLimit);
+    distance.set(BEYOND_THE_DISTANCE_LIMIT);
   });
 
-  return { size: remSize };
+  return { scale };
 };
-
-const baseWidth = 50;
-const distanceLimit = baseWidth * 6;
-const beyondTheDistanceLimit = distanceLimit + 1;
-const distanceInput = [
-  -distanceLimit,
-  -distanceLimit / 1.25,
-  -distanceLimit / 2,
-  0,
-  distanceLimit / 2,
-  distanceLimit / 1.25,
-  distanceLimit,
-];
-const widthOutput = [
-  baseWidth,
-  baseWidth * 1.1,
-  baseWidth * 1.414,
-  baseWidth * 2,
-  baseWidth * 1.414,
-  baseWidth * 1.1,
-  baseWidth,
-];

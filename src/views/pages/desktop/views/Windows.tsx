@@ -1,5 +1,5 @@
 import {
-  useMinimizedWindowIds,
+  useMinimizedWindows,
   useWindows,
   useWindowsAction,
 } from 'domains/window/store';
@@ -7,11 +7,14 @@ import { WindowRenderer } from 'domains/window/views/WindowRenderer/WindowRender
 
 export function Windows() {
   const windows = useWindows();
-  const minimizedWindowIds = useMinimizedWindowIds();
+  const minimizedWindows = useMinimizedWindows();
   const { updateWindow, setWindowElement: setWindowRef } = useWindowsAction();
 
   const notMinimizedWindows = windows.filter(
-    (window) => !minimizedWindowIds.includes(window.id)
+    (window) =>
+      !minimizedWindows.some(
+        (minimizedWindow) => minimizedWindow.id === window.id
+      )
   );
 
   return (
