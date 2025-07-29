@@ -29,7 +29,6 @@ export function Dock() {
   const [animatingItems, setAnimatingItems] = useState<Set<string>>(new Set());
   const prevMinimizedIdsRef = useRef<string[]>([]);
   const [itemKeys, setItemKeys] = useState<Map<string, string>>(new Map());
-  console.log(animatingItems);
 
   // 새로 minimize된 아이템 감지 및 애니메이션 시작
   useEffect(() => {

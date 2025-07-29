@@ -2,7 +2,7 @@ import { useDockHoverAnimation } from 'domains/dock/hooks';
 import { animate, motion, useMotionValue, useTransform } from 'framer-motion';
 import { useEffect, useRef } from 'react';
 import { DockIconOpenIndicator } from '../DockIconOpenIndicator';
-import { icon, item, openIndicator } from './DockItem.css';
+import * as styles from './DockItem.css';
 
 interface DockItemProps {
   src: string;
@@ -27,12 +27,14 @@ export function DockItem({
   const size = useTransform(() => ITEM_BASE_SIZE * scale.get());
 
   const t = useMotionValue(0);
-  const minimizedWidth = useTransform(() => ITEM_BASE_SIZE * t.get());
-  console.log(src, isAnimating, scale.get(), size.get(), minimizedWidth.get());
+  const minimizedWidth = useTransform(t, [0, 1], [0, ITEM_BASE_SIZE]);
+  const width = useTransform(() =>
+    isAnimating ? minimizedWidth.get() : size.get()
+  );
 
   useEffect(() => {
     if (isAnimating) {
-      // 0부터 1까지 1.5초 동안 애니메이션
+      // 1부터 0까지 1.5초 동안 애니메이션 (width: 50 -> 0)
       const animation = animate(t, 1, {
         duration: 1.5,
         ease: 'easeOut',
@@ -40,25 +42,25 @@ export function DockItem({
 
       return () => animation.stop();
     } else {
-      // 애니메이션이 끝나면 즉시 0으로 리셋
+      // 애니메이션이 끝나면 즉시 1로 리셋 (width: 50으로 복원)
       t.set(0);
     }
   }, [isAnimating, t]);
 
   return (
-    <div className={item}>
+    <div className={styles.item}>
       <motion.img
         ref={ref}
-        className={icon}
+        className={styles.icon}
         src={src}
         draggable={false}
         style={{
-          width: isAnimating ? minimizedWidth : size,
+          width,
           height: size,
         }}
         onClick={onClick}
       />
-      <DockIconOpenIndicator className={openIndicator} open={open} />
+      <DockIconOpenIndicator className={styles.openIndicator} open={open} />
     </div>
   );
 }
