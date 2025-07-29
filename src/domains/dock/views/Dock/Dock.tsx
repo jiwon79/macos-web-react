@@ -6,7 +6,6 @@ import {
 import { ApplicationID } from 'domains/app/applications.ts';
 import { useWindows } from 'domains/window/store/states.ts';
 import {
-  useMinimizedWindows,
   useWindowsAction,
   useWindowsStore,
 } from 'domains/window/store/store.ts';
@@ -19,9 +18,9 @@ export function Dock() {
   const [mouseX, setMouseX] = useState<number | null>(null);
   const windows = useWindows();
   const minimizingWindows = useWindowsStore((state) => state.minimizingWindows);
-  const minimizedWindows = useMinimizedWindows();
+  const minimizedWindows = useWindowsStore((state) => state.minimizedWindows);
   const {
-    restoreWindow,
+    restoreMinimizedWindow,
     openApplication,
     setFocusedWindowID,
     setMinimizedDockIndicatorRef,
@@ -42,7 +41,7 @@ export function Dock() {
 
     const isMinimized = minimizedWindows.some((window) => window.id === appID);
     if (isMinimized) {
-      restoreWindow(appID);
+      restoreMinimizedWindow(appID);
     }
 
     setFocusedWindowID(appID);
@@ -67,8 +66,8 @@ export function Dock() {
         <DockItem
           key={window.id}
           mouseX={mouseX}
-          src={IconAppCalculator}
-          onClick={() => restoreWindow(window.id)}
+          src={window.image}
+          onClick={() => restoreMinimizedWindow(window.id)}
           isAnimating={minimizingWindows.some(
             (minimizingWindow) => minimizingWindow.id === window.id
           )}

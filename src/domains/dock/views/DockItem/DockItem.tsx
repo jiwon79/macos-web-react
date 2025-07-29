@@ -10,6 +10,7 @@ interface DockItemProps {
   open?: boolean;
   onClick?: () => void;
   isAnimating?: boolean;
+  style?: React.CSSProperties;
 }
 
 const ITEM_BASE_SIZE = 50;
@@ -20,6 +21,7 @@ export function DockItem({
   src,
   onClick,
   isAnimating,
+  style,
 }: DockItemProps) {
   const ref = useRef<HTMLImageElement>(null);
   const { scale } = useDockHoverAnimation(mouseX, ref, ITEM_BASE_SIZE);
@@ -28,14 +30,9 @@ export function DockItem({
 
   const t = useMotionValue(0);
   const minimizedWidth = useTransform(t, [0, 1], [0, ITEM_BASE_SIZE]);
-  const width = useTransform(() => {
-    console.log({
-      isAnimating,
-      minimizedWidth: minimizedWidth.get(),
-      size: size.get(),
-    });
-    return isAnimating ? minimizedWidth.get() : size.get();
-  });
+  const width = useTransform(() =>
+    isAnimating ? minimizedWidth.get() : size.get()
+  );
 
   useEffect(() => {
     if (isAnimating) {
@@ -53,7 +50,7 @@ export function DockItem({
   }, [isAnimating, t]);
 
   return (
-    <div className={styles.item}>
+    <div className={styles.item} style={style}>
       <motion.img
         ref={ref}
         className={styles.icon}

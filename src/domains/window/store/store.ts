@@ -8,6 +8,7 @@ import { initialWindowStates } from './initialWindowStatesXX';
 
 interface MinimizedWindow {
   id: string;
+  image: string;
 }
 
 export interface WindowsState {
@@ -25,11 +26,12 @@ export interface WindowsAction {
   addWindow: (window: WindowState) => void;
   removeWindow: (id: string) => void;
   updateWindow: (id: string, data: DeepPartial<WindowState>) => void;
-  minimizeWindow: (id: string) => void;
-  startMinimizingWindow: (id: string) => void;
+  setWindowRef: (id: string, element: HTMLDivElement) => void;
+
+  minimizeWindow: (window: MinimizedWindow) => void;
+  restoreMinimizedWindow: (id: string) => void;
+  startMinimizingWindow: (window: MinimizedWindow) => void;
   stopMinimizingWindow: (id: string) => void;
-  restoreWindow: (id: string) => void;
-  setWindowElement: (id: string, element: HTMLDivElement) => void;
   setMinimizedDockIndicatorRef: (ref: HTMLDivElement) => void;
 }
 
@@ -97,17 +99,21 @@ export const useWindowsStore = create<WindowsState, WindowsAction>((set) => ({
         ),
       }));
     },
-    minimizeWindow: (id) =>
+    setWindowRef: (id, element) =>
+      set((state) => ({
+        windowElements: { ...state.windowElements, [id]: element },
+      })),
+    minimizeWindow: (window) =>
       set((state) => ({
         minimizedWindows: uniqBy(
-          [...state.minimizedWindows, { id }],
+          [...state.minimizedWindows, window],
           (window) => window.id
         ),
       })),
-    startMinimizingWindow: (id) =>
+    startMinimizingWindow: (window) =>
       set((state) => ({
         minimizingWindows: uniqBy(
-          [...state.minimizingWindows, { id }],
+          [...state.minimizingWindows, window],
           (window) => window.id
         ),
       })),
@@ -117,24 +123,16 @@ export const useWindowsStore = create<WindowsState, WindowsAction>((set) => ({
           (minimizingWindow) => minimizingWindow.id !== id
         ),
       })),
-    restoreWindow: (id) =>
+    restoreMinimizedWindow: (id) =>
       set((state) => ({
         minimizedWindows: state.minimizedWindows.filter(
           (minimizedWindow) => minimizedWindow.id !== id
         ),
       })),
-    setWindowElement: (id, element) =>
-      set((state) => ({
-        windowElements: { ...state.windowElements, [id]: element },
-      })),
     setMinimizedDockIndicatorRef: (ref) =>
       set({ minimizedDockIndicatorRef: ref }),
   },
 }));
-
-export function useMinimizedWindows() {
-  return useWindowsStore((state) => state.minimizedWindows);
-}
 
 export function useWindowsAction() {
   return useWindowsStore((state) => state.actions);
