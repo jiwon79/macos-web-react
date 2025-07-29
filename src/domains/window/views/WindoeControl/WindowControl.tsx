@@ -21,6 +21,8 @@ interface WindowControlProps {
   size?: 'standard' | 'mono' | 'withTitle';
 }
 
+const ANIMATION_DURATION = 2000;
+
 export function WindowControl({ size }: WindowControlProps) {
   const { id } = useWindowContext();
   const {
@@ -84,7 +86,10 @@ export function WindowControl({ size }: WindowControlProps) {
 
     const animate1 = (startTime: number) => {
       const currentTime = Date.now();
-      const t = Math.min((currentTime - startTime) / 1500, 1);
+      const t = Math.min(
+        (currentTime - startTime) / (ANIMATION_DURATION / 2),
+        1
+      );
       const mt = 1 - t;
 
       // 베지어 곡선 좌표 계산
@@ -156,7 +161,10 @@ export function WindowControl({ size }: WindowControlProps) {
     // animate2: 베지어 커브를 따라 y축으로 내려가는 애니메이션
     const animate2 = (startTime: number) => {
       const currentTime = Date.now();
-      const t = Math.min((currentTime - startTime) / 1500, 1);
+      const t = Math.min(
+        (currentTime - startTime) / (ANIMATION_DURATION / 2),
+        1
+      );
 
       const moveY = Math.round((canvas.height - height) * t);
 

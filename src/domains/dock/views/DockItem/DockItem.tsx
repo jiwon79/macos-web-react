@@ -14,6 +14,7 @@ interface DockItemProps {
 }
 
 const ITEM_BASE_SIZE = 50;
+const ANIMATION_DURATION = 2000;
 
 export function DockItem({
   open,
@@ -29,22 +30,36 @@ export function DockItem({
   const size = useTransform(() => ITEM_BASE_SIZE * scale.get());
 
   const t = useMotionValue(0);
-  const minimizedWidth = useTransform(t, [0, 1], [0, ITEM_BASE_SIZE]);
+  const minimizedWidth = useTransform(
+    t,
+    [0, ANIMATION_DURATION],
+    [0, ITEM_BASE_SIZE]
+  );
   const width = useTransform(() =>
-    isAnimating ? minimizedWidth.get() : size.get()
+    isAnimating ? ITEM_BASE_SIZE * minimizedWidth.get() : size.get()
+  );
+  const height = useTransform(() =>
+    isAnimating ? ITEM_BASE_SIZE : size.get()
+  );
+
+  // 아래에서 위로 보이는 애니메이션을 위한 clip-path
+  const clipPathValue = useTransform(
+    t,
+    [0, ANIMATION_DURATION / 2, ANIMATION_DURATION],
+    ['inset(100% 0 0 0)', 'inset(100% 0 0 0)', 'inset(0% 0 0 0)']
+  );
+  const clipPath = useTransform(() =>
+    isAnimating ? clipPathValue.get() : undefined
   );
 
   useEffect(() => {
     if (isAnimating) {
-      // 1부터 0까지 1.5초 동안 애니메이션 (width: 50 -> 0)
-      const animation = animate(t, 1, {
-        duration: 1.5,
-        ease: 'easeOut',
+      const animation = animate(t, ANIMATION_DURATION, {
+        duration: ANIMATION_DURATION / 1000,
       });
 
       return () => animation.stop();
     } else {
-      // 애니메이션이 끝나면 즉시 1로 리셋 (width: 50으로 복원)
       t.set(0);
     }
   }, [isAnimating, t]);
@@ -58,7 +73,8 @@ export function DockItem({
         draggable={false}
         style={{
           width,
-          height: size,
+          height,
+          clipPath,
         }}
         onClick={onClick}
       />
