@@ -14,6 +14,7 @@ export interface WindowsState {
   windows: WindowState[];
   windowElements: Record<string, HTMLDivElement>;
   minimizedWindows: MinimizedWindow[];
+  minimizingWindows: MinimizedWindow[];
   focusedWindowID: string | null;
   minimizedDockIndicatorRef: HTMLDivElement | null;
 }
@@ -25,6 +26,8 @@ export interface WindowsAction {
   removeWindow: (id: string) => void;
   updateWindow: (id: string, data: DeepPartial<WindowState>) => void;
   minimizeWindow: (id: string) => void;
+  startMinimizingWindow: (id: string) => void;
+  stopMinimizingWindow: (id: string) => void;
   restoreWindow: (id: string) => void;
   setWindowElement: (id: string, element: HTMLDivElement) => void;
   setMinimizedDockIndicatorRef: (ref: HTMLDivElement) => void;
@@ -34,6 +37,7 @@ export const useWindowsStore = create<WindowsState, WindowsAction>((set) => ({
   windows: initialWindowStates,
   windowElements: {},
   minimizedWindows: [],
+  minimizingWindows: [],
   focusedWindowID: null,
   minimizedDockIndicatorRef: null,
   actions: {
@@ -98,6 +102,19 @@ export const useWindowsStore = create<WindowsState, WindowsAction>((set) => ({
         minimizedWindows: uniqBy(
           [...state.minimizedWindows, { id }],
           (window) => window.id
+        ),
+      })),
+    startMinimizingWindow: (id) =>
+      set((state) => ({
+        minimizingWindows: uniqBy(
+          [...state.minimizingWindows, { id }],
+          (window) => window.id
+        ),
+      })),
+    stopMinimizingWindow: (id) =>
+      set((state) => ({
+        minimizingWindows: state.minimizingWindows.filter(
+          (minimizingWindow) => minimizingWindow.id !== id
         ),
       })),
     restoreWindow: (id) =>

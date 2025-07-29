@@ -22,7 +22,12 @@ interface WindowControlProps {
 
 export function WindowControl({ size }: WindowControlProps) {
   const { id } = useWindowContext();
-  const { removeWindow, minimizeWindow } = useWindowsAction();
+  const {
+    removeWindow,
+    minimizeWindow,
+    startMinimizingWindow,
+    stopMinimizingWindow,
+  } = useWindowsAction();
   const { windows, windowElements, minimizedDockIndicatorRef } =
     useWindowsStore();
   const curWindow = windows.find((window) => window.id === id);
@@ -34,6 +39,7 @@ export function WindowControl({ size }: WindowControlProps) {
   };
 
   const onMinimizeMouseDown = async (event: React.MouseEvent) => {
+    startMinimizingWindow(id);
     const minimizedDockRect =
       minimizedDockIndicatorRef?.getBoundingClientRect();
     if (minimizedDockRect == null) {
@@ -167,6 +173,7 @@ export function WindowControl({ size }: WindowControlProps) {
         requestAnimationFrame(() => animate2(startTime));
       } else {
         document.body.removeChild(canvas);
+        stopMinimizingWindow(id);
       }
     };
 

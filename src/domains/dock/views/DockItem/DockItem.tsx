@@ -28,9 +28,14 @@ export function DockItem({
 
   const t = useMotionValue(0);
   const minimizedWidth = useTransform(t, [0, 1], [0, ITEM_BASE_SIZE]);
-  const width = useTransform(() =>
-    isAnimating ? minimizedWidth.get() : size.get()
-  );
+  const width = useTransform(() => {
+    console.log({
+      isAnimating,
+      minimizedWidth: minimizedWidth.get(),
+      size: size.get(),
+    });
+    return isAnimating ? minimizedWidth.get() : size.get();
+  });
 
   useEffect(() => {
     if (isAnimating) {
