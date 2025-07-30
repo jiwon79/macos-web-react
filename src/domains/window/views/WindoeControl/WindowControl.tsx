@@ -22,7 +22,7 @@ interface WindowControlProps {
   size?: 'standard' | 'mono' | 'withTitle';
 }
 
-const ANIMATION_DURATION = 2000;
+const ANIMATION_DURATION = 500;
 
 export function WindowControl({ size }: WindowControlProps) {
   const { id } = useWindowContext();
@@ -88,6 +88,11 @@ export function WindowControl({ size }: WindowControlProps) {
     ctx.drawImage(windowCanvas, x, y, width, height);
     const image = ctx.getImageData(x, y, width, height);
 
+    const X_ANIMATION_DURATION = (ANIMATION_DURATION * 2) / 5;
+    const Y_ANIMATION_START =
+      ANIMATION_DURATION * (3 / 5) * (y / canvas.height);
+    const Y_ANIMATION_DURATION = ANIMATION_DURATION - Y_ANIMATION_START;
+
     const getPoints = (P0: Point, P3: Point) => {
       const P1XRate = 0.08;
       const P1YRate = 0.38;
@@ -107,17 +112,23 @@ export function WindowControl({ size }: WindowControlProps) {
 
     const animate1 = (startTime: number) => {
       const currentTime = Date.now();
-      const t = Math.min(
-        (currentTime - startTime) / (ANIMATION_DURATION / 2),
-        1
-      );
+      const time = currentTime - startTime;
+      const t = Math.min(time / ANIMATION_DURATION, 1);
       const mt = 1 - t;
+
+      const xt = Math.min(time / X_ANIMATION_DURATION, 1);
+      const mxt = 1 - xt;
+      const yt = Math.max(
+        Math.min((time - Y_ANIMATION_START) / Y_ANIMATION_DURATION, 1),
+        0
+      );
 
       // 베지어 곡선 좌표 계산
       const END_POINT = { x: minimizedDockRect.x, y: minimizedDockRect.top };
-      const LEFT_END_X = x * mt + END_POINT.x * t - (DOCK_ITEM_SIZE_2 / 4) * t;
+      const LEFT_END_X =
+        x * mxt + END_POINT.x * xt - (DOCK_ITEM_SIZE_2 / 2) * t;
       const RIGHT_END_X =
-        (x + width) * mt + END_POINT.x * t + (DOCK_ITEM_SIZE_2 / 4) * t;
+        (x + width) * mxt + END_POINT.x * xt + (DOCK_ITEM_SIZE_2 / 2) * t;
 
       const LEFT_P0 = { x: x, y: y };
       const LEFT_P3 = {
@@ -145,6 +156,8 @@ export function WindowControl({ size }: WindowControlProps) {
         RIGHT_P2,
         RIGHT_P3
       );
+
+      const moveY = Math.round((minimizedDockRect.top - y) * yt);
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -155,7 +168,7 @@ export function WindowControl({ size }: WindowControlProps) {
         rightBezierPoints,
         { x, y, width, height },
         { width: canvas.width, height: canvas.height },
-        0
+        moveY
       );
       ctx.putImageData(transformedImage, 0, 0);
 
@@ -165,79 +178,79 @@ export function WindowControl({ size }: WindowControlProps) {
       if (t < 1) {
         requestAnimationFrame(() => animate1(startTime));
       } else {
-        // animate2 시작
-        animate2(Date.now());
+        document.body.removeChild(canvas);
+        stopMinimizingWindow(id);
       }
     };
 
     animate1(Date.now());
 
-    // animate2: 베지어 커브를 따라 y축으로 내려가는 애니메이션
-    const animate2 = (startTime: number) => {
-      const currentTime = Date.now();
-      const t = Math.min(
-        (currentTime - startTime) / (ANIMATION_DURATION / 2),
-        1
-      );
+    // // animate2: 베지어 커브를 따라 y축으로 내려가는 애니메이션
+    // const animate2 = (startTime: number) => {
+    //   const currentTime = Date.now();
+    //   const t = Math.min(
+    //     (currentTime - startTime) / (ANIMATION_DURATION / 2),
+    //     1
+    //   );
 
-      const moveY = Math.round((minimizedDockRect.top - y) * t);
+    //   const moveY = Math.round((minimizedDockRect.top - y) * t);
 
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    //   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // 베지어 곡선 좌표 계산
-      const END_POINT = { x: minimizedDockRect.x, y: minimizedDockRect.top };
-      const LEFT_END_X = END_POINT.x - (DOCK_ITEM_SIZE_2 / 4) * (1 + t);
-      const RIGHT_END_X = END_POINT.x + (DOCK_ITEM_SIZE_2 / 4) * (1 + t);
+    //   // 베지어 곡선 좌표 계산
+    //   const END_POINT = { x: minimizedDockRect.x, y: minimizedDockRect.top };
+    //   const LEFT_END_X = END_POINT.x - (DOCK_ITEM_SIZE_2 / 4) * (1 + t);
+    //   const RIGHT_END_X = END_POINT.x + (DOCK_ITEM_SIZE_2 / 4) * (1 + t);
 
-      const LEFT_P0 = { x: x, y: y };
-      const LEFT_P3 = {
-        x: LEFT_END_X,
-        y: minimizedDockRect.top + DOCK_ITEM_OFFSET_Y,
-      };
-      const [LEFT_P1, LEFT_P2] = getPoints(LEFT_P0, LEFT_P3);
+    //   const LEFT_P0 = { x: x, y: y };
+    //   const LEFT_P3 = {
+    //     x: LEFT_END_X,
+    //     y: minimizedDockRect.top + DOCK_ITEM_OFFSET_Y,
+    //   };
+    //   const [LEFT_P1, LEFT_P2] = getPoints(LEFT_P0, LEFT_P3);
 
-      const RIGHT_P0 = { x: x + width, y: y };
-      const RIGHT_P3 = {
-        x: RIGHT_END_X,
-        y: minimizedDockRect.top + DOCK_ITEM_OFFSET_Y,
-      };
-      const [RIGHT_P1, RIGHT_P2] = getPoints(RIGHT_P0, RIGHT_P3);
+    //   const RIGHT_P0 = { x: x + width, y: y };
+    //   const RIGHT_P3 = {
+    //     x: RIGHT_END_X,
+    //     y: minimizedDockRect.top + DOCK_ITEM_OFFSET_Y,
+    //   };
+    //   const [RIGHT_P1, RIGHT_P2] = getPoints(RIGHT_P0, RIGHT_P3);
 
-      const leftBezierPoints = getInterpolatedBezierPoints(
-        LEFT_P0,
-        LEFT_P1,
-        LEFT_P2,
-        LEFT_P3
-      );
-      const rightBezierPoints = getInterpolatedBezierPoints(
-        RIGHT_P0,
-        RIGHT_P1,
-        RIGHT_P2,
-        RIGHT_P3
-      );
+    //   const leftBezierPoints = getInterpolatedBezierPoints(
+    //     LEFT_P0,
+    //     LEFT_P1,
+    //     LEFT_P2,
+    //     LEFT_P3
+    //   );
+    //   const rightBezierPoints = getInterpolatedBezierPoints(
+    //     RIGHT_P0,
+    //     RIGHT_P1,
+    //     RIGHT_P2,
+    //     RIGHT_P3
+    //   );
 
-      // 베지어 곡선을 사용한 변형된 이미지 데이터 생성 (yOffset 적용)
-      const transformedImage = getTransformedImage(
-        image,
-        leftBezierPoints,
-        rightBezierPoints,
-        { x, y, width, height },
-        { width: canvas.width, height: canvas.height },
-        moveY
-      );
-      ctx.putImageData(transformedImage, 0, 0);
+    //   // 베지어 곡선을 사용한 변형된 이미지 데이터 생성 (yOffset 적용)
+    //   const transformedImage = getTransformedImage(
+    //     image,
+    //     leftBezierPoints,
+    //     rightBezierPoints,
+    //     { x, y, width, height },
+    //     { width: canvas.width, height: canvas.height },
+    //     moveY
+    //   );
+    //   ctx.putImageData(transformedImage, 0, 0);
 
-      // 1. 마지막 베지어 커브 그리기
-      drawCurve(ctx, leftBezierPoints);
-      drawCurve(ctx, rightBezierPoints);
+    //   // 1. 마지막 베지어 커브 그리기
+    //   drawCurve(ctx, leftBezierPoints);
+    //   drawCurve(ctx, rightBezierPoints);
 
-      if (t < 1) {
-        requestAnimationFrame(() => animate2(startTime));
-      } else {
-        document.body.removeChild(canvas);
-        stopMinimizingWindow(id);
-      }
-    };
+    //   if (t < 1) {
+    //     requestAnimationFrame(() => animate2(startTime));
+    //   } else {
+    //     document.body.removeChild(canvas);
+    //     stopMinimizingWindow(id);
+    //   }
+    // };
   };
 
   const onControlButtonMouseDown = (event: React.MouseEvent) => {

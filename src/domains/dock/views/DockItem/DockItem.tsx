@@ -12,8 +12,10 @@ interface DockItemProps {
   isAnimating?: boolean;
 }
 
+// TODO: 애니메이션 스토어 만들어서, moveY 시작 시간 정하고 반영하기
+
 export const DOCK_ITEM_SIZE = 50;
-const ANIMATION_DURATION = 2000;
+const ANIMATION_DURATION = 500;
 
 export function DockItem({
   open,
