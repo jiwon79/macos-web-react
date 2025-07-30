@@ -4,7 +4,6 @@ import {
   IconAppTrash,
 } from 'assets/app-icons/index.ts';
 import { ApplicationID } from 'domains/app/applications.ts';
-import { useWindows } from 'domains/window/store/states.ts';
 import {
   useWindowsAction,
   useWindowsStore,
@@ -16,7 +15,7 @@ import * as styles from './Dock.css.ts';
 
 export function Dock() {
   const [mouseX, setMouseX] = useState<number | null>(null);
-  const windows = useWindows();
+  const windows = useWindowsStore((state) => state.windows);
   const minimizingWindows = useWindowsStore((state) => state.minimizingWindows);
   const minimizedWindows = useWindowsStore((state) => state.minimizedWindows);
   const {
