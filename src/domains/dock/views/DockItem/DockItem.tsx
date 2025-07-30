@@ -10,10 +10,9 @@ interface DockItemProps {
   open?: boolean;
   onClick?: () => void;
   isAnimating?: boolean;
-  style?: React.CSSProperties;
 }
 
-const ITEM_BASE_SIZE = 50;
+export const DOCK_ITEM_SIZE = 50;
 const ANIMATION_DURATION = 2000;
 
 export function DockItem({
@@ -22,30 +21,25 @@ export function DockItem({
   src,
   onClick,
   isAnimating,
-  style,
 }: DockItemProps) {
   const ref = useRef<HTMLImageElement>(null);
-  const { scale } = useDockHoverAnimation(mouseX, ref, ITEM_BASE_SIZE);
+  const { scale } = useDockHoverAnimation(mouseX, ref, DOCK_ITEM_SIZE);
 
-  const size = useTransform(() => ITEM_BASE_SIZE * scale.get());
+  const size = useTransform(() => DOCK_ITEM_SIZE * scale.get());
 
   const t = useMotionValue(0);
-  const minimizedWidth = useTransform(
-    t,
-    [0, ANIMATION_DURATION],
-    [0, ITEM_BASE_SIZE]
+  const scaleX = useTransform(() => (isAnimating ? t.get() : undefined));
+  const containerWidth = useTransform(() =>
+    isAnimating ? DOCK_ITEM_SIZE * t.get() : size.get()
   );
-  const width = useTransform(() =>
-    isAnimating ? ITEM_BASE_SIZE * minimizedWidth.get() : size.get()
-  );
+  const width = useTransform(() => (isAnimating ? DOCK_ITEM_SIZE : size.get()));
   const height = useTransform(() =>
-    isAnimating ? ITEM_BASE_SIZE : size.get()
+    isAnimating ? DOCK_ITEM_SIZE : size.get()
   );
 
-  // 아래에서 위로 보이는 애니메이션을 위한 clip-path
   const clipPathValue = useTransform(
     t,
-    [0, ANIMATION_DURATION / 2, ANIMATION_DURATION],
+    [0, 0.5, 1],
     ['inset(100% 0 0 0)', 'inset(100% 0 0 0)', 'inset(0% 0 0 0)']
   );
   const clipPath = useTransform(() =>
@@ -54,7 +48,7 @@ export function DockItem({
 
   useEffect(() => {
     if (isAnimating) {
-      const animation = animate(t, ANIMATION_DURATION, {
+      const animation = animate(t, 1, {
         duration: ANIMATION_DURATION / 1000,
       });
 
@@ -65,7 +59,12 @@ export function DockItem({
   }, [isAnimating, t]);
 
   return (
-    <div className={styles.item} style={style}>
+    <motion.div
+      className={styles.item}
+      style={{
+        width: containerWidth,
+      }}
+    >
       <motion.img
         ref={ref}
         className={styles.icon}
@@ -75,10 +74,11 @@ export function DockItem({
           width,
           height,
           clipPath,
+          scaleX,
         }}
         onClick={onClick}
       />
       <DockIconOpenIndicator className={styles.openIndicator} open={open} />
-    </div>
+    </motion.div>
   );
 }

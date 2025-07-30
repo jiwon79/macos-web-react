@@ -1,10 +1,10 @@
 const SIZE = 400;
-const INNER_SIZE_RATIO = 0.9;
+const INNER_SIZE_RATIO = 0.85;
 const INNER_SIZE = SIZE * INNER_SIZE_RATIO;
 
 export function getWindowImageUrl(
   windowCanvas: HTMLCanvasElement
-): string | null {
+): { url: string; widthRatio: number; offsetYRatio: number } | null {
   const resizedCanvas = document.createElement('canvas');
   resizedCanvas.width = SIZE;
   resizedCanvas.height = SIZE;
@@ -30,5 +30,9 @@ export function getWindowImageUrl(
     scaledHeight
   );
 
-  return resizedCanvas.toDataURL();
+  return {
+    url: resizedCanvas.toDataURL(),
+    widthRatio: scaledWidth / SIZE,
+    offsetYRatio: offsetY / SIZE,
+  };
 }
