@@ -8,6 +8,10 @@ import {
   useWindowsAction,
   useWindowsStore,
 } from 'domains/window/store/store.ts';
+import {
+  useWindowControlAction,
+  useWindowControlStore,
+} from 'domains/window-animation/windowControlStore.ts';
 import { useState } from 'react';
 import { DockItem } from '../DockItem';
 import { DockSeparator } from '../DockSeparator';
@@ -16,14 +20,13 @@ import * as styles from './Dock.css.ts';
 export function Dock() {
   const [mouseX, setMouseX] = useState<number | null>(null);
   const windows = useWindowsStore((state) => state.windows);
-  const minimizingWindows = useWindowsStore((state) => state.minimizingWindows);
   const minimizedWindows = useWindowsStore((state) => state.minimizedWindows);
-  const {
-    restoreMinimizedWindow,
-    openApplication,
-    setFocusedWindowID,
-    setMinimizedDockIndicatorRef,
-  } = useWindowsAction();
+  const { restoreMinimizedWindow, createAppWindow, setFocusedWindowID } =
+    useWindowsAction();
+  const minimizingWindows = useWindowControlStore(
+    (state) => state.minimizingWindows
+  );
+  const { setMinimizedDockIndicatorRef } = useWindowControlAction();
 
   const isOpen = (appID: ApplicationID) => {
     return (
@@ -35,7 +38,7 @@ export function Dock() {
   const onClickDockItem = (appID: ApplicationID) => {
     const isOpened = isOpen(appID);
     if (!isOpened) {
-      openApplication(appID);
+      createAppWindow(appID);
     }
 
     const isMinimized = minimizedWindows.some((window) => window.id === appID);

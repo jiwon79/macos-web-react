@@ -3,45 +3,32 @@ import { create } from 'third-parties/zustand';
 import { uniqBy } from 'utils/array/uniqBy';
 import { deepMergeObject } from 'utils/object';
 import { DeepPartial } from 'utils/type';
-import { WindowState } from '../interface/index';
+import { MinimizedWindow, Window } from '../interface';
 import { initialWindowStates } from './initialWindowStatesXX';
 
-interface MinimizedWindow {
-  id: string;
-  image: string;
-}
-
 export interface WindowsState {
-  windows: WindowState[];
+  windows: Window[];
   windowElements: Record<string, HTMLDivElement>;
   minimizedWindows: MinimizedWindow[];
-  minimizingWindows: MinimizedWindow[];
   focusedWindowID: string | null;
-  minimizedDockIndicatorRef: HTMLDivElement | null;
 }
 
 export interface WindowsAction {
   setFocusedWindowID: (id: string | null) => void;
-  openApplication: (appID: ApplicationID) => void;
-  addWindow: (window: WindowState) => void;
-  removeWindow: (id: string) => void;
-  updateWindow: (id: string, data: DeepPartial<WindowState>) => void;
+  createAppWindow: (appID: ApplicationID) => void;
+  updateWindow: (id: string, data: DeepPartial<Window>) => void;
+  deleteWindow: (id: string) => void;
   setWindowRef: (id: string, element: HTMLDivElement) => void;
 
   minimizeWindow: (window: MinimizedWindow) => void;
   restoreMinimizedWindow: (id: string) => void;
-  startMinimizingWindow: (window: MinimizedWindow) => void;
-  stopMinimizingWindow: (id: string) => void;
-  setMinimizedDockIndicatorRef: (ref: HTMLDivElement) => void;
 }
 
 export const useWindowsStore = create<WindowsState, WindowsAction>((set) => ({
   windows: initialWindowStates,
   windowElements: {},
   minimizedWindows: [],
-  minimizingWindows: [],
   focusedWindowID: null,
-  minimizedDockIndicatorRef: null,
   actions: {
     setFocusedWindowID: (id: string | null) =>
       set((state) => {
@@ -65,14 +52,14 @@ export const useWindowsStore = create<WindowsState, WindowsAction>((set) => ({
           ],
         };
       }),
-    openApplication: (appID) =>
+    createAppWindow: (appID) =>
       set((state) => {
         const app = applications[appID];
         if (app == null) {
           return state;
         }
 
-        const window: WindowState = {
+        const window: Window = {
           appID,
           id: self.crypto.randomUUID(),
           content: app.app(),
@@ -86,12 +73,6 @@ export const useWindowsStore = create<WindowsState, WindowsAction>((set) => ({
 
         return { windows: [...state.windows, window] };
       }),
-    addWindow: (window) =>
-      set((state) => ({ windows: [...state.windows, window] })),
-    removeWindow: (id) =>
-      set((state) => ({
-        windows: state.windows.filter((window) => window.id !== id),
-      })),
     updateWindow: (id, data) => {
       set((state) => ({
         windows: state.windows.map((window) =>
@@ -99,6 +80,10 @@ export const useWindowsStore = create<WindowsState, WindowsAction>((set) => ({
         ),
       }));
     },
+    deleteWindow: (id) =>
+      set((state) => ({
+        windows: state.windows.filter((window) => window.id !== id),
+      })),
     setWindowRef: (id, element) =>
       set((state) => ({
         windowElements: { ...state.windowElements, [id]: element },
@@ -110,27 +95,12 @@ export const useWindowsStore = create<WindowsState, WindowsAction>((set) => ({
           (window) => window.id
         ),
       })),
-    startMinimizingWindow: (window) =>
-      set((state) => ({
-        minimizingWindows: uniqBy(
-          [...state.minimizingWindows, window],
-          (window) => window.id
-        ),
-      })),
-    stopMinimizingWindow: (id) =>
-      set((state) => ({
-        minimizingWindows: state.minimizingWindows.filter(
-          (minimizingWindow) => minimizingWindow.id !== id
-        ),
-      })),
     restoreMinimizedWindow: (id) =>
       set((state) => ({
         minimizedWindows: state.minimizedWindows.filter(
           (minimizedWindow) => minimizedWindow.id !== id
         ),
       })),
-    setMinimizedDockIndicatorRef: (ref) =>
-      set({ minimizedDockIndicatorRef: ref }),
   },
 }));
 

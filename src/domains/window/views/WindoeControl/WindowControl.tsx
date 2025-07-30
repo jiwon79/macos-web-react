@@ -9,6 +9,10 @@ import { getInterpolatedBezierPoints } from 'domains/window/services/getInterpol
 import { getTransformedImage } from 'domains/window/services/getTransformedImage';
 import { getWindowImageUrl } from 'domains/window/services/getWindowImageUrl';
 import { useWindowsAction, useWindowsStore } from 'domains/window/store/store';
+import {
+  useWindowControlAction,
+  useWindowControlStore,
+} from 'domains/window-animation/windowControlStore';
 import html2canvas from 'html2canvas';
 import { useWindowContext } from '../WindowContext';
 import {
@@ -26,14 +30,14 @@ const ANIMATION_DURATION = 500;
 
 export function WindowControl({ size }: WindowControlProps) {
   const { id } = useWindowContext();
-  const {
-    removeWindow,
-    minimizeWindow,
-    startMinimizingWindow,
-    stopMinimizingWindow,
-  } = useWindowsAction();
-  const { windows, windowElements, minimizedDockIndicatorRef } =
-    useWindowsStore();
+  const { windows, windowElements } = useWindowsStore();
+  const { deleteWindow: removeWindow, minimizeWindow } = useWindowsAction();
+  const minimizedDockIndicatorRef = useWindowControlStore(
+    (state) => state.minimizedDockIndicatorRef
+  );
+  const { startMinimizingWindow, stopMinimizingWindow } =
+    useWindowControlAction();
+
   const curWindow = windows.find((window) => window.id === id);
   const curWindowElement = windowElements[id];
 
@@ -75,11 +79,7 @@ export function WindowControl({ size }: WindowControlProps) {
     }
     const windowImageUrl = windowImage.url;
     const widthRatio = windowImage.widthRatio;
-    const offsetYRatio = windowImage.offsetYRatio;
     const DOCK_ITEM_SIZE_2 = DOCK_ITEM_SIZE * widthRatio;
-    const DOCK_PADDING_TOP = 5;
-    const DOCK_ITEM_OFFSET_Y =
-      DOCK_ITEM_SIZE_2 * offsetYRatio + DOCK_PADDING_TOP;
 
     minimizeWindow({ id, image: windowImageUrl });
     startMinimizingWindow({ id, image: windowImageUrl });
@@ -110,11 +110,10 @@ export function WindowControl({ size }: WindowControlProps) {
       return [P1, P2];
     };
 
-    const animate1 = (startTime: number) => {
+    const animate = (startTime: number) => {
       const currentTime = Date.now();
       const time = currentTime - startTime;
       const t = Math.min(time / ANIMATION_DURATION, 1);
-      const mt = 1 - t;
 
       const xt = Math.min(time / X_ANIMATION_DURATION, 1);
       const mxt = 1 - xt;
@@ -133,14 +132,14 @@ export function WindowControl({ size }: WindowControlProps) {
       const LEFT_P0 = { x: x, y: y };
       const LEFT_P3 = {
         x: LEFT_END_X,
-        y: minimizedDockRect.top + DOCK_ITEM_OFFSET_Y,
+        y: minimizedDockRect.top,
       };
       const [LEFT_P1, LEFT_P2] = getPoints(LEFT_P0, LEFT_P3);
 
       const RIGHT_P0 = { x: x + width, y: y };
       const RIGHT_P3 = {
         x: RIGHT_END_X,
-        y: minimizedDockRect.top + DOCK_ITEM_OFFSET_Y,
+        y: minimizedDockRect.top,
       };
       const [RIGHT_P1, RIGHT_P2] = getPoints(RIGHT_P0, RIGHT_P3);
 
@@ -176,81 +175,14 @@ export function WindowControl({ size }: WindowControlProps) {
       drawCurve(ctx, rightBezierPoints);
 
       if (t < 1) {
-        requestAnimationFrame(() => animate1(startTime));
+        requestAnimationFrame(() => animate(startTime));
       } else {
         document.body.removeChild(canvas);
         stopMinimizingWindow(id);
       }
     };
 
-    animate1(Date.now());
-
-    // // animate2: 베지어 커브를 따라 y축으로 내려가는 애니메이션
-    // const animate2 = (startTime: number) => {
-    //   const currentTime = Date.now();
-    //   const t = Math.min(
-    //     (currentTime - startTime) / (ANIMATION_DURATION / 2),
-    //     1
-    //   );
-
-    //   const moveY = Math.round((minimizedDockRect.top - y) * t);
-
-    //   ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    //   // 베지어 곡선 좌표 계산
-    //   const END_POINT = { x: minimizedDockRect.x, y: minimizedDockRect.top };
-    //   const LEFT_END_X = END_POINT.x - (DOCK_ITEM_SIZE_2 / 4) * (1 + t);
-    //   const RIGHT_END_X = END_POINT.x + (DOCK_ITEM_SIZE_2 / 4) * (1 + t);
-
-    //   const LEFT_P0 = { x: x, y: y };
-    //   const LEFT_P3 = {
-    //     x: LEFT_END_X,
-    //     y: minimizedDockRect.top + DOCK_ITEM_OFFSET_Y,
-    //   };
-    //   const [LEFT_P1, LEFT_P2] = getPoints(LEFT_P0, LEFT_P3);
-
-    //   const RIGHT_P0 = { x: x + width, y: y };
-    //   const RIGHT_P3 = {
-    //     x: RIGHT_END_X,
-    //     y: minimizedDockRect.top + DOCK_ITEM_OFFSET_Y,
-    //   };
-    //   const [RIGHT_P1, RIGHT_P2] = getPoints(RIGHT_P0, RIGHT_P3);
-
-    //   const leftBezierPoints = getInterpolatedBezierPoints(
-    //     LEFT_P0,
-    //     LEFT_P1,
-    //     LEFT_P2,
-    //     LEFT_P3
-    //   );
-    //   const rightBezierPoints = getInterpolatedBezierPoints(
-    //     RIGHT_P0,
-    //     RIGHT_P1,
-    //     RIGHT_P2,
-    //     RIGHT_P3
-    //   );
-
-    //   // 베지어 곡선을 사용한 변형된 이미지 데이터 생성 (yOffset 적용)
-    //   const transformedImage = getTransformedImage(
-    //     image,
-    //     leftBezierPoints,
-    //     rightBezierPoints,
-    //     { x, y, width, height },
-    //     { width: canvas.width, height: canvas.height },
-    //     moveY
-    //   );
-    //   ctx.putImageData(transformedImage, 0, 0);
-
-    //   // 1. 마지막 베지어 커브 그리기
-    //   drawCurve(ctx, leftBezierPoints);
-    //   drawCurve(ctx, rightBezierPoints);
-
-    //   if (t < 1) {
-    //     requestAnimationFrame(() => animate2(startTime));
-    //   } else {
-    //     document.body.removeChild(canvas);
-    //     stopMinimizingWindow(id);
-    //   }
-    // };
+    animate(Date.now());
   };
 
   const onControlButtonMouseDown = (event: React.MouseEvent) => {

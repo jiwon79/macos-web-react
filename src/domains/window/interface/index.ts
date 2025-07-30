@@ -1,1 +1,1 @@
-export * from './WindowState.ts';
+export * from './window.ts';

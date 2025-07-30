@@ -1,4 +1,4 @@
-export interface WindowState {
+export interface Window {
   id: string;
   appID: string;
   content: React.ReactNode;
@@ -10,4 +10,9 @@ export interface WindowStyle {
   y: number;
   width: number;
   height: number;
+}
+
+export interface MinimizedWindow {
+  id: string;
+  image: string;
 }
