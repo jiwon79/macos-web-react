@@ -17,6 +17,10 @@ import { DockItem } from '../DockItem';
 import { DockSeparator } from '../DockSeparator';
 import * as styles from './Dock.css.ts';
 
+// 1. 이미지, 위치 등 필요한 정보 계산 (minimizedWindow, 나중에 최대화 할 때도 필요한 정보)
+// 2. 애니메이션 중에만 필요한 정보 > animation store에 관련 정보 저장
+// 3. 애니메이션 함수 실행
+
 export function Dock() {
   const [mouseX, setMouseX] = useState<number | null>(null);
   const windows = useWindowsStore((state) => state.windows);

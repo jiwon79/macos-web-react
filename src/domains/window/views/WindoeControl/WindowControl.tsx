@@ -5,19 +5,15 @@ import {
 } from 'assets/icons';
 import { DOCK_ITEM_SIZE } from 'domains/dock/views/DockItem';
 import { useWindowsAction, useWindowsStore } from 'domains/window/store/store';
-import { WINDOW_ANIMATION } from 'domains/window-animation/constant';
 import {
   useWindowControlAction,
   useWindowControlStore,
 } from 'domains/window-animation/windowControlStore';
 import html2canvas from 'html2canvas';
-import { clamp, interpolate } from 'utils/math';
 import { useWindowContext } from '../WindowContext';
-import { createScreenCanvas } from './services/createScreenCanvas';
-import { easeInOut } from './services/cubicBezier';
-import { getTransformedImage } from './services/getTransformedImage';
-import { getWindowImageUrl } from './services/getWindowImageUrl';
-import { getWindowInterpolatedBezierPoints } from './services/getWindowInterpolatedBezierPoints';
+import { animateGenieEffect } from './services/animateGenieEffect';
+import { getDockItemImage } from './services/getDockItemImage';
+import { getImageData } from './services/getImageData';
 import {
   closeIcon,
   container,
@@ -39,8 +35,8 @@ export function WindowControl({ size }: WindowControlProps) {
   const { startMinimizingWindow, stopMinimizingWindow } =
     useWindowControlAction();
 
-  const curWindow = windows.find((window) => window.id === id);
-  const curWindowElement = windowElements[id];
+  const window = windows.find((window) => window.id === id);
+  const windowElement = windowElements[id];
 
   const onCloseMouseDown = (event: React.MouseEvent) => {
     event.stopPropagation();
@@ -49,7 +45,7 @@ export function WindowControl({ size }: WindowControlProps) {
 
   const onMinimizeMouseDown = async (event: React.MouseEvent) => {
     event.stopPropagation();
-    if (curWindow == null || curWindowElement == null) {
+    if (window == null || windowElement == null) {
       return;
     }
 
@@ -60,100 +56,36 @@ export function WindowControl({ size }: WindowControlProps) {
     const targetX = targetRect.x;
     const targetY = targetRect.y;
 
-    const canvas = createScreenCanvas();
-    document.body.appendChild(canvas);
-
-    const ctx = canvas.getContext('2d');
-    if (ctx == null) {
-      return;
-    }
-
-    const windowCanvas = await html2canvas(curWindowElement, {
+    const windowCanvas = await html2canvas(windowElement, {
       backgroundColor: null,
       logging: false,
       useCORS: true,
     });
-
-    const windowImage = getWindowImageUrl(windowCanvas);
-    if (windowImage == null) {
+    const { width, height } = window.style;
+    const image = getImageData(windowCanvas, width, height);
+    if (image == null) {
       return;
     }
 
-    const windowImageUrl = windowImage.url;
-    const windowImageWidthRatio = windowImage.widthRatio;
-    const targetWidth = DOCK_ITEM_SIZE * windowImageWidthRatio;
+    const dockItemImage = getDockItemImage(windowCanvas);
+    if (dockItemImage == null) {
+      return;
+    }
 
-    minimizeWindow({ id, image: windowImageUrl });
-    startMinimizingWindow({ id, image: windowImageUrl });
+    const dockItemImageUrl = dockItemImage.url;
+    const dockItemImageWidthRatio = dockItemImage.widthRatio;
+    const targetWidth = DOCK_ITEM_SIZE * dockItemImageWidthRatio;
 
-    const { x, y, width, height } = curWindow.style;
-    ctx.drawImage(windowCanvas, x, y, width, height);
-    const image = ctx.getImageData(x, y, width, height);
+    minimizeWindow({ id, image: dockItemImageUrl });
+    startMinimizingWindow({ id, image: dockItemImageUrl });
 
-    const xAnimationDuration =
-      WINDOW_ANIMATION.DURATION * WINDOW_ANIMATION.X_ANIMATION_DURATION_RATIO;
-    const yAnimationStart =
-      WINDOW_ANIMATION.DURATION *
-      WINDOW_ANIMATION.X_ANIMATION_DURATION_RATIO *
-      ((y + height) / targetY);
-    const yAnimationDuration = WINDOW_ANIMATION.DURATION - yAnimationStart;
+    await animateGenieEffect(image, window.style, {
+      x: targetX,
+      y: targetY,
+      width: targetWidth,
+    });
 
-    const animate = (startTime: number) => {
-      const currentTime = Date.now();
-      const time = currentTime - startTime;
-      const t = Math.min(time / WINDOW_ANIMATION.DURATION, 1);
-      const easeT = easeInOut(t);
-
-      const xt = Math.min(time / xAnimationDuration, 1);
-      const easeXt = easeInOut(xt);
-      const yt = clamp((time - yAnimationStart) / yAnimationDuration, 0, 1);
-      const easeYt = easeInOut(yt);
-
-      const currentTargetWidth = targetWidth * t;
-
-      const leftStart = { x, y };
-      const leftEnd = {
-        x: interpolate(x, targetX)(easeXt) - currentTargetWidth / 2,
-        y: targetY,
-      };
-      const rightStart = { x: x + width, y };
-      const rightEnd = {
-        x: interpolate(x + width, targetX)(easeXt) + currentTargetWidth / 2,
-        y: targetY,
-      };
-
-      const leftBezierPoints = getWindowInterpolatedBezierPoints(
-        leftStart,
-        leftEnd
-      );
-      const rightBezierPoints = getWindowInterpolatedBezierPoints(
-        rightStart,
-        rightEnd
-      );
-
-      const moveY = Math.round((targetY - y) * easeYt);
-
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      const transformedImage = getTransformedImage(
-        image,
-        leftBezierPoints,
-        rightBezierPoints,
-        { x, y, width, height },
-        { width: canvas.width, height: canvas.height },
-        moveY
-      );
-      ctx.putImageData(transformedImage, 0, 0);
-
-      if (easeT < 1) {
-        requestAnimationFrame(() => animate(startTime));
-      } else {
-        document.body.removeChild(canvas);
-        stopMinimizingWindow(id);
-      }
-    };
-
-    animate(Date.now());
+    stopMinimizingWindow(id);
   };
 
   const onControlButtonMouseDown = (event: React.MouseEvent) => {

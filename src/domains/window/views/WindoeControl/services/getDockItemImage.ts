@@ -2,7 +2,7 @@ const SIZE = 400;
 const INNER_SIZE_RATIO = 0.85;
 const INNER_SIZE = SIZE * INNER_SIZE_RATIO;
 
-export function getWindowImageUrl(
+export function getDockItemImage(
   windowCanvas: HTMLCanvasElement
 ): { url: string; widthRatio: number } | null {
   const resizedCanvas = document.createElement('canvas');
