@@ -101,40 +101,37 @@ export function WindowControl({ size }: WindowControlProps) {
     const animate = (startTime: number) => {
       const currentTime = Date.now();
       const time = currentTime - startTime;
-      const tRaw = Math.min(time / WINDOW_ANIMATION.DURATION, 1);
-      const t = easeInOut(tRaw);
+      const t = Math.min(time / WINDOW_ANIMATION.DURATION, 1);
+      const easeT = easeInOut(t);
 
-      const xtRaw = Math.min(time / xAnimationDuration, 1);
-      const xt = easeInOut(xtRaw);
-      const ytRaw = clamp((time - yAnimationStart) / yAnimationDuration, 0, 1);
-      const yt = easeInOut(ytRaw);
+      const xt = Math.min(time / xAnimationDuration, 1);
+      const easeXt = easeInOut(xt);
+      const yt = clamp((time - yAnimationStart) / yAnimationDuration, 0, 1);
+      const easeYt = easeInOut(yt);
 
-      const currentTargetWidth = targetWidth * tRaw;
-      const leftEndX = interpolate(x, targetX)(xt) - currentTargetWidth / 2;
-      const rightEndX =
-        interpolate(x + width, targetX)(xt) + currentTargetWidth / 2;
+      const currentTargetWidth = targetWidth * t;
 
       const leftStart = { x, y };
       const leftEnd = {
-        x: leftEndX,
+        x: interpolate(x, targetX)(easeXt) - currentTargetWidth / 2,
         y: targetY,
       };
+      const rightStart = { x: x + width, y };
+      const rightEnd = {
+        x: interpolate(x + width, targetX)(easeXt) + currentTargetWidth / 2,
+        y: targetY,
+      };
+
       const leftBezierPoints = getWindowInterpolatedBezierPoints(
         leftStart,
         leftEnd
       );
-
-      const rightStart = { x: x + width, y: y };
-      const rightEnd = {
-        x: rightEndX,
-        y: targetY,
-      };
       const rightBezierPoints = getWindowInterpolatedBezierPoints(
         rightStart,
         rightEnd
       );
 
-      const moveY = Math.round((targetY - y) * yt);
+      const moveY = Math.round((targetY - y) * easeYt);
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -148,7 +145,7 @@ export function WindowControl({ size }: WindowControlProps) {
       );
       ctx.putImageData(transformedImage, 0, 0);
 
-      if (t < 1) {
+      if (easeT < 1) {
         requestAnimationFrame(() => animate(startTime));
       } else {
         document.body.removeChild(canvas);
