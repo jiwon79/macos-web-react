@@ -1,4 +1,5 @@
 import { useDockHoverAnimation } from 'domains/dock/hooks';
+import { WINDOW_ANIMATION } from 'domains/window-animation/constant';
 import { animate, motion, useMotionValue, useTransform } from 'framer-motion';
 import { useEffect, useRef } from 'react';
 import { DockIconOpenIndicator } from '../DockIconOpenIndicator';
@@ -15,7 +16,6 @@ interface DockItemProps {
 // TODO: 애니메이션 스토어 만들어서, moveY 시작 시간 정하고 반영하기
 
 export const DOCK_ITEM_SIZE = 50;
-const ANIMATION_DURATION = 500;
 
 export function DockItem({
   open,
@@ -51,7 +51,7 @@ export function DockItem({
   useEffect(() => {
     if (isAnimating) {
       const animation = animate(t, 1, {
-        duration: ANIMATION_DURATION / 1000,
+        duration: WINDOW_ANIMATION.DURATION / 1000,
       });
 
       return () => animation.stop();

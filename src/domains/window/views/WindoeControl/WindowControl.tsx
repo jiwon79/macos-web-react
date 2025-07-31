@@ -9,6 +9,7 @@ import { getInterpolatedBezierPoints } from 'domains/window/services/getInterpol
 import { getTransformedImage } from 'domains/window/services/getTransformedImage';
 import { getWindowImageUrl } from 'domains/window/services/getWindowImageUrl';
 import { useWindowsAction, useWindowsStore } from 'domains/window/store/store';
+import { WINDOW_ANIMATION } from 'domains/window-animation/constant';
 import {
   useWindowControlAction,
   useWindowControlStore,
@@ -25,8 +26,6 @@ import {
 interface WindowControlProps {
   size?: 'standard' | 'mono' | 'withTitle';
 }
-
-const ANIMATION_DURATION = 500;
 
 export function WindowControl({ size }: WindowControlProps) {
   const { id } = useWindowContext();
@@ -47,23 +46,23 @@ export function WindowControl({ size }: WindowControlProps) {
   };
 
   const onMinimizeMouseDown = async (event: React.MouseEvent) => {
-    const minimizedDockRect =
-      minimizedDockIndicatorRef?.getBoundingClientRect();
-    if (minimizedDockRect == null) {
+    event.stopPropagation();
+    if (curWindow == null || curWindowElement == null) {
       return;
     }
 
-    event.stopPropagation();
-    const canvas = document.createElement('canvas');
-    canvas.style.position = 'absolute';
-    canvas.style.top = '0';
-    canvas.style.left = '0';
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    const targetRect = minimizedDockIndicatorRef?.getBoundingClientRect();
+    if (targetRect == null) {
+      return;
+    }
+    const targetX = targetRect.x;
+    const targetY = targetRect.y;
+
+    const canvas = createScreenCanvas();
     document.body.appendChild(canvas);
 
     const ctx = canvas.getContext('2d');
-    if (ctx == null || curWindow == null || !curWindowElement) {
+    if (ctx == null) {
       return;
     }
 
@@ -77,9 +76,10 @@ export function WindowControl({ size }: WindowControlProps) {
     if (windowImage == null) {
       return;
     }
+
     const windowImageUrl = windowImage.url;
-    const widthRatio = windowImage.widthRatio;
-    const DOCK_ITEM_SIZE_2 = DOCK_ITEM_SIZE * widthRatio;
+    const windowImageWidthRatio = windowImage.widthRatio;
+    const targetWidth = DOCK_ITEM_SIZE * windowImageWidthRatio;
 
     minimizeWindow({ id, image: windowImageUrl });
     startMinimizingWindow({ id, image: windowImageUrl });
@@ -88,75 +88,55 @@ export function WindowControl({ size }: WindowControlProps) {
     ctx.drawImage(windowCanvas, x, y, width, height);
     const image = ctx.getImageData(x, y, width, height);
 
-    const X_ANIMATION_DURATION = (ANIMATION_DURATION * 2) / 5;
-    const Y_ANIMATION_START =
-      ANIMATION_DURATION * (3 / 5) * (y / canvas.height);
-    const Y_ANIMATION_DURATION = ANIMATION_DURATION - Y_ANIMATION_START;
-
-    const getPoints = (P0: Point, P3: Point) => {
-      const P1XRate = 0.08;
-      const P1YRate = 0.38;
-      const P1 = {
-        x: P0.x * (1 - P1XRate) + P3.x * P1XRate,
-        y: P0.y * (1 - P1YRate) + P3.y * P1YRate,
-      };
-
-      const P2XRate = 0.06;
-      const P2YRate = 0.38;
-      const P2 = {
-        x: P0.x * P2XRate + P3.x * (1 - P2XRate),
-        y: P0.y * P2YRate + P3.y * (1 - P2YRate),
-      };
-      return [P1, P2];
-    };
+    const xAnimationDuration =
+      WINDOW_ANIMATION.DURATION * WINDOW_ANIMATION.X_ANIMATION_DURATION_RATIO;
+    const yAnimationStart =
+      WINDOW_ANIMATION.DURATION *
+      WINDOW_ANIMATION.X_ANIMATION_DURATION_RATIO *
+      ((y + height) / targetY);
+    const yAnimationDuration = WINDOW_ANIMATION.DURATION - yAnimationStart;
 
     const animate = (startTime: number) => {
       const currentTime = Date.now();
       const time = currentTime - startTime;
-      const t = Math.min(time / ANIMATION_DURATION, 1);
+      const t = Math.min(time / WINDOW_ANIMATION.DURATION, 1);
 
-      const xt = Math.min(time / X_ANIMATION_DURATION, 1);
-      const mxt = 1 - xt;
-      const yt = Math.max(
-        Math.min((time - Y_ANIMATION_START) / Y_ANIMATION_DURATION, 1),
-        0
-      );
+      const xt = Math.min(time / xAnimationDuration, 1);
+      const yt = clamp((time - yAnimationStart) / yAnimationDuration, 0, 1);
 
-      // 베지어 곡선 좌표 계산
-      const END_POINT = { x: minimizedDockRect.x, y: minimizedDockRect.top };
-      const LEFT_END_X =
-        x * mxt + END_POINT.x * xt - (DOCK_ITEM_SIZE_2 / 2) * t;
-      const RIGHT_END_X =
-        (x + width) * mxt + END_POINT.x * xt + (DOCK_ITEM_SIZE_2 / 2) * t;
+      const currentTargetWidth = targetWidth * t;
+      const leftEndX = interpolate(x, targetX, xt) - currentTargetWidth / 2;
+      const rightEndX =
+        interpolate(x + width, targetX, xt) + currentTargetWidth / 2;
 
-      const LEFT_P0 = { x: x, y: y };
-      const LEFT_P3 = {
-        x: LEFT_END_X,
-        y: minimizedDockRect.top,
+      const leftP0 = { x, y };
+      const leftP3 = {
+        x: leftEndX,
+        y: targetY,
       };
-      const [LEFT_P1, LEFT_P2] = getPoints(LEFT_P0, LEFT_P3);
+      const [leftP1, leftP2] = getBezierMiddlePoints(leftP0, leftP3);
 
-      const RIGHT_P0 = { x: x + width, y: y };
-      const RIGHT_P3 = {
-        x: RIGHT_END_X,
-        y: minimizedDockRect.top,
+      const rightP0 = { x: x + width, y: y };
+      const rightP3 = {
+        x: rightEndX,
+        y: targetRect.top,
       };
-      const [RIGHT_P1, RIGHT_P2] = getPoints(RIGHT_P0, RIGHT_P3);
+      const [rightP1, rightP2] = getBezierMiddlePoints(rightP0, rightP3);
 
       const leftBezierPoints = getInterpolatedBezierPoints(
-        LEFT_P0,
-        LEFT_P1,
-        LEFT_P2,
-        LEFT_P3
+        leftP0,
+        leftP1,
+        leftP2,
+        leftP3
       );
       const rightBezierPoints = getInterpolatedBezierPoints(
-        RIGHT_P0,
-        RIGHT_P1,
-        RIGHT_P2,
-        RIGHT_P3
+        rightP0,
+        rightP1,
+        rightP2,
+        rightP3
       );
 
-      const moveY = Math.round((minimizedDockRect.top - y) * yt);
+      const moveY = Math.round((targetY - y) * yt);
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -204,6 +184,20 @@ export function WindowControl({ size }: WindowControlProps) {
   );
 }
 
+function createScreenCanvas() {
+  const canvas = document.createElement('canvas');
+  canvas.style.position = 'absolute';
+  canvas.style.top = '0';
+  canvas.style.left = '0';
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  return canvas;
+}
+
+function interpolate(v1: number, v2: number, t: number) {
+  return v1 * (1 - t) + v2 * t;
+}
+
 function drawCurve(ctx: CanvasRenderingContext2D, points: Point[]) {
   ctx.strokeStyle = 'rgba(255, 0, 0, 0.5)';
   ctx.lineWidth = 2;
@@ -213,4 +207,25 @@ function drawCurve(ctx: CanvasRenderingContext2D, points: Point[]) {
     ctx.lineTo(points[i].x, points[i].y);
   }
   ctx.stroke();
+}
+
+const getBezierMiddlePoints = (P0: Point, P3: Point) => {
+  const P1XRate = 0.08;
+  const P1YRate = 0.38;
+  const P1 = {
+    x: P0.x * (1 - P1XRate) + P3.x * P1XRate,
+    y: P0.y * (1 - P1YRate) + P3.y * P1YRate,
+  };
+
+  const P2XRate = 0.06;
+  const P2YRate = 0.38;
+  const P2 = {
+    x: P0.x * P2XRate + P3.x * (1 - P2XRate),
+    y: P0.y * P2YRate + P3.y * (1 - P2YRate),
+  };
+  return [P1, P2];
+};
+
+function clamp(value: number, min: number, max: number) {
+  return Math.max(min, Math.min(value, max));
 }

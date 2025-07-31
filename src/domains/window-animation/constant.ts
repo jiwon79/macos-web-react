@@ -1,0 +1,5 @@
+export const WINDOW_ANIMATION = {
+  DURATION: 500,
+  X_ANIMATION_DURATION_RATIO: 2 / 5,
+  //   DURATION: 2000,
+};
