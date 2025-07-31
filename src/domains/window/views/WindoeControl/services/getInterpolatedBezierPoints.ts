@@ -1,4 +1,4 @@
-import { Point } from '../interface/Point';
+import { Point } from 'domains/window/interface/Point';
 
 export function getInterpolatedBezierPoints(
   P0: Point,
@@ -78,3 +78,57 @@ function getBezierPoint(
     y: mt3 * P0.y + 3 * mt2 * t * P1.y + 3 * mt * t2 * P2.y + t3 * P3.y,
   };
 }
+
+export function createCubicBezierFunction(
+  x1: number,
+  y1: number,
+  x2: number,
+  y2: number,
+  epsilon = 1e-6
+) {
+  return (xTarget: number) => {
+    if (xTarget === 0) {
+      return 0;
+    }
+
+    if (xTarget === 1) {
+      return 1;
+    }
+
+    let low = 0;
+    let high = 1;
+    let t = 0;
+    while (low < high) {
+      t = (low + high) / 2;
+      const x = cubicBezier(t, 0, x1, x2, 1);
+      if (Math.abs(x - xTarget) < epsilon) {
+        break;
+      }
+      if (x < xTarget) {
+        low = t;
+      } else {
+        high = t;
+      }
+    }
+    const y = cubicBezier(t, 0, y1, y2, 1);
+    return y;
+  };
+}
+
+function cubicBezier(
+  t: number,
+  p0: number,
+  p1: number,
+  p2: number,
+  p3: number
+) {
+  return (
+    (1 - t) ** 3 * p0 +
+    3 * (1 - t) ** 2 * t * p1 +
+    3 * (1 - t) * t ** 2 * p2 +
+    t ** 3 * p3
+  );
+}
+
+export const easeInOutCubicBezier = createCubicBezierFunction(0.42, 0, 0.58, 1);
+export const easeOutCubicBezier = createCubicBezierFunction(0, 0, 0.58, 1);

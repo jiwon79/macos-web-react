@@ -1,4 +1,4 @@
-import { Point } from '../interface/Point';
+import { Point } from 'domains/window/interface/Point';
 
 export function getTransformedImage(
   image: ImageData,

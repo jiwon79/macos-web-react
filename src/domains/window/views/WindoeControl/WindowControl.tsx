@@ -5,17 +5,18 @@ import {
 } from 'assets/icons';
 import { DOCK_ITEM_SIZE } from 'domains/dock/views/DockItem';
 import { Point } from 'domains/window/interface/Point';
-import { getInterpolatedBezierPoints } from 'domains/window/services/getInterpolatedBezierPoints';
-import { getTransformedImage } from 'domains/window/services/getTransformedImage';
-import { getWindowImageUrl } from 'domains/window/services/getWindowImageUrl';
 import { useWindowsAction, useWindowsStore } from 'domains/window/store/store';
 import { WINDOW_ANIMATION } from 'domains/window-animation/constant';
 import {
   useWindowControlAction,
   useWindowControlStore,
 } from 'domains/window-animation/windowControlStore';
+import { easeInOut } from 'framer-motion';
 import html2canvas from 'html2canvas';
 import { useWindowContext } from '../WindowContext';
+import { getInterpolatedBezierPoints } from './services/getInterpolatedBezierPoints';
+import { getTransformedImage } from './services/getTransformedImage';
+import { getWindowImageUrl } from './services/getWindowImageUrl';
 import {
   closeIcon,
   container,
@@ -99,12 +100,15 @@ export function WindowControl({ size }: WindowControlProps) {
     const animate = (startTime: number) => {
       const currentTime = Date.now();
       const time = currentTime - startTime;
-      const t = Math.min(time / WINDOW_ANIMATION.DURATION, 1);
+      const tRaw = Math.min(time / WINDOW_ANIMATION.DURATION, 1);
+      const t = easeInOut(tRaw);
 
-      const xt = Math.min(time / xAnimationDuration, 1);
-      const yt = clamp((time - yAnimationStart) / yAnimationDuration, 0, 1);
+      const xtRaw = Math.min(time / xAnimationDuration, 1);
+      const xt = easeInOut(xtRaw);
+      const ytRaw = clamp((time - yAnimationStart) / yAnimationDuration, 0, 1);
+      const yt = easeInOut(ytRaw);
 
-      const currentTargetWidth = targetWidth * t;
+      const currentTargetWidth = targetWidth * tRaw;
       const leftEndX = interpolate(x, targetX, xt) - currentTargetWidth / 2;
       const rightEndX =
         interpolate(x + width, targetX, xt) + currentTargetWidth / 2;
@@ -150,9 +154,6 @@ export function WindowControl({ size }: WindowControlProps) {
         moveY
       );
       ctx.putImageData(transformedImage, 0, 0);
-
-      drawCurve(ctx, leftBezierPoints);
-      drawCurve(ctx, rightBezierPoints);
 
       if (t < 1) {
         requestAnimationFrame(() => animate(startTime));
