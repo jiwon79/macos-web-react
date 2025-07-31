@@ -4,19 +4,20 @@ import {
   IconWindowMinimize,
 } from 'assets/icons';
 import { DOCK_ITEM_SIZE } from 'domains/dock/views/DockItem';
-import { Point } from 'domains/window/interface/Point';
 import { useWindowsAction, useWindowsStore } from 'domains/window/store/store';
 import { WINDOW_ANIMATION } from 'domains/window-animation/constant';
 import {
   useWindowControlAction,
   useWindowControlStore,
 } from 'domains/window-animation/windowControlStore';
-import { easeInOut } from 'framer-motion';
 import html2canvas from 'html2canvas';
+import { clamp, interpolate } from 'utils/math';
 import { useWindowContext } from '../WindowContext';
-import { getInterpolatedBezierPoints } from './services/getInterpolatedBezierPoints';
+import { createScreenCanvas } from './services/createScreenCanvas';
+import { easeInOut } from './services/cubicBezier';
 import { getTransformedImage } from './services/getTransformedImage';
 import { getWindowImageUrl } from './services/getWindowImageUrl';
+import { getWindowInterpolatedBezierPoints } from './services/getWindowInterpolatedBezierPoints';
 import {
   closeIcon,
   container,
@@ -109,42 +110,34 @@ export function WindowControl({ size }: WindowControlProps) {
       const yt = easeInOut(ytRaw);
 
       const currentTargetWidth = targetWidth * tRaw;
-      const leftEndX = interpolate(x, targetX, xt) - currentTargetWidth / 2;
+      const leftEndX = interpolate(x, targetX)(xt) - currentTargetWidth / 2;
       const rightEndX =
-        interpolate(x + width, targetX, xt) + currentTargetWidth / 2;
+        interpolate(x + width, targetX)(xt) + currentTargetWidth / 2;
 
-      const leftP0 = { x, y };
-      const leftP3 = {
+      const leftStart = { x, y };
+      const leftEnd = {
         x: leftEndX,
         y: targetY,
       };
-      const [leftP1, leftP2] = getBezierMiddlePoints(leftP0, leftP3);
-
-      const rightP0 = { x: x + width, y: y };
-      const rightP3 = {
-        x: rightEndX,
-        y: targetRect.top,
-      };
-      const [rightP1, rightP2] = getBezierMiddlePoints(rightP0, rightP3);
-
-      const leftBezierPoints = getInterpolatedBezierPoints(
-        leftP0,
-        leftP1,
-        leftP2,
-        leftP3
+      const leftBezierPoints = getWindowInterpolatedBezierPoints(
+        leftStart,
+        leftEnd
       );
-      const rightBezierPoints = getInterpolatedBezierPoints(
-        rightP0,
-        rightP1,
-        rightP2,
-        rightP3
+
+      const rightStart = { x: x + width, y: y };
+      const rightEnd = {
+        x: rightEndX,
+        y: targetY,
+      };
+      const rightBezierPoints = getWindowInterpolatedBezierPoints(
+        rightStart,
+        rightEnd
       );
 
       const moveY = Math.round((targetY - y) * yt);
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // 베지어 곡선을 사용한 변형된 이미지 데이터 생성
       const transformedImage = getTransformedImage(
         image,
         leftBezierPoints,
@@ -183,50 +176,4 @@ export function WindowControl({ size }: WindowControlProps) {
       </button>
     </div>
   );
-}
-
-function createScreenCanvas() {
-  const canvas = document.createElement('canvas');
-  canvas.style.position = 'absolute';
-  canvas.style.top = '0';
-  canvas.style.left = '0';
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-  return canvas;
-}
-
-function interpolate(v1: number, v2: number, t: number) {
-  return v1 * (1 - t) + v2 * t;
-}
-
-function drawCurve(ctx: CanvasRenderingContext2D, points: Point[]) {
-  ctx.strokeStyle = 'rgba(255, 0, 0, 0.5)';
-  ctx.lineWidth = 2;
-  ctx.beginPath();
-  ctx.moveTo(points[0].x, points[0].y);
-  for (let i = 0; i < points.length; i++) {
-    ctx.lineTo(points[i].x, points[i].y);
-  }
-  ctx.stroke();
-}
-
-const getBezierMiddlePoints = (P0: Point, P3: Point) => {
-  const P1XRate = 0.08;
-  const P1YRate = 0.38;
-  const P1 = {
-    x: P0.x * (1 - P1XRate) + P3.x * P1XRate,
-    y: P0.y * (1 - P1YRate) + P3.y * P1YRate,
-  };
-
-  const P2XRate = 0.06;
-  const P2YRate = 0.38;
-  const P2 = {
-    x: P0.x * P2XRate + P3.x * (1 - P2XRate),
-    y: P0.y * P2YRate + P3.y * (1 - P2YRate),
-  };
-  return [P1, P2];
-};
-
-function clamp(value: number, min: number, max: number) {
-  return Math.max(min, Math.min(value, max));
 }
