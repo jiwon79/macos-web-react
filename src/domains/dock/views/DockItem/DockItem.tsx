@@ -1,8 +1,8 @@
-import { useDockHoverAnimation } from 'domains/dock/hooks';
-import { WINDOW_ANIMATION } from 'domains/window-animation/constant';
-import { animate, motion, useMotionValue, useTransform } from 'framer-motion';
-import { useEffect, useRef } from 'react';
+import { useDockItemSize } from 'domains/dock/hooks/useDockItemSize';
+import { motion } from 'framer-motion';
+import { useRef } from 'react';
 import { DockIconOpenIndicator } from '../DockIconOpenIndicator';
+import { DOCK_ITEM_SIZE } from './constant';
 import * as styles from './DockItem.css';
 
 interface DockItemProps {
@@ -10,77 +10,26 @@ interface DockItemProps {
   mouseX: number | null;
   open?: boolean;
   onClick?: () => void;
-  isAnimating?: boolean;
 }
 
-// TODO: 애니메이션 스토어 만들어서, moveY 시작 시간 정하고 반영하기
-
-export const DOCK_ITEM_SIZE = 50;
-
-export function DockItem({
-  open,
-  mouseX,
-  src,
-  onClick,
-  isAnimating,
-}: DockItemProps) {
+export function DockItem({ open, mouseX, src, onClick }: DockItemProps) {
   const ref = useRef<HTMLImageElement>(null);
-  const { scale } = useDockHoverAnimation(mouseX, ref, DOCK_ITEM_SIZE);
-
-  const size = useTransform(() => DOCK_ITEM_SIZE * scale.get());
-
-  const t = useMotionValue(0);
-  const scaleX = useTransform(() => (isAnimating ? t.get() : undefined));
-  const containerWidth = useTransform(() =>
-    isAnimating ? DOCK_ITEM_SIZE * t.get() : size.get()
-  );
-  const width = useTransform(() => (isAnimating ? DOCK_ITEM_SIZE : size.get()));
-  const height = useTransform(() =>
-    isAnimating ? DOCK_ITEM_SIZE : size.get()
-  );
-
-  const clipPathValue = useTransform(
-    t,
-    [0, 0.5, 1],
-    ['inset(100% 0 0 0)', 'inset(100% 0 0 0)', 'inset(0% 0 0 0)']
-  );
-  const clipPath = useTransform(() =>
-    isAnimating ? clipPathValue.get() : undefined
-  );
-
-  useEffect(() => {
-    if (isAnimating) {
-      const animation = animate(t, 1, {
-        duration: WINDOW_ANIMATION.DURATION / 1000,
-      });
-
-      return () => animation.stop();
-    } else {
-      t.set(0);
-    }
-  }, [isAnimating, t]);
+  const size = useDockItemSize(mouseX, ref, DOCK_ITEM_SIZE);
 
   return (
-    <motion.div
-      className={styles.item}
-      style={{
-        width: containerWidth,
-      }}
-    >
+    <div className={styles.item}>
       <motion.img
         ref={ref}
         className={styles.icon}
         src={src}
         draggable={false}
         style={{
-          width,
-          height,
-          clipPath,
-          scaleX,
+          width: size,
+          height: size,
         }}
         onClick={onClick}
       />
       <DockIconOpenIndicator className={styles.openIndicator} open={open} />
-    </motion.div>
+    </div>
   );
 }

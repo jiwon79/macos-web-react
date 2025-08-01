@@ -3,12 +3,12 @@ import {
   IconWindowMaximize,
   IconWindowMinimize,
 } from 'assets/icons';
-import { DOCK_ITEM_SIZE } from 'domains/dock/views/DockItem';
+import { DOCK_ITEM_SIZE } from 'domains/dock/views/DockItem/constant';
 import { useWindowsAction, useWindowsStore } from 'domains/window/store/store';
 import {
-  useWindowControlAction,
-  useWindowControlStore,
-} from 'domains/window-animation/windowControlStore';
+  useWindowAnimationAction,
+  useWindowAnimationStore,
+} from 'domains/window-animation/store';
 import html2canvas from 'html2canvas';
 import { useWindowContext } from '../WindowContext';
 import { animateGenieEffect } from './services/animateGenieEffect';
@@ -29,11 +29,11 @@ export function WindowControl({ size }: WindowControlProps) {
   const { id } = useWindowContext();
   const { windows, windowElements } = useWindowsStore();
   const { deleteWindow: removeWindow, minimizeWindow } = useWindowsAction();
-  const minimizedDockIndicatorRef = useWindowControlStore(
+  const minimizedDockIndicatorRef = useWindowAnimationStore(
     (state) => state.minimizedDockIndicatorRef
   );
   const { startMinimizingWindow, stopMinimizingWindow } =
-    useWindowControlAction();
+    useWindowAnimationAction();
 
   const window = windows.find((window) => window.id === id);
   const windowElement = windowElements[id];
@@ -76,14 +76,21 @@ export function WindowControl({ size }: WindowControlProps) {
     const dockItemImageWidthRatio = dockItemImage.widthRatio;
     const targetWidth = DOCK_ITEM_SIZE * dockItemImageWidthRatio;
 
-    minimizeWindow({ id, image: dockItemImageUrl });
-    startMinimizingWindow({ id, image: dockItemImageUrl });
-
-    await animateGenieEffect(image, window.style, {
-      x: targetX,
-      y: targetY,
-      width: targetWidth,
+    const target = { x: targetX, y: targetY, width: targetWidth };
+    minimizeWindow({
+      id,
+      image: dockItemImageUrl,
+      window: window.style,
+      target,
     });
+    startMinimizingWindow({
+      id,
+      image: dockItemImageUrl,
+      window: window.style,
+      target,
+    });
+
+    await animateGenieEffect(image, window.style, target);
 
     stopMinimizingWindow(id);
   };

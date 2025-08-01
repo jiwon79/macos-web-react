@@ -2,6 +2,7 @@ import { WINDOW_ANIMATION } from 'domains/window-animation/constant';
 import { clamp, interpolate } from 'utils/math';
 import { createScreenCanvas } from './createScreenCanvas';
 import { easeInOut } from './cubicBezier';
+import { getGenieAnimationTime } from './getGenieAnimationTime';
 import { getTransformedImage } from './getTransformedImage';
 import { getWindowInterpolatedBezierPoints } from './getWindowInterpolatedBezierPoints';
 
@@ -15,13 +16,8 @@ export async function animateGenieEffect(
   const targetWidth = target.width;
   const { x, y, width, height } = window;
 
-  const xAnimationDuration =
-    WINDOW_ANIMATION.DURATION * WINDOW_ANIMATION.X_ANIMATION_DURATION_RATIO;
-  const yAnimationStart =
-    WINDOW_ANIMATION.DURATION *
-    WINDOW_ANIMATION.X_ANIMATION_DURATION_RATIO *
-    ((y + height) / targetY);
-  const yAnimationDuration = WINDOW_ANIMATION.DURATION - yAnimationStart;
+  const { xAnimationDuration, yAnimationStart, yAnimationDuration } =
+    getGenieAnimationTime(window, target);
 
   const canvas = createScreenCanvas();
   const ctx = canvas.getContext('2d');
@@ -56,6 +52,7 @@ export async function animateGenieEffect(
         y: targetY,
       };
 
+      // TODO: 여기에서 end 지점 때문에 윈도우가 target 밑에 있을 때는 다 짤림
       const leftBezierPoints = getWindowInterpolatedBezierPoints(
         leftStart,
         leftEnd

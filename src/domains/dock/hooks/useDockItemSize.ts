@@ -1,13 +1,8 @@
-import {
-  MotionValue,
-  useMotionValue,
-  useSpring,
-  useTransform,
-} from 'framer-motion';
+import { useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { RefObject } from 'react';
 import { useRaf } from 'utils/react/useRaf';
 
-export const useDockHoverAnimation = (
+export const useDockItemSize = (
   mouseX: number | null,
   ref: RefObject<HTMLImageElement>,
   baseSize: number
@@ -23,11 +18,19 @@ export const useDockHoverAnimation = (
     DISTANCE_LIMIT / 1.25,
     DISTANCE_LIMIT,
   ];
-  const SCALE_OUTPUT = [1.0, 1.1, 1.414, 2.0, 1.414, 1.1, 1.0];
+  const SIZE_OUTPUT = [
+    baseSize * 1.0,
+    baseSize * 1.1,
+    baseSize * 1.414,
+    baseSize * 2.0,
+    baseSize * 1.414,
+    baseSize * 1.1,
+    baseSize * 1.0,
+  ];
 
   const distance = useMotionValue(BEYOND_THE_DISTANCE_LIMIT);
-  const rawScale = useTransform(distance, DISTANCE_INPUT, SCALE_OUTPUT);
-  const scale: MotionValue<number> = useSpring(rawScale, {
+  const rawSize = useTransform(distance, DISTANCE_INPUT, SIZE_OUTPUT);
+  const size = useSpring(rawSize, {
     stiffness: 1300,
     damping: 82,
   });
@@ -47,5 +50,5 @@ export const useDockHoverAnimation = (
     distance.set(BEYOND_THE_DISTANCE_LIMIT);
   });
 
-  return { scale };
+  return size;
 };
