@@ -11,6 +11,7 @@ export async function animateGenieEffect(
   window: { x: number; y: number; width: number; height: number },
   target: { x: number; y: number; width: number }
 ) {
+  console.log('START', Date.now());
   const targetX = target.x;
   const targetY = target.y;
   const targetWidth = target.width;
@@ -18,6 +19,7 @@ export async function animateGenieEffect(
 
   const { xAnimationDuration, yAnimationStart, yAnimationDuration } =
     getGenieAnimationTime(window, target);
+  console.log('getGenieAnimationTime', Date.now());
 
   const canvas = createScreenCanvas();
   const ctx = canvas.getContext('2d');

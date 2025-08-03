@@ -1,5 +1,5 @@
 import { MinimizedWindow } from 'domains/window/interface';
-import { getGenieAnimationTime } from 'domains/window/views/WindoeControl/services/getGenieAnimationTime';
+import { getGenieAnimationTime } from 'domains/window/views/WindowControl/services/getGenieAnimationTime';
 import { WINDOW_ANIMATION } from 'domains/window-animation/constant';
 import { useMinimizingWindow } from 'domains/window-animation/store';
 import {
@@ -59,15 +59,20 @@ function AnimatedWindowDockItem({
   );
   const fillAnimationStartRatio =
     fillAnimationStart / WINDOW_ANIMATION.DURATION;
+  console.log({ fillAnimationStart, fillAnimationStartRatio });
   const getClipPath = interpolate(
     [0, fillAnimationStartRatio, 1],
     ['inset(100% 0 0 0)', 'inset(100% 0 0 0)', 'inset(0% 0 0 0)']
   );
+
   const clipPath = useTransform(() => getClipPath(t.get()));
 
+  // TODO: 여기가 35ms 정도 느림. 시작이 어디서 느려지는지 확인하기
   useEffect(() => {
+    console.log('DOCK START', Date.now());
     const animation = animate(t, 1, {
       duration: WINDOW_ANIMATION.DURATION / 1000,
+      ease: 'linear',
     });
 
     return () => animation.stop();
@@ -96,75 +101,3 @@ function AnimatedWindowDockItem({
     </motion.div>
   );
 }
-
-// interface WindowDockItemProps {
-//   id: string;
-//   src: string;
-//   mouseX: number | null;
-//   onClick?: () => void;
-// }
-
-// export function WindowDockItem({
-//   id,
-//   mouseX,
-//   src,
-//   onClick,
-// }: WindowDockItemProps) {
-//   const minimizingWindow = useMinimizingWindow(id);
-//   const animating = minimizingWindow != null;
-
-//   const ref = useRef<HTMLImageElement>(null);
-//   const size = useDockItemSize(mouseX, ref, DOCK_ITEM_SIZE);
-
-//   const t = useMotionValue(0);
-//   const scaleX = useTransform(() => (animating ? t.get() : undefined));
-//   const containerWidth = useTransform(() =>
-//     animating ? DOCK_ITEM_SIZE * t.get() : size.get()
-//   );
-//   const width = useTransform(() => (animating ? DOCK_ITEM_SIZE : size.get()));
-//   const height = useTransform(() => (animating ? DOCK_ITEM_SIZE : size.get()));
-
-//   const getClipPath = interpolate(
-//     [0, 0.5, 1],
-//     ['inset(100% 0 0 0)', 'inset(100% 0 0 0)', 'inset(0% 0 0 0)']
-//   );
-//   const clipPath = useTransform(() =>
-//     animating ? getClipPath(t.get()) : undefined
-//   );
-
-//   useEffect(() => {
-//     if (animating) {
-//       const animation = animate(t, 1, {
-//         duration: WINDOW_ANIMATION.DURATION / 1000,
-//       });
-
-//       return () => animation.stop();
-//     } else {
-//       t.set(0);
-//     }
-//   }, [animating, t]);
-
-//   return (
-//     <motion.div
-//       className={styles.item}
-//       style={{
-//         width: containerWidth,
-//       }}
-//     >
-//       <motion.img
-//         ref={ref}
-//         className={styles.icon}
-//         src={src}
-//         draggable={false}
-//         style={{
-//           width,
-//           height,
-//           clipPath,
-//           scaleX,
-//         }}
-//         onClick={onClick}
-//       />
-//       <DockIconOpenIndicator className={styles.openIndicator} />
-//     </motion.div>
-//   );
-// }
