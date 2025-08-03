@@ -21,13 +21,6 @@ export function getGenieAnimationTime(
   const fillAnimationStart =
     fillAnimationStartAfterYAnimationStart + yAnimationStart;
 
-  console.log({
-    xAnimationDuration,
-    yAnimationStart,
-    yAnimationDuration,
-    fillAnimationStart,
-    fillAnimationStartRatio: fillAnimationStart / DURATION,
-  });
   return {
     xAnimationDuration,
     yAnimationStart,

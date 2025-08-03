@@ -59,17 +59,21 @@ function AnimatedWindowDockItem({
   );
   const fillAnimationStartRatio =
     fillAnimationStart / WINDOW_ANIMATION.DURATION;
-  console.log({ fillAnimationStart, fillAnimationStartRatio });
+
+  const heightRatio = minimizedWindow.target.heightRatio;
+  const paddingYRatio = (1 - heightRatio) / 2;
   const getClipPath = interpolate(
     [0, fillAnimationStartRatio, 1],
-    ['inset(100% 0 0 0)', 'inset(100% 0 0 0)', 'inset(0% 0 0 0)']
+    [
+      `inset(100% 0 0 0)`,
+      `inset(${(1 - paddingYRatio) * 100}% 0 0 0)`,
+      `inset(${paddingYRatio * 100}% 0 0 0)`,
+    ]
   );
 
   const clipPath = useTransform(() => getClipPath(t.get()));
 
-  // TODO: 여기가 35ms 정도 느림. 시작이 어디서 느려지는지 확인하기
   useEffect(() => {
-    console.log('DOCK START', Date.now());
     const animation = animate(t, 1, {
       duration: WINDOW_ANIMATION.DURATION / 1000,
       ease: 'linear',

@@ -25,5 +25,6 @@ export interface MinimizedWindow {
     x: number;
     y: number;
     width: number;
+    heightRatio: number;
   };
 }

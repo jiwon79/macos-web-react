@@ -73,10 +73,14 @@ export function WindowControl({ size }: WindowControlProps) {
     }
 
     const dockItemImageUrl = dockItemImage.url;
-    const dockItemImageWidthRatio = dockItemImage.widthRatio;
-    const targetWidth = DOCK_ITEM_SIZE * dockItemImageWidthRatio;
+    const targetWidth = DOCK_ITEM_SIZE * dockItemImage.widthRatio;
 
-    const target = { x: targetX, y: targetY, width: targetWidth };
+    const target = {
+      x: targetX,
+      y: targetY,
+      width: targetWidth,
+      heightRatio: dockItemImage.heightRatio,
+    };
     minimizeWindow({
       id,
       image: dockItemImageUrl,

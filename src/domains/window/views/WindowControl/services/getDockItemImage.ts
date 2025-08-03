@@ -4,7 +4,7 @@ const INNER_SIZE = SIZE * INNER_SIZE_RATIO;
 
 export function getDockItemImage(
   windowCanvas: HTMLCanvasElement
-): { url: string; widthRatio: number } | null {
+): { url: string; widthRatio: number; heightRatio: number } | null {
   const resizedCanvas = document.createElement('canvas');
   resizedCanvas.width = SIZE;
   resizedCanvas.height = SIZE;
@@ -33,5 +33,6 @@ export function getDockItemImage(
   return {
     url: resizedCanvas.toDataURL(),
     widthRatio: scaledWidth / SIZE,
+    heightRatio: scaledHeight / SIZE,
   };
 }
