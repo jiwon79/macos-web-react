@@ -1,7 +1,7 @@
 import { WINDOW_ANIMATION } from 'domains/window-animation/constant';
 import { clamp, interpolate } from 'utils/math';
 import { createScreenCanvas } from './createScreenCanvas';
-import { easeInOut } from './cubicBezier';
+import { easeInOut, easeOut } from './cubicBezier';
 import { getGenieAnimationTime } from './getGenieAnimationTime';
 import { getTransformedImage } from './getTransformedImage';
 import { getWindowInterpolatedBezierPoints } from './getWindowInterpolatedBezierPoints';
@@ -37,7 +37,7 @@ export async function animateGenieEffect(
       const xt = Math.min(time / xAnimationDuration, 1);
       const easeXt = easeInOut(xt);
       const yt = clamp((time - yAnimationStart) / yAnimationDuration, 0, 1);
-      const easeYt = easeInOut(yt);
+      const easeYt = easeOut(yt);
 
       const currentTargetWidth = targetWidth * t;
 

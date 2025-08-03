@@ -57,5 +57,9 @@ export const easeIn = cubicBezier(0.42, 0, 1, 1);
 export const easeOut = cubicBezier(0, 0, 0.58, 1);
 export const easeInOut = cubicBezier(0.42, 0, 0.58, 1);
 
-export const getEaseInOutTForY = (y: number) =>
+export const getEaseInXForY = (y: number) =>
+  calcBezier(binarySubdivide(y, 0, 1, 0, 1), 0.42, 1);
+export const getEaseOutXForY = (y: number) =>
+  calcBezier(binarySubdivide(y, 0, 1, 0, 1), 0, 0.58);
+export const getEaseInOutXForY = (y: number) =>
   calcBezier(binarySubdivide(y, 0, 1, 0, 1), 0.42, 0.58);

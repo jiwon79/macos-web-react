@@ -1,5 +1,5 @@
 import { WINDOW_ANIMATION } from 'domains/window-animation/constant';
-import { getEaseInOutTForY } from './cubicBezier';
+import { getEaseOutXForY } from './cubicBezier';
 
 const { DURATION, X_ANIMATION_DURATION_RATIO } = WINDOW_ANIMATION;
 
@@ -16,7 +16,7 @@ export function getGenieAnimationTime(
   const yAnimationDuration = DURATION - yAnimationStart;
 
   const fillAnimationStartAfterYAnimationStart =
-    getEaseInOutTForY((targetY - y - height) / (targetY - y)) *
+    getEaseOutXForY((targetY - y - height) / (targetY - y)) *
     yAnimationDuration;
   const fillAnimationStart =
     fillAnimationStartAfterYAnimationStart + yAnimationStart;
