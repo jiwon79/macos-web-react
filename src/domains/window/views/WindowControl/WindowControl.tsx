@@ -5,15 +5,14 @@ import {
 } from 'assets/icons';
 import { DOCK_ITEM_SIZE } from 'domains/dock/views/DockItem/constant';
 import { useWindowsAction, useWindowsStore } from 'domains/window/store/store';
+import { animateGenieEffect } from 'domains/window-animation/services/animateGenieEffect';
 import {
   useWindowAnimationAction,
   useWindowAnimationStore,
 } from 'domains/window-animation/store';
 import html2canvas from 'html2canvas';
+import { getImageData } from 'utils/browser';
 import { useWindowContext } from '../WindowContext';
-import { animateGenieEffect } from './services/animateGenieEffect';
-import { getDockItemImage } from './services/getDockItemImage';
-import { getImageData } from './services/getImageData';
 import {
   closeIcon,
   container,
@@ -67,29 +66,20 @@ export function WindowControl({ size }: WindowControlProps) {
       return;
     }
 
-    const dockItemImage = getDockItemImage(windowCanvas);
-    if (dockItemImage == null) {
-      return;
-    }
-
-    const dockItemImageUrl = dockItemImage.url;
-    const targetWidth = DOCK_ITEM_SIZE * dockItemImage.widthRatio;
-
     const target = {
       x: targetX,
       y: targetY,
-      width: targetWidth,
-      heightRatio: dockItemImage.heightRatio,
+      width: DOCK_ITEM_SIZE,
     };
     minimizeWindow({
       id,
-      image: dockItemImageUrl,
+      imageData: image,
       window: window.style,
       target,
     });
     startMinimizingWindow({
       id,
-      image: dockItemImageUrl,
+      imageData: image,
       window: window.style,
       target,
     });

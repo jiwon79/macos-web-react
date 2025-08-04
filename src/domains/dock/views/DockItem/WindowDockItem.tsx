@@ -1,6 +1,9 @@
+import { DOCK_ITEM } from 'domains/dock/constant';
+import { createDockItemImageUrl } from 'domains/dock/services/createDockItemImageUrl';
+import { getDockItemInnerRect } from 'domains/dock/services/getDockItemInnerRect';
 import { MinimizedWindow } from 'domains/window/interface';
-import { getGenieAnimationTime } from 'domains/window/views/WindowControl/services/getGenieAnimationTime';
 import { WINDOW_ANIMATION } from 'domains/window-animation/constant';
+import { getGenieAnimationTime } from 'domains/window-animation/services/getGenieAnimationTime';
 import { useMinimizingWindow } from 'domains/window-animation/store';
 import {
   animate,
@@ -9,7 +12,7 @@ import {
   useMotionValue,
   useTransform,
 } from 'framer-motion';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { DockIconOpenIndicator } from '../DockIconOpenIndicator';
 import { DOCK_ITEM_SIZE } from './constant';
 import { DockItem } from './DockItem';
@@ -17,7 +20,7 @@ import * as styles from './DockItem.css';
 
 interface WindowDockItemProps {
   id: string;
-  src: string;
+  imageData: ImageData;
   mouseX: number | null;
   onClick?: () => void;
 }
@@ -25,31 +28,34 @@ interface WindowDockItemProps {
 export function WindowDockItem({
   id,
   mouseX,
-  src,
+  imageData,
   onClick,
 }: WindowDockItemProps) {
   const minimizingWindow = useMinimizingWindow(id);
+  const src = useMemo(() => createDockItemImageUrl(imageData), [imageData]);
 
   if (minimizingWindow != null) {
     return (
       <AnimatedWindowDockItem
-        id={id}
-        mouseX={mouseX}
-        src={src}
+        src={src ?? ''}
         onClick={onClick}
         minimizedWindow={minimizingWindow}
       />
     );
   }
 
-  return <DockItem mouseX={mouseX} src={src} onClick={onClick} />;
+  return <DockItem mouseX={mouseX} src={src ?? ''} onClick={onClick} />;
 }
 
 function AnimatedWindowDockItem({
   src,
   onClick,
   minimizedWindow,
-}: WindowDockItemProps & { minimizedWindow: MinimizedWindow }) {
+}: {
+  src: string;
+  onClick?: () => void;
+  minimizedWindow: MinimizedWindow;
+}) {
   const t = useMotionValue(0);
   const containerWidth = useTransform(() => DOCK_ITEM_SIZE * t.get());
 
@@ -60,14 +66,14 @@ function AnimatedWindowDockItem({
   const fillAnimationStartRatio =
     fillAnimationStart / WINDOW_ANIMATION.DURATION;
 
-  const heightRatio = minimizedWindow.target.heightRatio;
-  const paddingYRatio = (1 - heightRatio) / 2;
+  const innerRect = getDockItemInnerRect(minimizedWindow.imageData);
+  const innerYRatio = innerRect.y / DOCK_ITEM.SIZE;
   const getClipPath = interpolate(
     [0, fillAnimationStartRatio, 1],
     [
       `inset(100% 0 0 0)`,
-      `inset(${(1 - paddingYRatio) * 100}% 0 0 0)`,
-      `inset(${paddingYRatio * 100}% 0 0 0)`,
+      `inset(${(1 - innerYRatio) * 100}% 0 0 0)`,
+      `inset(${innerYRatio * 100}% 0 0 0)`,
     ]
   );
 

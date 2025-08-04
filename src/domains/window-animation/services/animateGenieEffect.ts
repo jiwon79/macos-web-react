@@ -1,7 +1,7 @@
+import { getDockItemInnerRect } from 'domains/dock/services/getDockItemInnerRect';
 import { WINDOW_ANIMATION } from 'domains/window-animation/constant';
-import { clamp, interpolate, Point } from 'utils/math';
+import { clamp, easeInOut, easeOut, interpolate, Point } from 'utils/math';
 import { createScreenCanvas } from './createScreenCanvas';
-import { easeInOut, easeOut } from './cubicBezier';
 import { getGenieAnimationTime } from './getGenieAnimationTime';
 import { getTransformedImage } from './getTransformedImage';
 import { getWindowInterpolatedBezierPoints } from './getWindowInterpolatedBezierPoints';
@@ -9,11 +9,11 @@ import { getWindowInterpolatedBezierPoints } from './getWindowInterpolatedBezier
 export async function animateGenieEffect(params: {
   image: ImageData;
   window: { x: number; y: number; width: number; height: number };
-  target: { x: number; y: number; width: number };
+  target: { x: number; y: number };
   reverse: boolean;
 }) {
   const { image, window, target, reverse = false } = params;
-  const { x: targetX, y: targetY, width: targetWidth } = target;
+  const { x: targetX, y: targetY } = target;
   const { x, y, width, height } = window;
 
   const { xAnimationDuration, yAnimationStart, yAnimationDuration } =
@@ -24,6 +24,9 @@ export async function animateGenieEffect(params: {
   if (ctx == null) {
     return;
   }
+
+  const innerRect = getDockItemInnerRect(image);
+  const targetWidth = innerRect.width;
 
   document.body.appendChild(canvas);
 

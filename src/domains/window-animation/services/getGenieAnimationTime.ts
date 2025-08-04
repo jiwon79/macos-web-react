@@ -1,11 +1,11 @@
 import { WINDOW_ANIMATION } from 'domains/window-animation/constant';
-import { getEaseOutXForY } from './cubicBezier';
+import { getEaseOutXForY } from 'utils/math';
 
 const { DURATION, X_ANIMATION_DURATION_RATIO } = WINDOW_ANIMATION;
 
 export function getGenieAnimationTime(
   window: { x: number; y: number; width: number; height: number },
-  target: { x: number; y: number; width: number }
+  target: { x: number; y: number }
 ) {
   const { y, height } = window;
   const { y: targetY } = target;
