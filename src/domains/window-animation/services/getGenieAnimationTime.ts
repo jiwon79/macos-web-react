@@ -5,10 +5,9 @@ const { DURATION, X_ANIMATION_DURATION_RATIO } = WINDOW_ANIMATION;
 
 export function getGenieAnimationTime(
   window: { x: number; y: number; width: number; height: number },
-  target: { x: number; y: number }
+  targetY: number
 ) {
   const { y, height } = window;
-  const { y: targetY } = target;
 
   const xAnimationDuration = DURATION * X_ANIMATION_DURATION_RATIO;
   const yAnimationStart =

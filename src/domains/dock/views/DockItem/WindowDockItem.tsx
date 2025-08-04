@@ -7,6 +7,7 @@ import { getGenieAnimationTime } from 'domains/window-animation/services/getGeni
 import {
   useMaximizingWindow,
   useMinimizingWindow,
+  useWindowAnimationAction,
 } from 'domains/window-animation/store';
 import {
   animate,
@@ -15,7 +16,7 @@ import {
   useMotionValue,
   useTransform,
 } from 'framer-motion';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { DockIconOpenIndicator } from '../DockIconOpenIndicator';
 import { DOCK_ITEM_SIZE } from './constant';
 import { DockItem } from './DockItem';
@@ -36,24 +37,45 @@ export function WindowDockItem({
 }: WindowDockItemProps) {
   const minimizingWindow = useMinimizingWindow(id);
   const maximizingWindow = useMaximizingWindow(id);
+  const { setDockItemRef } = useWindowAnimationAction();
+  const itemRef = useRef<HTMLDivElement>(null);
   const src = useMemo(() => createDockItemImageUrl(imageData), [imageData]);
+
+  useEffect(() => {
+    if (itemRef.current) {
+      setDockItemRef(id, itemRef.current);
+    }
+    return () => {
+      setDockItemRef(id, null);
+    };
+  }, [id, setDockItemRef]);
 
   if (minimizingWindow != null) {
     return (
-      <MinimizingWindowDockItem
-        src={src ?? ''}
-        onClick={onClick}
-        minimizedWindow={minimizingWindow}
-        minimize={false}
-      />
+      <div ref={itemRef}>
+        <MinimizingWindowDockItem
+          src={src ?? ''}
+          onClick={onClick}
+          minimizedWindow={minimizingWindow}
+          minimize={false}
+        />
+      </div>
     );
   }
 
   if (maximizingWindow != null) {
-    return <MaximizingWindowDockItem src={src ?? ''} onClick={onClick} />;
+    return (
+      <div ref={itemRef}>
+        <MaximizingWindowDockItem src={src ?? ''} onClick={onClick} />
+      </div>
+    );
   }
 
-  return <DockItem mouseX={mouseX} src={src ?? ''} onClick={onClick} />;
+  return (
+    <div ref={itemRef}>
+      <DockItem mouseX={mouseX} src={src ?? ''} onClick={onClick} />
+    </div>
+  );
 }
 
 function MinimizingWindowDockItem({
@@ -72,7 +94,7 @@ function MinimizingWindowDockItem({
 
   const { fillAnimationStart } = getGenieAnimationTime(
     minimizedWindow.window,
-    minimizedWindow.target
+    minimizedWindow.target.y
   );
   const fillAnimationStartRatio =
     fillAnimationStart / WINDOW_ANIMATION.DURATION;

@@ -27,12 +27,17 @@ interface WindowControlProps {
 export function WindowControl({ size }: WindowControlProps) {
   const { id } = useWindowContext();
   const { windows, windowElements } = useWindowsStore();
+  const dockRef = useWindowAnimationStore((state) => state.dockRef);
   const { deleteWindow: removeWindow, minimizeWindow } = useWindowsAction();
   const minimizedDockIndicatorRef = useWindowAnimationStore(
-    (state) => state.minimizedDockIndicatorRef
+    (state: any) => state.minimizedDockIndicatorRef
   );
-  const { startMinimizingWindow, stopMinimizingWindow } =
-    useWindowAnimationAction();
+  const {
+    startMinimizingWindow,
+    stopMinimizingWindow,
+    getDockItemRef,
+    getDockRef,
+  } = useWindowAnimationAction();
 
   const window = windows.find((window) => window.id === id);
   const windowElement = windowElements[id];
@@ -48,12 +53,16 @@ export function WindowControl({ size }: WindowControlProps) {
       return;
     }
 
-    const targetRect = minimizedDockIndicatorRef?.getBoundingClientRect();
+    // Try to get existing dock item ref first, fallback to indicator ref
+    const dockItemRef = getDockItemRef(id);
+    const targetElement = dockItemRef || minimizedDockIndicatorRef;
+
+    const targetRect = targetElement?.getBoundingClientRect();
     if (targetRect == null) {
       return;
     }
-    const targetX = targetRect.x;
-    const targetY = targetRect.y;
+    const targetX = targetRect.x + targetRect.width / 2;
+    const targetY = targetRect.y + targetRect.height / 2;
 
     const windowCanvas = await html2canvas(windowElement, {
       backgroundColor: null,
@@ -87,7 +96,28 @@ export function WindowControl({ size }: WindowControlProps) {
     await animateGenieEffect({
       image,
       window: window.style,
-      target,
+      dockY: dockRef?.getBoundingClientRect().y ?? targetY,
+      target: () => {
+        // Try to get dock item ref on each frame
+        const ref = getDockItemRef(id);
+        const dockRef = getDockRef();
+
+        if (ref) {
+          const rect = ref.getBoundingClientRect();
+          return {
+            x: rect.x + rect.width / 2,
+            y: dockRef
+              ? dockRef.getBoundingClientRect().y
+              : rect.y + rect.height / 2,
+            width: rect.width,
+          };
+        }
+        return {
+          x: target.x,
+          y: dockRef ? dockRef.getBoundingClientRect().y : target.y,
+          width: target.width,
+        };
+      },
       reverse: false,
     });
 

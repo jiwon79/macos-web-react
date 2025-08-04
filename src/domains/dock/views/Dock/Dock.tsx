@@ -7,7 +7,8 @@ import { ApplicationID } from 'domains/app/applications';
 import { useWindowsAction, useWindowsStore } from 'domains/window/store/store';
 import { animateGenieEffect } from 'domains/window-animation/services/animateGenieEffect';
 import { useWindowAnimationAction } from 'domains/window-animation/store';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { DOCK_ITEM_SIZE } from '../DockItem/constant';
 import { DockItem } from '../DockItem/DockItem';
 import { WindowDockItem } from '../DockItem/WindowDockItem';
 import { DockSeparator } from '../DockSeparator';
@@ -15,6 +16,7 @@ import * as styles from './Dock.css';
 
 export function Dock() {
   const [mouseX, setMouseX] = useState<number | null>(null);
+  const dockRef = useRef<HTMLDivElement>(null);
   const windows = useWindowsStore((state) => state.windows);
   const minimizedWindows = useWindowsStore((state) => state.minimizedWindows);
   const { restoreMinimizedWindow, createAppWindow, setFocusedWindowID } =
@@ -23,7 +25,19 @@ export function Dock() {
     setMinimizedDockIndicatorRef,
     startMaximizingWindow,
     stopMaximizingWindow,
+    getDockItemRef,
+    setDockRef,
+    getDockRef,
   } = useWindowAnimationAction();
+
+  useEffect(() => {
+    if (dockRef.current) {
+      setDockRef(dockRef.current);
+    }
+    return () => {
+      setDockRef(null);
+    };
+  }, [setDockRef]);
 
   const isOpen = (appID: ApplicationID) => {
     return (
@@ -57,7 +71,30 @@ export function Dock() {
     await animateGenieEffect({
       image: minimizedWindow.imageData,
       window: minimizedWindow.window,
-      target: minimizedWindow.target,
+      dockY:
+        dockRef?.current?.getBoundingClientRect().y ?? minimizedWindow.target.y,
+      target: () => {
+        const ref = getDockItemRef(windowId);
+        const dockRef = getDockRef();
+
+        if (ref) {
+          const rect = ref.getBoundingClientRect();
+          return {
+            x: rect.x + rect.width / 2,
+            y: dockRef
+              ? dockRef.getBoundingClientRect().y
+              : rect.y + rect.height / 2,
+            width: rect.width,
+          };
+        }
+        return {
+          x: minimizedWindow.target.x,
+          y: dockRef
+            ? dockRef.getBoundingClientRect().y
+            : minimizedWindow.target.y,
+          width: DOCK_ITEM_SIZE,
+        };
+      },
       reverse: true,
     });
 
@@ -67,6 +104,7 @@ export function Dock() {
 
   return (
     <div
+      ref={dockRef}
       className={styles.container}
       onMouseMove={(event) => setMouseX(event.clientX)}
       onMouseLeave={() => setMouseX(null)}

@@ -9,15 +9,15 @@ import { getWindowInterpolatedBezierPoints } from './getWindowInterpolatedBezier
 export async function animateGenieEffect(params: {
   image: ImageData;
   window: { x: number; y: number; width: number; height: number };
-  target: { x: number; y: number };
+  target: () => { x: number; y: number; width: number };
+  dockY: number;
   reverse: boolean;
 }) {
-  const { image, window, target, reverse = false } = params;
-  const { x: targetX, y: targetY } = target;
+  const { image, window, target, dockY, reverse = false } = params;
   const { x, y, width, height } = window;
 
   const { xAnimationDuration, yAnimationStart, yAnimationDuration } =
-    getGenieAnimationTime(window, target);
+    getGenieAnimationTime(window, dockY);
 
   const canvas = createScreenCanvas();
   const ctx = canvas.getContext('2d');
@@ -43,6 +43,11 @@ export async function animateGenieEffect(params: {
         return;
       }
 
+      // Update target position on each frame
+      const currentTarget = target();
+      const currentTargetX = currentTarget.x;
+      const currentTargetY = currentTarget.y;
+
       const xt = Math.min(time / xAnimationDuration, 1);
       const easeXt = easeInOut(xt);
       const yt = clamp((time - yAnimationStart) / yAnimationDuration, 0, 1);
@@ -52,13 +57,15 @@ export async function animateGenieEffect(params: {
 
       const leftStart = { x, y };
       const leftEnd = {
-        x: interpolate(x, targetX)(easeXt) - currentTargetWidth / 2,
-        y: targetY,
+        x: interpolate(x, currentTargetX)(easeXt) - currentTargetWidth / 2,
+        y: currentTargetY,
       };
       const rightStart = { x: x + width, y };
       const rightEnd = {
-        x: interpolate(x + width, targetX)(easeXt) + currentTargetWidth / 2,
-        y: targetY,
+        x:
+          interpolate(x + width, currentTargetX)(easeXt) +
+          currentTargetWidth / 2,
+        y: currentTargetY,
       };
 
       // TODO: 여기에서 end 지점 때문에 윈도우가 target 밑에 있을 때는 다 짤림 (위로 올리는 애니메이션)
@@ -71,7 +78,7 @@ export async function animateGenieEffect(params: {
         rightEnd
       );
 
-      const moveY = Math.round((targetY - y) * easeYt);
+      const moveY = Math.round((currentTargetY - y) * easeYt);
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
