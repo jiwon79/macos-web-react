@@ -19,7 +19,11 @@ export function Dock() {
   const minimizedWindows = useWindowsStore((state) => state.minimizedWindows);
   const { restoreMinimizedWindow, createAppWindow, setFocusedWindowID } =
     useWindowsAction();
-  const { setMinimizedDockIndicatorRef } = useWindowAnimationAction();
+  const {
+    setMinimizedDockIndicatorRef,
+    startMaximizingWindow,
+    stopMaximizingWindow,
+  } = useWindowAnimationAction();
 
   const isOpen = (appID: ApplicationID) => {
     return (
@@ -48,6 +52,8 @@ export function Dock() {
       return;
     }
 
+    startMaximizingWindow(minimizedWindow);
+
     await animateGenieEffect({
       image: minimizedWindow.imageData,
       window: minimizedWindow.window,
@@ -55,6 +61,7 @@ export function Dock() {
       reverse: true,
     });
 
+    stopMaximizingWindow(windowId);
     restoreMinimizedWindow(windowId);
   };
 
