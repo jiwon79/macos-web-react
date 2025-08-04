@@ -94,7 +94,12 @@ export function WindowControl({ size }: WindowControlProps) {
       target,
     });
 
-    await animateGenieEffect(image, window.style, target);
+    await animateGenieEffect({
+      image,
+      window: window.style,
+      target,
+      reverse: false,
+    });
 
     stopMinimizingWindow(id);
   };

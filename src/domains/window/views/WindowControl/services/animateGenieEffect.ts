@@ -1,19 +1,19 @@
 import { WINDOW_ANIMATION } from 'domains/window-animation/constant';
-import { clamp, interpolate } from 'utils/math';
+import { clamp, interpolate, Point } from 'utils/math';
 import { createScreenCanvas } from './createScreenCanvas';
 import { easeInOut, easeOut } from './cubicBezier';
 import { getGenieAnimationTime } from './getGenieAnimationTime';
 import { getTransformedImage } from './getTransformedImage';
 import { getWindowInterpolatedBezierPoints } from './getWindowInterpolatedBezierPoints';
 
-export async function animateGenieEffect(
-  image: ImageData,
-  window: { x: number; y: number; width: number; height: number },
-  target: { x: number; y: number; width: number }
-) {
-  const targetX = target.x;
-  const targetY = target.y;
-  const targetWidth = target.width;
+export async function animateGenieEffect(params: {
+  image: ImageData;
+  window: { x: number; y: number; width: number; height: number };
+  target: { x: number; y: number; width: number };
+  reverse: boolean;
+}) {
+  const { image, window, target, reverse = false } = params;
+  const { x: targetX, y: targetY, width: targetWidth } = target;
   const { x, y, width, height } = window;
 
   const { xAnimationDuration, yAnimationStart, yAnimationDuration } =
@@ -30,9 +30,15 @@ export async function animateGenieEffect(
   return new Promise((resolve) => {
     const animate = (startTime: number) => {
       const currentTime = Date.now();
-      const time = currentTime - startTime;
-      const t = Math.min(time / WINDOW_ANIMATION.DURATION, 1);
-      const easeT = easeInOut(t);
+      const diff = currentTime - startTime;
+      const time = reverse ? WINDOW_ANIMATION.DURATION - diff : diff;
+      const t = time / WINDOW_ANIMATION.DURATION;
+
+      if (t < 0 || t > 1) {
+        document.body.removeChild(canvas);
+        resolve(void 0);
+        return;
+      }
 
       const xt = Math.min(time / xAnimationDuration, 1);
       const easeXt = easeInOut(xt);
@@ -52,7 +58,7 @@ export async function animateGenieEffect(
         y: targetY,
       };
 
-      // TODO: 여기에서 end 지점 때문에 윈도우가 target 밑에 있을 때는 다 짤림
+      // TODO: 여기에서 end 지점 때문에 윈도우가 target 밑에 있을 때는 다 짤림 (위로 올리는 애니메이션)
       const leftBezierPoints = getWindowInterpolatedBezierPoints(
         leftStart,
         leftEnd
@@ -76,14 +82,23 @@ export async function animateGenieEffect(
       );
       ctx.putImageData(transformedImage, 0, 0);
 
-      if (easeT < 1) {
-        requestAnimationFrame(() => animate(startTime));
-      } else {
-        document.body.removeChild(canvas);
-        resolve(void 0);
-      }
+      drawCurve(ctx, leftBezierPoints);
+      drawCurve(ctx, rightBezierPoints);
+
+      requestAnimationFrame(() => animate(startTime));
     };
 
     animate(Date.now());
   });
+}
+
+function drawCurve(ctx: CanvasRenderingContext2D, points: Point[]) {
+  ctx.beginPath();
+  ctx.moveTo(points[0].x, points[0].y);
+  for (let i = 1; i < points.length; i++) {
+    ctx.lineTo(points[i].x, points[i].y);
+  }
+  ctx.lineWidth = 2;
+  ctx.strokeStyle = 'red';
+  ctx.stroke();
 }

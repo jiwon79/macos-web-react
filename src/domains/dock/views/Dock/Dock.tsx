@@ -5,6 +5,7 @@ import {
 } from 'assets/app-icons';
 import { ApplicationID } from 'domains/app/applications';
 import { useWindowsAction, useWindowsStore } from 'domains/window/store/store';
+import { animateGenieEffect } from 'domains/window/views/WindowControl/services/animateGenieEffect';
 import { useWindowAnimationAction } from 'domains/window-animation/store';
 import { useState } from 'react';
 import { DockItem } from '../DockItem/DockItem';
@@ -35,10 +36,44 @@ export function Dock() {
 
     const isMinimized = minimizedWindows.some((window) => window.id === appID);
     if (isMinimized) {
-      restoreMinimizedWindow(appID);
+      onRestoreWindow(appID);
     }
 
     setFocusedWindowID(appID);
+  };
+
+  const onRestoreWindow = async (windowId: string) => {
+    const minimizedWindow = minimizedWindows.find((w) => w.id === windowId);
+    if (!minimizedWindow) {
+      return;
+    }
+
+    const img = new Image();
+    img.src = minimizedWindow.image;
+    await new Promise((resolve) => {
+      img.onload = resolve;
+    });
+
+    const canvas = document.createElement('canvas');
+    canvas.width = minimizedWindow.window.width;
+    canvas.height = minimizedWindow.window.height;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) {
+      restoreMinimizedWindow(windowId);
+      return;
+    }
+
+    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+
+    await animateGenieEffect({
+      image: imageData,
+      window: minimizedWindow.window,
+      target: minimizedWindow.target,
+      reverse: true,
+    });
+
+    restoreMinimizedWindow(windowId);
   };
 
   return (
@@ -62,7 +97,7 @@ export function Dock() {
           id={window.id}
           mouseX={mouseX}
           src={window.image}
-          onClick={() => restoreMinimizedWindow(window.id)}
+          onClick={() => onRestoreWindow(window.id)}
         />
       ))}
       <div
