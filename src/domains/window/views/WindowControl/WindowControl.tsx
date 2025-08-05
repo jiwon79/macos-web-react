@@ -30,14 +30,10 @@ export function WindowControl({ size }: WindowControlProps) {
   const dockRef = useWindowAnimationStore((state) => state.dockRef);
   const { deleteWindow: removeWindow, minimizeWindow } = useWindowsAction();
   const minimizedDockIndicatorRef = useWindowAnimationStore(
-    (state: any) => state.minimizedDockIndicatorRef
+    (state) => state.minimizedDockIndicatorRef
   );
-  const {
-    startMinimizingWindow,
-    stopMinimizingWindow,
-    getDockItemRef,
-    getDockRef,
-  } = useWindowAnimationAction();
+  const { startMinimizingWindow, stopMinimizingWindow, getDockItemRef } =
+    useWindowAnimationAction();
 
   const window = windows.find((window) => window.id === id);
   const windowElement = windowElements[id];
@@ -47,22 +43,28 @@ export function WindowControl({ size }: WindowControlProps) {
     removeWindow(id);
   };
 
+  const getTargetRect = (): { x: number; y: number; width: number } => {
+    const dockItemRef = getDockItemRef(id);
+    const targetElement = dockItemRef ?? minimizedDockIndicatorRef;
+    if (targetElement == null) {
+      throw new Error('Target element not found');
+    }
+
+    return targetElement.getBoundingClientRect();
+  };
+
   const onMinimizeMouseDown = async (event: React.MouseEvent) => {
     event.stopPropagation();
     if (window == null || windowElement == null) {
       return;
     }
 
-    // Try to get existing dock item ref first, fallback to indicator ref
-    const dockItemRef = getDockItemRef(id);
-    const targetElement = dockItemRef || minimizedDockIndicatorRef;
-
-    const targetRect = targetElement?.getBoundingClientRect();
+    const targetRect = getTargetRect();
     if (targetRect == null) {
       return;
     }
     const targetX = targetRect.x + targetRect.width / 2;
-    const targetY = targetRect.y + targetRect.height / 2;
+    const targetY = targetRect.y;
 
     const windowCanvas = await html2canvas(windowElement, {
       backgroundColor: null,
@@ -97,27 +99,7 @@ export function WindowControl({ size }: WindowControlProps) {
       image,
       window: window.style,
       dockY: dockRef?.getBoundingClientRect().y ?? targetY,
-      target: () => {
-        // Try to get dock item ref on each frame
-        const ref = getDockItemRef(id);
-        const dockRef = getDockRef();
-
-        if (ref) {
-          const rect = ref.getBoundingClientRect();
-          return {
-            x: rect.x + rect.width / 2,
-            y: dockRef
-              ? dockRef.getBoundingClientRect().y
-              : rect.y + rect.height / 2,
-            width: rect.width,
-          };
-        }
-        return {
-          x: target.x,
-          y: dockRef ? dockRef.getBoundingClientRect().y : target.y,
-          width: target.width,
-        };
-      },
+      getTarget: getTargetRect,
       reverse: false,
     });
 

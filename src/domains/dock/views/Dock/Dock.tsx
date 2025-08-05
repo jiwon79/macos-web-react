@@ -27,16 +27,13 @@ export function Dock() {
     stopMaximizingWindow,
     getDockItemRef,
     setDockRef,
-    getDockRef,
   } = useWindowAnimationAction();
 
   useEffect(() => {
     if (dockRef.current) {
       setDockRef(dockRef.current);
     }
-    return () => {
-      setDockRef(null);
-    };
+    return () => setDockRef(null);
   }, [setDockRef]);
 
   const isOpen = (appID: ApplicationID) => {
@@ -73,25 +70,22 @@ export function Dock() {
       window: minimizedWindow.window,
       dockY:
         dockRef?.current?.getBoundingClientRect().y ?? minimizedWindow.target.y,
-      target: () => {
+      getTarget: () => {
         const ref = getDockItemRef(windowId);
-        const dockRef = getDockRef();
 
         if (ref) {
           const rect = ref.getBoundingClientRect();
           return {
             x: rect.x + rect.width / 2,
-            y: dockRef
-              ? dockRef.getBoundingClientRect().y
-              : rect.y + rect.height / 2,
+            y: dockRef?.current?.getBoundingClientRect().y ?? rect.y,
             width: rect.width,
           };
         }
         return {
           x: minimizedWindow.target.x,
-          y: dockRef
-            ? dockRef.getBoundingClientRect().y
-            : minimizedWindow.target.y,
+          y:
+            dockRef?.current?.getBoundingClientRect().y ??
+            minimizedWindow.target.y,
           width: DOCK_ITEM_SIZE,
         };
       },

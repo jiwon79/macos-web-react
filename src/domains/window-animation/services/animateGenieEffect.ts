@@ -9,11 +9,11 @@ import { getWindowInterpolatedBezierPoints } from './getWindowInterpolatedBezier
 export async function animateGenieEffect(params: {
   image: ImageData;
   window: { x: number; y: number; width: number; height: number };
-  target: () => { x: number; y: number; width: number };
+  getTarget: () => { x: number; y: number; width: number };
   dockY: number;
   reverse: boolean;
 }) {
-  const { image, window, target, dockY, reverse = false } = params;
+  const { image, window, getTarget, dockY, reverse = false } = params;
   const { x, y, width, height } = window;
 
   const { xAnimationDuration, yAnimationStart, yAnimationDuration } =
@@ -44,9 +44,7 @@ export async function animateGenieEffect(params: {
       }
 
       // Update target position on each frame
-      const currentTarget = target();
-      const currentTargetX = currentTarget.x;
-      const currentTargetY = currentTarget.y;
+      const target = getTarget();
 
       const xt = Math.min(time / xAnimationDuration, 1);
       const easeXt = easeInOut(xt);
@@ -57,15 +55,13 @@ export async function animateGenieEffect(params: {
 
       const leftStart = { x, y };
       const leftEnd = {
-        x: interpolate(x, currentTargetX)(easeXt) - currentTargetWidth / 2,
-        y: currentTargetY,
+        x: interpolate(x, target.x)(easeXt),
+        y: target.y,
       };
       const rightStart = { x: x + width, y };
       const rightEnd = {
-        x:
-          interpolate(x + width, currentTargetX)(easeXt) +
-          currentTargetWidth / 2,
-        y: currentTargetY,
+        x: interpolate(x + width, target.x)(easeXt) + currentTargetWidth,
+        y: target.y,
       };
 
       // TODO: 여기에서 end 지점 때문에 윈도우가 target 밑에 있을 때는 다 짤림 (위로 올리는 애니메이션)
@@ -78,7 +74,7 @@ export async function animateGenieEffect(params: {
         rightEnd
       );
 
-      const moveY = Math.round((currentTargetY - y) * easeYt);
+      const moveY = Math.round((target.y - y) * easeYt);
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
