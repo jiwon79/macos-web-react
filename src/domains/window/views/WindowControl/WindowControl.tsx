@@ -3,7 +3,6 @@ import {
   IconWindowMaximize,
   IconWindowMinimize,
 } from 'assets/icons';
-import { DOCK_ITEM_SIZE } from 'domains/dock/views/DockItem/constant';
 import { useWindowsAction, useWindowsStore } from 'domains/window/store/store';
 import { animateGenieEffect } from 'domains/window-animation/services/animateGenieEffect';
 import {
@@ -26,13 +25,15 @@ interface WindowControlProps {
 
 export function WindowControl({ size }: WindowControlProps) {
   const { id } = useWindowContext();
-  const { windows, windowElements } = useWindowsStore();
-  const dockRef = useWindowAnimationStore((state) => state.dockRef);
+  const windows = useWindowsStore((state) => state.windows);
+  const windowElements = useWindowsStore((state) => state.windowElements);
   const { deleteWindow: removeWindow, minimizeWindow } = useWindowsAction();
-  const minimizedDockIndicatorRef = useWindowAnimationStore(
-    (state) => state.minimizedDockIndicatorRef
+
+  const dockElement = useWindowAnimationStore((state) => state.dockElement);
+  const minimizedDockIndicatorElement = useWindowAnimationStore(
+    (state) => state.minimizedDockIndicatorElement
   );
-  const { startMinimizingWindow, stopMinimizingWindow, getDockItemRef } =
+  const { startMinimizingWindow, stopMinimizingWindow, getDockItemElement } =
     useWindowAnimationAction();
 
   const window = windows.find((window) => window.id === id);
@@ -43,9 +44,9 @@ export function WindowControl({ size }: WindowControlProps) {
     removeWindow(id);
   };
 
-  const getTargetRect = (): { x: number; y: number; width: number } => {
-    const dockItemRef = getDockItemRef(id);
-    const targetElement = dockItemRef ?? minimizedDockIndicatorRef;
+  const getTarget = (): { x: number; y: number; width: number } => {
+    const dockItemElement = getDockItemElement(id);
+    const targetElement = dockItemElement ?? minimizedDockIndicatorElement;
     if (targetElement == null) {
       throw new Error('Target element not found');
     }
@@ -59,12 +60,10 @@ export function WindowControl({ size }: WindowControlProps) {
       return;
     }
 
-    const targetRect = getTargetRect();
-    if (targetRect == null) {
+    const target = getTarget();
+    if (target == null) {
       return;
     }
-    const targetX = targetRect.x + targetRect.width / 2;
-    const targetY = targetRect.y;
 
     const windowCanvas = await html2canvas(windowElement, {
       backgroundColor: null,
@@ -77,11 +76,6 @@ export function WindowControl({ size }: WindowControlProps) {
       return;
     }
 
-    const target = {
-      x: targetX,
-      y: targetY,
-      width: DOCK_ITEM_SIZE,
-    };
     minimizeWindow({
       id,
       imageData: image,
@@ -95,11 +89,12 @@ export function WindowControl({ size }: WindowControlProps) {
       target,
     });
 
+    const targetContainerY = dockElement?.getBoundingClientRect().y ?? target.y;
     await animateGenieEffect({
       image,
       window: window.style,
-      dockY: dockRef?.getBoundingClientRect().y ?? targetY,
-      getTarget: getTargetRect,
+      targetContainerY,
+      getTarget: getTarget,
       reverse: false,
     });
 

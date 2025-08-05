@@ -37,18 +37,18 @@ export function WindowDockItem({
 }: WindowDockItemProps) {
   const minimizingWindow = useMinimizingWindow(id);
   const maximizingWindow = useMaximizingWindow(id);
-  const { setDockItemRef } = useWindowAnimationAction();
+  const { setDockItemElement } = useWindowAnimationAction();
   const itemRef = useRef<HTMLDivElement>(null);
   const src = useMemo(() => createDockItemImageUrl(imageData), [imageData]);
 
   useEffect(() => {
     if (itemRef.current) {
-      setDockItemRef(id, itemRef.current);
+      setDockItemElement(id, itemRef.current);
     }
     return () => {
-      setDockItemRef(id, null);
+      setDockItemElement(id, null);
     };
-  }, [id, setDockItemRef]);
+  }, [id, setDockItemElement]);
 
   if (minimizingWindow != null) {
     return (

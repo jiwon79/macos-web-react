@@ -4,9 +4,9 @@ import { create } from 'third-parties/zustand';
 export interface WindowAnimationState {
   minimizingWindows: MinimizedWindow[];
   maximizingWindows: MinimizedWindow[];
-  minimizedDockIndicatorRef: HTMLDivElement | null;
-  dockItemRefs: Map<string, HTMLElement>;
-  dockRef: HTMLElement | null;
+  minimizedDockIndicatorElement: HTMLDivElement | null;
+  dockItemElements: Map<string, HTMLElement>;
+  dockElement: HTMLElement | null;
 }
 
 export interface WindowAnimationAction {
@@ -15,9 +15,9 @@ export interface WindowAnimationAction {
   startMaximizingWindow: (window: MinimizedWindow) => void;
   stopMaximizingWindow: (id: string) => void;
   setMinimizedDockIndicatorRef: (ref: HTMLDivElement) => void;
-  setDockItemRef: (id: string, ref: HTMLElement | null) => void;
-  getDockItemRef: (id: string) => HTMLElement | undefined;
-  setDockRef: (ref: HTMLElement | null) => void;
+  setDockItemElement: (id: string, ref: HTMLElement | null) => void;
+  getDockItemElement: (id: string) => HTMLElement | undefined;
+  setDockElement: (ref: HTMLElement | null) => void;
 }
 
 export const useWindowAnimationStore = create<
@@ -26,9 +26,9 @@ export const useWindowAnimationStore = create<
 >((set): WindowAnimationState & { actions: WindowAnimationAction } => ({
   minimizingWindows: [],
   maximizingWindows: [],
-  minimizedDockIndicatorRef: null,
-  dockItemRefs: new Map(),
-  dockRef: null,
+  minimizedDockIndicatorElement: null,
+  dockItemElements: new Map(),
+  dockElement: null,
   actions: {
     startMinimizingWindow: (window: MinimizedWindow) => {
       set((state) => ({
@@ -55,24 +55,24 @@ export const useWindowAnimationStore = create<
       }));
     },
     setMinimizedDockIndicatorRef: (ref: HTMLDivElement) => {
-      set({ minimizedDockIndicatorRef: ref });
+      set({ minimizedDockIndicatorElement: ref });
     },
-    setDockItemRef: (id: string, ref: HTMLElement | null) => {
+    setDockItemElement: (id: string, ref: HTMLElement | null) => {
       set((state) => {
-        const newRefs = new Map(state.dockItemRefs);
+        const newRefs = new Map(state.dockItemElements);
         if (ref) {
           newRefs.set(id, ref);
         } else {
           newRefs.delete(id);
         }
-        return { dockItemRefs: newRefs };
+        return { dockItemElements: newRefs };
       });
     },
-    getDockItemRef: (id: string): HTMLElement | undefined => {
-      return useWindowAnimationStore.getState().dockItemRefs.get(id);
+    getDockItemElement: (id: string): HTMLElement | undefined => {
+      return useWindowAnimationStore.getState().dockItemElements.get(id);
     },
-    setDockRef: (ref: HTMLElement | null) => {
-      set({ dockRef: ref });
+    setDockElement: (ref: HTMLElement | null) => {
+      set({ dockElement: ref });
     },
   },
 }));

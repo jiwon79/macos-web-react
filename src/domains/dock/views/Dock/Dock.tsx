@@ -25,16 +25,16 @@ export function Dock() {
     setMinimizedDockIndicatorRef,
     startMaximizingWindow,
     stopMaximizingWindow,
-    getDockItemRef,
-    setDockRef,
+    getDockItemElement,
+    setDockElement,
   } = useWindowAnimationAction();
 
   useEffect(() => {
     if (dockRef.current) {
-      setDockRef(dockRef.current);
+      setDockElement(dockRef.current);
     }
-    return () => setDockRef(null);
-  }, [setDockRef]);
+    return () => setDockElement(null);
+  }, [setDockElement]);
 
   const isOpen = (appID: ApplicationID) => {
     return (
@@ -68,10 +68,10 @@ export function Dock() {
     await animateGenieEffect({
       image: minimizedWindow.imageData,
       window: minimizedWindow.window,
-      dockY:
+      targetContainerY:
         dockRef?.current?.getBoundingClientRect().y ?? minimizedWindow.target.y,
       getTarget: () => {
-        const ref = getDockItemRef(windowId);
+        const ref = getDockItemElement(windowId);
 
         if (ref) {
           const rect = ref.getBoundingClientRect();

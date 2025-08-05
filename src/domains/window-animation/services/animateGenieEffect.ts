@@ -10,14 +10,20 @@ export async function animateGenieEffect(params: {
   image: ImageData;
   window: { x: number; y: number; width: number; height: number };
   getTarget: () => { x: number; y: number; width: number };
-  dockY: number;
+  targetContainerY: number;
   reverse: boolean;
 }) {
-  const { image, window, getTarget, dockY, reverse = false } = params;
+  const {
+    image,
+    window,
+    getTarget,
+    targetContainerY,
+    reverse = false,
+  } = params;
   const { x, y, width, height } = window;
 
   const { xAnimationDuration, yAnimationStart, yAnimationDuration } =
-    getGenieAnimationTime(window, dockY);
+    getGenieAnimationTime(window, targetContainerY);
 
   const canvas = createScreenCanvas();
   const ctx = canvas.getContext('2d');
@@ -25,8 +31,8 @@ export async function animateGenieEffect(params: {
     return;
   }
 
-  const innerRect = getDockItemInnerRect(image);
-  const targetWidth = innerRect.width;
+  const dockItemInnerRect = getDockItemInnerRect(image);
+  const targetWidth = dockItemInnerRect.width;
 
   document.body.appendChild(canvas);
 
@@ -43,8 +49,12 @@ export async function animateGenieEffect(params: {
         return;
       }
 
-      // Update target position on each frame
       const target = getTarget();
+      const targetX = target.x + dockItemInnerRect.x;
+      const targetY = Math.min(
+        target.y + dockItemInnerRect.y,
+        targetContainerY
+      );
 
       const xt = Math.min(time / xAnimationDuration, 1);
       const easeXt = easeInOut(xt);
@@ -55,13 +65,13 @@ export async function animateGenieEffect(params: {
 
       const leftStart = { x, y };
       const leftEnd = {
-        x: interpolate(x, target.x)(easeXt),
-        y: target.y,
+        x: interpolate(x, targetX)(easeXt),
+        y: targetY,
       };
       const rightStart = { x: x + width, y };
       const rightEnd = {
-        x: interpolate(x + width, target.x)(easeXt) + currentTargetWidth,
-        y: target.y,
+        x: interpolate(x + width, targetX)(easeXt) + currentTargetWidth,
+        y: targetY,
       };
 
       // TODO: 여기에서 end 지점 때문에 윈도우가 target 밑에 있을 때는 다 짤림 (위로 올리는 애니메이션)
@@ -74,7 +84,7 @@ export async function animateGenieEffect(params: {
         rightEnd
       );
 
-      const moveY = Math.round((target.y - y) * easeYt);
+      const moveY = Math.round((targetY - y) * easeYt);
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
