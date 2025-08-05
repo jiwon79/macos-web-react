@@ -54,6 +54,7 @@ export function WindowDockItem({
     return (
       <div ref={itemRef}>
         <MinimizingWindowDockItem
+          mouseX={mouseX}
           src={src ?? ''}
           onClick={onClick}
           minimizedWindow={minimizingWindow}
@@ -66,7 +67,11 @@ export function WindowDockItem({
   if (maximizingWindow != null) {
     return (
       <div ref={itemRef}>
-        <MaximizingWindowDockItem src={src ?? ''} onClick={onClick} />
+        <MaximizingWindowDockItem
+          mouseX={mouseX}
+          src={src ?? ''}
+          onClick={onClick}
+        />
       </div>
     );
   }
@@ -79,11 +84,13 @@ export function WindowDockItem({
 }
 
 function MinimizingWindowDockItem({
+  mouseX,
   src,
   onClick,
   minimizedWindow,
   minimize,
 }: {
+  mouseX: number | null;
   src: string;
   onClick?: () => void;
   minimizedWindow: MinimizedWindow;
@@ -147,9 +154,11 @@ function MinimizingWindowDockItem({
 }
 
 function MaximizingWindowDockItem({
+  mouseX,
   src,
   onClick,
 }: {
+  mouseX: number | null;
   src: string;
   onClick?: () => void;
 }) {

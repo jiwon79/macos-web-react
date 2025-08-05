@@ -71,23 +71,14 @@ export function Dock() {
       targetContainerY:
         dockRef?.current?.getBoundingClientRect().y ?? minimizedWindow.target.y,
       getTarget: () => {
-        const ref = getDockItemElement(windowId);
-
-        if (ref) {
-          const rect = ref.getBoundingClientRect();
-          return {
-            x: rect.x + rect.width / 2,
-            y: dockRef?.current?.getBoundingClientRect().y ?? rect.y,
-            width: rect.width,
-          };
-        }
-        return {
-          x: minimizedWindow.target.x,
-          y:
-            dockRef?.current?.getBoundingClientRect().y ??
-            minimizedWindow.target.y,
-          width: DOCK_ITEM_SIZE,
-        };
+        const element = getDockItemElement(windowId);
+        return (
+          element?.getBoundingClientRect() ?? {
+            x: minimizedWindow.target.x,
+            y: minimizedWindow.target.y,
+            width: DOCK_ITEM_SIZE,
+          }
+        );
       },
       reverse: true,
     });
