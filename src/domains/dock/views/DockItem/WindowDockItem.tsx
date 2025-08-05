@@ -67,11 +67,7 @@ export function WindowDockItem({
   if (maximizingWindow != null) {
     return (
       <div ref={itemRef}>
-        <MaximizingWindowDockItem
-          mouseX={mouseX}
-          src={src ?? ''}
-          onClick={onClick}
-        />
+        <RestoreMinimizingWindowDOckItem mouseX={mouseX} onClick={onClick} />
       </div>
     );
   }
@@ -153,20 +149,18 @@ function MinimizingWindowDockItem({
   );
 }
 
-function MaximizingWindowDockItem({
+function RestoreMinimizingWindowDOckItem({
   mouseX,
-  src,
   onClick,
 }: {
   mouseX: number | null;
-  src: string;
   onClick?: () => void;
 }) {
   const t = useMotionValue(1);
   const containerWidth = useTransform(() => DOCK_ITEM_SIZE * t.get());
 
   useEffect(() => {
-    const animation = animate(t, 1, {
+    const animation = animate(t, 0, {
       duration: WINDOW_ANIMATION.DURATION / 1000,
       ease: 'linear',
     });
@@ -183,8 +177,8 @@ function MaximizingWindowDockItem({
     >
       <motion.img
         className={styles.icon}
-        src={src}
         draggable={false}
+        src={EMPTY_IMAGE_URL}
         style={{
           width: DOCK_ITEM_SIZE,
           height: DOCK_ITEM_SIZE,
@@ -196,3 +190,6 @@ function MaximizingWindowDockItem({
     </motion.div>
   );
 }
+
+const EMPTY_IMAGE_URL =
+  'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMBgKgdxsUAAAAASUVORK5CYII=';
