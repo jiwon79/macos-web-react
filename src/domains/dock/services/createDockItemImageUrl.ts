@@ -1,4 +1,4 @@
-import { DOCK_ITEM } from '../constant';
+import { DOCK_ITEM } from '../views/DockItem/constant';
 
 const CANVAS_SIZE = 400;
 const CANVAS_INNER_SIZE = CANVAS_SIZE * DOCK_ITEM.INNER_RATIO;

@@ -4,11 +4,11 @@ import {
   IconAppTrash,
 } from 'assets/app-icons';
 import { ApplicationID } from 'domains/app/applications';
+import { DOCK_ITEM } from 'domains/dock/views/DockItem/constant';
 import { useWindowsAction, useWindowsStore } from 'domains/window/store/store';
 import { animateGenieEffect } from 'domains/window-animation/services/animateGenieEffect';
 import { useWindowAnimationAction } from 'domains/window-animation/store';
 import { useEffect, useRef, useState } from 'react';
-import { DOCK_ITEM_SIZE } from '../DockItem/constant';
 import { DockItem } from '../DockItem/DockItem';
 import { WindowDockItem } from '../DockItem/WindowDockItem';
 import { DockSeparator } from '../DockSeparator';
@@ -76,7 +76,7 @@ export function Dock() {
           element?.getBoundingClientRect() ?? {
             x: minimizedWindow.target.x,
             y: minimizedWindow.target.y,
-            width: DOCK_ITEM_SIZE,
+            width: DOCK_ITEM.SIZE,
           }
         );
       },

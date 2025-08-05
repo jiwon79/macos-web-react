@@ -1,4 +1,4 @@
-import { DOCK_ITEM } from '../constant';
+import { DOCK_ITEM } from '../views/DockItem/constant';
 
 export function getDockItemInnerRect(imageData: ImageData): {
   x: number;

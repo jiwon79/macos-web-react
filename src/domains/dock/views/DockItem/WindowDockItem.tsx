@@ -1,6 +1,6 @@
-import { DOCK_ITEM } from 'domains/dock/constant';
 import { createDockItemImageUrl } from 'domains/dock/services/createDockItemImageUrl';
 import { getDockItemInnerRect } from 'domains/dock/services/getDockItemInnerRect';
+import { DOCK_ITEM } from 'domains/dock/views/DockItem/constant';
 import { MinimizedWindow } from 'domains/window/interface';
 import { WINDOW_ANIMATION } from 'domains/window-animation/constant';
 import { getGenieAnimationTime } from 'domains/window-animation/services/getGenieAnimationTime';
@@ -18,7 +18,6 @@ import {
 } from 'framer-motion';
 import { useEffect, useMemo, useRef } from 'react';
 import { DockIconOpenIndicator } from '../DockIconOpenIndicator';
-import { DOCK_ITEM_SIZE } from './constant';
 import { DockItem } from './DockItem';
 import * as styles from './DockItem.css';
 
@@ -93,7 +92,7 @@ function MinimizingWindowDockItem({
   minimize: boolean;
 }) {
   const t = useMotionValue(minimize ? 1 : 0);
-  const containerWidth = useTransform(() => DOCK_ITEM_SIZE * t.get());
+  const containerWidth = useTransform(() => DOCK_ITEM.SIZE * t.get());
 
   const { fillAnimationStart } = getGenieAnimationTime(
     minimizedWindow.window,
@@ -136,8 +135,8 @@ function MinimizingWindowDockItem({
         src={src}
         draggable={false}
         style={{
-          width: DOCK_ITEM_SIZE,
-          height: DOCK_ITEM_SIZE,
+          width: DOCK_ITEM.SIZE,
+          height: DOCK_ITEM.SIZE,
           clipPath: minimize ? undefined : clipPath,
           scaleX: t,
           opacity: minimize ? 0 : 1,
@@ -157,7 +156,7 @@ function RestoreMinimizingWindowDOckItem({
   onClick?: () => void;
 }) {
   const t = useMotionValue(1);
-  const containerWidth = useTransform(() => DOCK_ITEM_SIZE * t.get());
+  const containerWidth = useTransform(() => DOCK_ITEM.SIZE * t.get());
 
   useEffect(() => {
     const animation = animate(t, 0, {
@@ -180,8 +179,8 @@ function RestoreMinimizingWindowDOckItem({
         draggable={false}
         src={EMPTY_IMAGE_URL}
         style={{
-          width: DOCK_ITEM_SIZE,
-          height: DOCK_ITEM_SIZE,
+          width: DOCK_ITEM.SIZE,
+          height: DOCK_ITEM.SIZE,
           scaleX: t,
         }}
         onClick={onClick}
