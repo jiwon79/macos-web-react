@@ -18,7 +18,6 @@ export interface WindowAnimationAction {
   setDockItemRef: (id: string, ref: HTMLElement | null) => void;
   getDockItemRef: (id: string) => HTMLElement | undefined;
   setDockRef: (ref: HTMLElement | null) => void;
-  getDockRef: () => HTMLElement | null;
 }
 
 export const useWindowAnimationStore = create<
@@ -75,26 +74,21 @@ export const useWindowAnimationStore = create<
     setDockRef: (ref: HTMLElement | null) => {
       set({ dockRef: ref });
     },
-    getDockRef: (): HTMLElement | null => {
-      return useWindowAnimationStore.getState().dockRef;
-    },
   },
 }));
 
-type WindowAnimationStore = WindowAnimationState & { actions: WindowAnimationAction };
-
 export function useMinimizingWindow(id: string) {
-  return useWindowAnimationStore((state: WindowAnimationStore) =>
+  return useWindowAnimationStore((state) =>
     state.minimizingWindows.find((window: MinimizedWindow) => window.id === id)
   );
 }
 
 export function useMaximizingWindow(id: string) {
-  return useWindowAnimationStore((state: WindowAnimationStore) =>
+  return useWindowAnimationStore((state) =>
     state.maximizingWindows.find((window: MinimizedWindow) => window.id === id)
   );
 }
 
 export function useWindowAnimationAction() {
-  return useWindowAnimationStore((state: WindowAnimationStore) => state.actions);
+  return useWindowAnimationStore((state) => state.actions);
 }
