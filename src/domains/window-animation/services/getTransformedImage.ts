@@ -13,9 +13,11 @@ export function getTransformedImage(
   const imageData = image.data;
   const transformedImageDate = transformedImage.data;
 
-  const maxHeight = Math.min(height, screen.height - yOffset);
-  for (let yIdx = 0; yIdx < maxHeight; yIdx++) {
+  for (let yIdx = 0; yIdx < height; yIdx++) {
     const currentY = y + yIdx + yOffset;
+    if (currentY < 0 || currentY >= screen.height) {
+      continue;
+    }
     // TODO: O(n) -> O(1)
     const leftPoint = leftCurvePoints.find((p) => p.y === currentY);
     const rightPoint = rightCurvePoints.find((p) => p.y === currentY);

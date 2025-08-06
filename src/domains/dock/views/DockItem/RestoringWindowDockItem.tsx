@@ -1,3 +1,4 @@
+import { DEBUG } from 'domains/debug/constant';
 import { EMPTY_IMAGE_URL } from 'domains/dock/constant';
 import { useDockItemSize } from 'domains/dock/hooks/useDockItemSize';
 import { useDock } from 'domains/dock/store';
@@ -45,7 +46,7 @@ export function RestoringWindowDockItem({
       className={styles.item}
       style={{
         width: containerWidth,
-        boxShadow: 'inset 0 0 0 1px blue',
+        boxShadow: DEBUG.WINDOW_ANIMATION ? 'inset 0 0 0 1px blue' : undefined,
       }}
     >
       <motion.img

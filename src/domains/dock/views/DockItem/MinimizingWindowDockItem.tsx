@@ -1,3 +1,4 @@
+import { DEBUG } from 'domains/debug/constant';
 import { useDockItemSize } from 'domains/dock/hooks/useDockItemSize';
 import { getDockItemInnerRectRatio } from 'domains/dock/services/getDockItemInnerRectRatio';
 import { useDock } from 'domains/dock/store';
@@ -81,7 +82,7 @@ export function MinimizingWindowDockItem({
       className={styles.item}
       style={{
         width: containerWidth,
-        boxShadow: 'inset 0 0 0 1px blue',
+        boxShadow: DEBUG.WINDOW_ANIMATION ? 'inset 0 0 0 1px blue' : undefined,
       }}
     >
       <motion.img
@@ -95,7 +96,7 @@ export function MinimizingWindowDockItem({
           scaleX: t,
           translateX,
           clipPath,
-          boxShadow: 'inset 0 0 0 1px red',
+          boxShadow: DEBUG.WINDOW_ANIMATION ? 'inset 0 0 0 1px red' : undefined,
         }}
         onClick={onClick}
       />

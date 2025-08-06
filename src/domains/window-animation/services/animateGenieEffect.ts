@@ -1,3 +1,4 @@
+import { DEBUG } from 'domains/debug/constant';
 import { getDockItemInnerRectRatio } from 'domains/dock/services/getDockItemInnerRectRatio';
 import { WINDOW_ANIMATION } from 'domains/window-animation/constant';
 import { clamp, easeInOut, easeOut, interpolate, Point } from 'utils/math';
@@ -50,20 +51,26 @@ export async function animateGenieEffect(params: {
       const xt = Math.min(time / xAnimationDuration, 1);
       const easeXt = easeInOut(xt);
       const yt = clamp((time - yAnimationStart) / yAnimationDuration, 0, 1);
-      const easeYt = easeOut(yt);
+      const easeYt = easeInOut(yt);
 
-      const leftStart = { x, y };
+      const upYt = Math.min(time / (yAnimationStart * 0.95), 1);
+      const easeUpYt = easeOut(upYt);
+
+      const upperYDiff = Math.max(y + height - targetY, 0);
+      const currentUpperYDiff = Math.round(upperYDiff * easeUpYt);
+      const upperY = Math.round(y - upperYDiff);
+
+      const leftStart = { x, y: y - currentUpperYDiff };
       const leftEnd = {
         x: interpolate(x, targetInnerX)(easeXt),
-        y: targetY,
+        y: targetY + upperYDiff - currentUpperYDiff,
       };
-      const rightStart = { x: x + width, y };
+      const rightStart = { x: x + width, y: y - currentUpperYDiff };
       const rightEnd = {
         x: interpolate(x + width, targetInnerX)(easeXt) + targetInnerWidth,
-        y: targetY,
+        y: targetY + upperYDiff - currentUpperYDiff,
       };
 
-      // TODO: 여기에서 end 지점 때문에 윈도우가 target 밑에 있을 때는 다 짤림 (위로 올리는 애니메이션)
       const leftBezierPoints = getWindowInterpolatedBezierPoints(
         leftStart,
         leftEnd
@@ -73,7 +80,7 @@ export async function animateGenieEffect(params: {
         rightEnd
       );
 
-      const moveY = Math.round((targetY - y) * easeYt);
+      const moveY = Math.round((targetY - upperY) * easeYt);
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -81,14 +88,16 @@ export async function animateGenieEffect(params: {
         image,
         leftBezierPoints,
         rightBezierPoints,
-        { x, y, width, height },
+        { x, y: y - currentUpperYDiff, width, height },
         { width: canvas.width, height: canvas.height },
         moveY
       );
       ctx.putImageData(transformedImage, 0, 0);
 
-      drawCurve(ctx, leftBezierPoints);
-      drawCurve(ctx, rightBezierPoints);
+      if (DEBUG.WINDOW_ANIMATION) {
+        drawCurve(ctx, leftBezierPoints);
+        drawCurve(ctx, rightBezierPoints);
+      }
 
       requestAnimationFrame(() => animate(startTime));
     };
