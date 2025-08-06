@@ -6,6 +6,8 @@ export const desktop = style({
   width: '100%',
   height: '100%',
   backgroundImage: 'url(/src/assets/wallpapers/wallpaper_light.png)',
+  backgroundSize: 'cover',
+  backgroundPosition: 'center',
 });
 
 darkModeStyle(desktop, {
