@@ -4,17 +4,17 @@ import {
   IconAppTrash,
 } from 'assets/app-icons';
 import { ApplicationID } from 'domains/app/applications';
+import { useDockAction } from 'domains/dock/store';
 import { useWindowsAction, useWindowsStore } from 'domains/window/store/store';
 import { animateGenieEffect } from 'domains/window-animation/services/animateGenieEffect';
 import { useWindowAnimationAction } from 'domains/window-animation/store';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { DockItem } from '../DockItem/DockItem';
 import { WindowDockItem } from '../DockItem/WindowDockItem';
 import { DockSeparator } from '../DockSeparator';
 import * as styles from './Dock.css';
 
 export function Dock() {
-  const [mouseX, setMouseX] = useState<number | null>(null);
   const dockRef = useRef<HTMLDivElement>(null);
   const windows = useWindowsStore((state) => state.windows);
   const minimizedWindows = useWindowsStore((state) => state.minimizedWindows);
@@ -22,11 +22,12 @@ export function Dock() {
     useWindowsAction();
   const {
     setMinimizedDockIndicatorRef,
-    startMaximizingWindow,
-    stopMaximizingWindow,
+    startRestoringWindow,
+    stopRestoringWindow,
     getDockItemElement,
     setDockElement,
   } = useWindowAnimationAction();
+  const { setMouseX } = useDockAction();
 
   useEffect(() => {
     if (dockRef.current) {
@@ -62,7 +63,7 @@ export function Dock() {
       return;
     }
 
-    startMaximizingWindow(minimizedWindow);
+    startRestoringWindow(minimizedWindow);
 
     await animateGenieEffect({
       image: minimizedWindow.imageData,
@@ -79,7 +80,7 @@ export function Dock() {
       reverse: true,
     });
 
-    stopMaximizingWindow(windowId);
+    stopRestoringWindow(windowId);
     restoreMinimizedWindow(windowId);
   };
 
@@ -90,10 +91,9 @@ export function Dock() {
       onMouseMove={(event) => setMouseX(event.clientX)}
       onMouseLeave={() => setMouseX(null)}
     >
-      <DockItem mouseX={mouseX} src={IconAppFinder} open={isOpen('Finder')} />
+      <DockItem src={IconAppFinder} open={isOpen('Finder')} />
       <DockSeparator />
       <DockItem
-        mouseX={mouseX}
         src={IconAppCalculator}
         open={isOpen('calculator')}
         onClick={() => onClickDockItem('calculator')}
@@ -102,9 +102,8 @@ export function Dock() {
       {minimizedWindows.map((window) => (
         <WindowDockItem
           key={window.id}
-          id={window.id}
-          mouseX={mouseX}
-          imageData={window.imageData}
+          windowId={window.id}
+          image={window.imageData}
           onClick={() => onRestoreWindow(window.id)}
         />
       ))}
@@ -112,7 +111,7 @@ export function Dock() {
         className={styles.minimizedDockIndicator}
         ref={setMinimizedDockIndicatorRef}
       />
-      <DockItem mouseX={mouseX} src={IconAppTrash} />
+      <DockItem src={IconAppTrash} />
     </div>
   );
 }

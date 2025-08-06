@@ -3,7 +3,7 @@ import { create } from 'third-parties/zustand';
 
 export interface WindowAnimationState {
   minimizingWindows: MinimizedWindow[];
-  maximizingWindows: MinimizedWindow[];
+  restoringWindows: MinimizedWindow[];
   minimizedDockIndicatorElement: HTMLDivElement | null;
   dockItemElements: Map<string, HTMLElement>;
   dockElement: HTMLElement | null;
@@ -12,8 +12,8 @@ export interface WindowAnimationState {
 export interface WindowAnimationAction {
   startMinimizingWindow: (window: MinimizedWindow) => void;
   stopMinimizingWindow: (id: string) => void;
-  startMaximizingWindow: (window: MinimizedWindow) => void;
-  stopMaximizingWindow: (id: string) => void;
+  startRestoringWindow: (window: MinimizedWindow) => void;
+  stopRestoringWindow: (id: string) => void;
   setMinimizedDockIndicatorRef: (ref: HTMLDivElement) => void;
   setDockItemElement: (id: string, ref: HTMLElement | null) => void;
   getDockItemElement: (id: string) => HTMLElement | undefined;
@@ -25,7 +25,7 @@ export const useWindowAnimationStore = create<
   WindowAnimationAction
 >((set): WindowAnimationState & { actions: WindowAnimationAction } => ({
   minimizingWindows: [],
-  maximizingWindows: [],
+  restoringWindows: [],
   minimizedDockIndicatorElement: null,
   dockItemElements: new Map(),
   dockElement: null,
@@ -42,14 +42,14 @@ export const useWindowAnimationStore = create<
         ),
       }));
     },
-    startMaximizingWindow: (window: MinimizedWindow) => {
+    startRestoringWindow: (window: MinimizedWindow) => {
       set((state) => ({
-        maximizingWindows: [...state.maximizingWindows, window],
+        restoringWindows: [...state.restoringWindows, window],
       }));
     },
-    stopMaximizingWindow: (id: string) => {
+    stopRestoringWindow: (id: string) => {
       set((state) => ({
-        maximizingWindows: state.maximizingWindows.filter(
+        restoringWindows: state.restoringWindows.filter(
           (window) => window.id !== id
         ),
       }));
@@ -83,9 +83,9 @@ export function useMinimizingWindow(id: string) {
   );
 }
 
-export function useMaximizingWindow(id: string) {
+export function useRestoringWindow(id: string) {
   return useWindowAnimationStore((state) =>
-    state.maximizingWindows.find((window: MinimizedWindow) => window.id === id)
+    state.restoringWindows.find((window: MinimizedWindow) => window.id === id)
   );
 }
 
