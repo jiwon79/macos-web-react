@@ -1,7 +1,9 @@
 import { style } from '@vanilla-extract/css';
-import { darkModeStyle } from 'third-parties/vanilla-extract';
+import { darkModeStyle, Z_INDEX } from 'third-parties/vanilla-extract';
 
 export const container = style({
+  zIndex: Z_INDEX.dock,
+
   position: 'absolute',
   bottom: 5,
   left: '50%',

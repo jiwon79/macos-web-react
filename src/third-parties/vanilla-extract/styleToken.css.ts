@@ -1,6 +1,11 @@
 import { style } from '@vanilla-extract/css';
 
-export const font = {
+export const Z_INDEX = {
+  canvas: 1,
+  dock: 10,
+};
+
+export const FONT = {
   icon: style({
     fontFamily: 'Pretendard',
     fontWeight: 500,

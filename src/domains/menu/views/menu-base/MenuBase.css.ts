@@ -1,5 +1,5 @@
 import { recipe } from '@vanilla-extract/recipes';
-import { darkModeStyle, font } from 'third-parties/vanilla-extract';
+import { darkModeStyle, FONT } from 'third-parties/vanilla-extract';
 import { hexAlpha } from 'utils/style';
 
 export const container = recipe({
@@ -22,19 +22,19 @@ export const container = recipe({
     },
     type: {
       icon: [
-        font.icon,
+        FONT.icon,
         {
           padding: '2px 11px',
         },
       ],
       'text-bold': [
-        font.headline.regular,
+        FONT.headline.regular,
         {
           padding: '4px 11px',
         },
       ],
       text: [
-        font.body.emphasized,
+        FONT.body.emphasized,
         {
           padding: '4px 11px',
         },
