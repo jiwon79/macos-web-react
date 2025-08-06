@@ -1,21 +1,21 @@
-import { DEBUG } from 'domains/debug/constant';
-import { useDockItemSize } from 'domains/dock/hooks/useDockItemSize';
-import { getDockItemInnerRectRatio } from 'domains/dock/services/getDockItemInnerRectRatio';
-import { useDock } from 'domains/dock/store';
-import { MinimizedWindow } from 'domains/window/interface';
-import { WINDOW_ANIMATION } from 'domains/window-animation/constant';
-import { getGenieAnimationTime } from 'domains/window-animation/services/getGenieAnimationTime';
-import { useWindowAnimationAction } from 'domains/window-animation/store';
+import { DEBUG } from "domains/debug/constant";
+import { useDockItemSize } from "domains/dock/hooks/useDockItemSize";
+import { getDockItemInnerRectRatio } from "domains/dock/services/getDockItemInnerRectRatio";
+import { useDock } from "domains/dock/store";
+import type { MinimizedWindow } from "domains/window/interface";
+import { WINDOW_ANIMATION } from "domains/window-animation/constant";
+import { getGenieAnimationTime } from "domains/window-animation/services/getGenieAnimationTime";
+import { useWindowAnimationAction } from "domains/window-animation/store";
 import {
   animate,
   interpolate,
   motion,
   useMotionValue,
-  useTransform,
-} from 'framer-motion';
-import { useEffect, useRef } from 'react';
-import { DockIconOpenIndicator } from '../DockIconOpenIndicator';
-import * as styles from './DockItem.css';
+  useTransform
+} from "framer-motion";
+import { useEffect, useRef } from "react";
+import { DockIconOpenIndicator } from "../DockIconOpenIndicator";
+import * as styles from "./DockItem.css";
 
 interface MinimizingWindowDockItemProps {
   windowId: string;
@@ -30,7 +30,7 @@ export function MinimizingWindowDockItem({
   src,
   onClick,
   minimizedWindow,
-  onDistanceChange,
+  onDistanceChange
 }: MinimizingWindowDockItemProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const imageRef = useRef<HTMLImageElement>(null);
@@ -41,7 +41,7 @@ export function MinimizingWindowDockItem({
   const size = useDockItemSize({
     mouseX,
     element: itemElement,
-    onDistanceChange,
+    onDistanceChange
   });
 
   const t = useMotionValue(0);
@@ -61,7 +61,7 @@ export function MinimizingWindowDockItem({
     [
       `inset(100% 0 0 0)`,
       `inset(${(1 - innerYRatio) * 100}% 0 0 0)`,
-      `inset(${innerYRatio * 100}% 0 0 0)`,
+      `inset(${innerYRatio * 100}% 0 0 0)`
     ]
   );
 
@@ -70,7 +70,7 @@ export function MinimizingWindowDockItem({
   useEffect(() => {
     const animation = animate(t, 1, {
       duration: WINDOW_ANIMATION.DURATION / 1000,
-      ease: 'linear',
+      ease: "linear"
     });
 
     return () => animation.stop();
@@ -82,7 +82,7 @@ export function MinimizingWindowDockItem({
       className={styles.item}
       style={{
         width: containerWidth,
-        boxShadow: DEBUG.WINDOW_ANIMATION ? 'inset 0 0 0 1px blue' : undefined,
+        boxShadow: DEBUG.WINDOW_ANIMATION ? "inset 0 0 0 1px blue" : undefined
       }}
     >
       <motion.img
@@ -96,7 +96,7 @@ export function MinimizingWindowDockItem({
           scaleX: t,
           translateX,
           clipPath,
-          boxShadow: DEBUG.WINDOW_ANIMATION ? 'inset 0 0 0 1px red' : undefined,
+          boxShadow: DEBUG.WINDOW_ANIMATION ? "inset 0 0 0 1px red" : undefined
         }}
         onClick={onClick}
       />

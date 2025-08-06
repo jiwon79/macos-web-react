@@ -1,8 +1,8 @@
-import { useFloatingMenu } from 'domains/menu/hooks/useFloatingMenu';
-import { ReactNode } from 'react';
-import { FloatingMenuContent } from './FloatingMenuContent';
-import { FloatingMenuContext } from './FloatingMenuContext';
-import { FloatingMenuTrigger } from './FloatingMenuTrigger';
+import { useFloatingMenu } from "domains/menu/hooks/useFloatingMenu";
+import type { ReactNode } from "react";
+import { FloatingMenuContent } from "./FloatingMenuContent";
+import { FloatingMenuContext } from "./FloatingMenuContext";
+import { FloatingMenuTrigger } from "./FloatingMenuTrigger";
 
 interface FloatingMenuProps {
   focused: boolean;
@@ -15,10 +15,10 @@ export function FloatingMenu({
   focused,
   selected,
   onSelectedChange,
-  children,
+  children
 }: FloatingMenuProps) {
   const { refs, floating, reference, open, onOpenChange } = useFloatingMenu({
-    focused,
+    focused
   });
   const context = {
     focused,
@@ -28,7 +28,7 @@ export function FloatingMenu({
     onOpenChange,
     refs,
     floating,
-    reference,
+    reference
   };
 
   return (

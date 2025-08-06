@@ -1,5 +1,5 @@
-import { WindowStyle } from 'domains/window/interface/window';
-import { createContext, useContext } from 'react';
+import type { WindowStyle } from "domains/window/interface/window";
+import { createContext, useContext } from "react";
 
 interface WindowContextProps {
   id: string;
@@ -8,14 +8,14 @@ interface WindowContextProps {
 }
 
 export const WindowContext = createContext<WindowContextProps>({
-  id: '',
+  id: "",
   style: {
     x: 0,
     y: 0,
     width: 0,
-    height: 0,
+    height: 0
   },
-  onStyleChange: () => {},
+  onStyleChange: () => {}
 });
 
 export function useWindowContext() {

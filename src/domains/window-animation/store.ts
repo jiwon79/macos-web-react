@@ -1,5 +1,5 @@
-import { MinimizedWindow } from 'domains/window/interface';
-import { create } from 'third-parties/zustand';
+import type { MinimizedWindow } from "domains/window/interface";
+import { create } from "third-parties/zustand";
 
 export interface WindowAnimationState {
   minimizingWindows: MinimizedWindow[];
@@ -32,26 +32,26 @@ export const useWindowAnimationStore = create<
   actions: {
     startMinimizingWindow: (window: MinimizedWindow) => {
       set((state) => ({
-        minimizingWindows: [...state.minimizingWindows, window],
+        minimizingWindows: [...state.minimizingWindows, window]
       }));
     },
     stopMinimizingWindow: (id: string) => {
       set((state) => ({
         minimizingWindows: state.minimizingWindows.filter(
           (window) => window.id !== id
-        ),
+        )
       }));
     },
     startRestoringWindow: (window: MinimizedWindow) => {
       set((state) => ({
-        restoringWindows: [...state.restoringWindows, window],
+        restoringWindows: [...state.restoringWindows, window]
       }));
     },
     stopRestoringWindow: (id: string) => {
       set((state) => ({
         restoringWindows: state.restoringWindows.filter(
           (window) => window.id !== id
-        ),
+        )
       }));
     },
     setMinimizedDockIndicatorRef: (ref: HTMLDivElement) => {
@@ -73,8 +73,8 @@ export const useWindowAnimationStore = create<
     },
     setDockElement: (ref: HTMLElement | null) => {
       set({ dockElement: ref });
-    },
-  },
+    }
+  }
 }));
 
 export function useMinimizingWindow(id: string) {

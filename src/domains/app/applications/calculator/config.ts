@@ -1,276 +1,276 @@
-import { IconAppCalculator } from 'assets/app-icons';
-import { AppConfig } from '../../interface';
-import { Calculator } from './views/Calculator';
+import { IconAppCalculator } from "assets/app-icons";
+import type { AppConfig } from "../../interface";
+import { Calculator } from "./views/Calculator";
 
 export const calculatorConfig: AppConfig = {
-  id: 'Calculator',
+  id: "Calculator",
   icon: IconAppCalculator,
   app: Calculator,
   menus: [
     {
-      name: 'Calculator',
+      name: "Calculator",
       submenuGroups: [
         [
           {
-            name: 'About Calculator',
-          },
+            name: "About Calculator"
+          }
         ],
         [
           {
-            name: 'Hide Calculator',
-            shortcut: '⌘H',
+            name: "Hide Calculator",
+            shortcut: "⌘H"
           },
           {
-            name: 'Hide Others',
-            shortcut: '⌥⌘H',
+            name: "Hide Others",
+            shortcut: "⌥⌘H"
           },
           {
-            name: 'Show All',
-            disabled: true,
-          },
+            name: "Show All",
+            disabled: true
+          }
         ],
         [
           {
-            name: 'Quit Calculator',
-            shortcut: '⌘Q',
-          },
-        ],
-      ],
+            name: "Quit Calculator",
+            shortcut: "⌘Q"
+          }
+        ]
+      ]
     },
     {
-      name: 'File',
+      name: "File",
       submenuGroups: [
         [
           {
-            name: 'Close',
-            shortcut: '⌘W',
+            name: "Close",
+            shortcut: "⌘W"
           },
           {
-            name: 'Save Tape As…',
-            shortcut: '⇧⌘S',
-          },
+            name: "Save Tape As…",
+            shortcut: "⇧⌘S"
+          }
         ],
         [
           {
-            name: 'Page Setup…',
-            shortcut: '⇧⌘P',
+            name: "Page Setup…",
+            shortcut: "⇧⌘P"
           },
           {
-            name: 'Print Tape…',
-            shortcut: '⌘P',
-          },
-        ],
-      ],
+            name: "Print Tape…",
+            shortcut: "⌘P"
+          }
+        ]
+      ]
     },
     {
-      name: 'Edit',
+      name: "Edit",
       submenuGroups: [
         [
           {
-            name: 'Undo',
-            shortcut: '⌘Z',
-            disabled: true,
+            name: "Undo",
+            shortcut: "⌘Z",
+            disabled: true
           },
           {
-            name: 'Redo',
-            shortcut: '⇧⌘Z',
-            disabled: true,
-          },
+            name: "Redo",
+            shortcut: "⇧⌘Z",
+            disabled: true
+          }
         ],
         [
           {
-            name: 'Cut',
-            shortcut: '⌘X',
-            disabled: true,
+            name: "Cut",
+            shortcut: "⌘X",
+            disabled: true
           },
           {
-            name: 'Copy',
-            shortcut: '⌘C',
+            name: "Copy",
+            shortcut: "⌘C"
           },
           {
-            name: 'Paste',
-            shortcut: '⌘V',
+            name: "Paste",
+            shortcut: "⌘V"
           },
           {
-            name: 'Clear',
-            disabled: true,
+            name: "Clear",
+            disabled: true
           },
           {
-            name: 'Select All',
-            shortcut: '⌘A',
-            disabled: true,
-          },
+            name: "Select All",
+            shortcut: "⌘A",
+            disabled: true
+          }
         ],
         [
           {
-            name: 'Auto Fill',
+            name: "Auto Fill"
           },
           {
-            name: 'Start Dictation…',
+            name: "Start Dictation…"
           },
           {
-            name: 'Emoji & Symbols',
-          },
-        ],
-      ],
+            name: "Emoji & Symbols"
+          }
+        ]
+      ]
     },
     {
-      name: 'View',
+      name: "View",
       submenuGroups: [
         [
           {
-            name: 'Basic(selected)',
-            shortcut: '⌘1',
+            name: "Basic(selected)",
+            shortcut: "⌘1"
           },
           {
-            name: 'Scientific',
-            shortcut: '⌘2',
+            name: "Scientific",
+            shortcut: "⌘2"
           },
           {
-            name: 'Programmer',
-            shortcut: '⌘3',
-          },
+            name: "Programmer",
+            shortcut: "⌘3"
+          }
         ],
         [
           {
-            name: 'Show Thousands Separators',
-          },
+            name: "Show Thousands Separators"
+          }
         ],
         [
           {
-            name: 'RPN Mode',
-            shortcut: '⌘R',
-          },
+            name: "RPN Mode",
+            shortcut: "⌘R"
+          }
         ],
         [
           {
-            name: 'Decimal Places',
+            name: "Decimal Places"
           },
           {
-            name: 'Enter Full Screen',
-            shortcut: '⌥F',
-            disabled: true,
-          },
-        ],
-      ],
+            name: "Enter Full Screen",
+            shortcut: "⌥F",
+            disabled: true
+          }
+        ]
+      ]
     },
     {
-      name: 'Convert',
+      name: "Convert",
       submenuGroups: [
         [
           {
-            name: 'Recent Conversions',
-          },
+            name: "Recent Conversions"
+          }
         ],
         [
           {
-            name: 'Area…',
+            name: "Area…"
           },
           {
-            name: 'Currency…',
+            name: "Currency…"
           },
           {
-            name: 'Energy or Work…',
+            name: "Energy or Work…"
           },
           {
-            name: 'Length…',
+            name: "Length…"
           },
           {
-            name: 'Power…',
+            name: "Power…"
           },
           {
-            name: 'Pressure…',
+            name: "Pressure…"
           },
           {
-            name: 'Speed…',
+            name: "Speed…"
           },
           {
-            name: 'Temperature…',
+            name: "Temperature…"
           },
           {
-            name: 'Time…',
+            name: "Time…"
           },
           {
-            name: 'Volume…',
+            name: "Volume…"
           },
           {
-            name: 'Weights and Masses…',
-          },
-        ],
-      ],
+            name: "Weights and Masses…"
+          }
+        ]
+      ]
     },
     {
-      name: 'Speech',
+      name: "Speech",
       submenuGroups: [
         [
           {
-            name: 'Speak Button Pressed',
+            name: "Speak Button Pressed"
           },
           {
-            name: 'Speak Result',
-          },
-        ],
-      ],
+            name: "Speak Result"
+          }
+        ]
+      ]
     },
     {
-      name: 'Window',
+      name: "Window",
       submenuGroups: [
         [
           {
-            name: 'Move Window to Left Side of Screen',
+            name: "Move Window to Left Side of Screen"
           },
           {
-            name: 'Move Window to Right Side of Screen',
+            name: "Move Window to Right Side of Screen"
           },
           {
-            name: 'Replace Tiled Window',
-            disabled: true,
-          },
+            name: "Replace Tiled Window",
+            disabled: true
+          }
         ],
         [
           {
-            name: 'Remove Window from Set',
-            disabled: true,
+            name: "Remove Window from Set",
+            disabled: true
           },
           {
-            name: 'Minimize',
-            shortcut: '⌘M',
-            disabled: true,
+            name: "Minimize",
+            shortcut: "⌘M",
+            disabled: true
           },
           {
-            name: 'Zoom',
-            disabled: true,
-          },
+            name: "Zoom",
+            disabled: true
+          }
         ],
         [
           {
-            name: 'Show Paper Tape',
-            shortcut: '⌘T',
-          },
+            name: "Show Paper Tape",
+            shortcut: "⌘T"
+          }
         ],
         [
           {
-            name: 'Bring All to Front',
-          },
-        ],
-      ],
+            name: "Bring All to Front"
+          }
+        ]
+      ]
     },
     {
-      name: 'Help',
+      name: "Help",
       submenuGroups: [
         [
           {
-            name: 'Search(input)',
+            name: "Search(input)"
           },
           {
-            name: 'Calculator Help',
-          },
-        ],
-      ],
-    },
+            name: "Calculator Help"
+          }
+        ]
+      ]
+    }
   ],
   initialStyle: {
     width: 300,
-    height: 400,
-  },
+    height: 400
+  }
 };

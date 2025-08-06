@@ -1,4 +1,4 @@
-import { ResizableResizeEvent, ResizableStartResizeEvent } from './Event';
+import type { ResizableResizeEvent, ResizableStartResizeEvent } from "./Event";
 
 export interface ResizableOptions {
   maxWidth?: number;
@@ -7,7 +7,7 @@ export interface ResizableOptions {
   minHeight?: number;
   shouldStartResize?: (e: ResizableStartResizeEvent) => boolean;
   canResize?: (e: ResizableResizeEvent) => boolean;
-  verticalPositiveDeltaDirection: 'top' | 'bottom';
-  horizontalPositiveDeltaDirection: 'left' | 'right';
+  verticalPositiveDeltaDirection: "top" | "bottom";
+  horizontalPositiveDeltaDirection: "left" | "right";
   keepRatio?: boolean;
 }

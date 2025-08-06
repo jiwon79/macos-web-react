@@ -1,10 +1,10 @@
-import { useWindowsAction, useWindowsStore } from 'domains/window/store';
-import { WindowRenderer } from 'domains/window/views/WindowRenderer/WindowRenderer';
+import { useWindowsAction, useWindowsStore } from "domains/window/store";
+import { WindowRenderer } from "domains/window/views/WindowRenderer/WindowRenderer";
 
 export function Windows() {
   const windows = useWindowsStore((state) => state.windows);
   const minimizedWindows = useWindowsStore((state) => state.minimizedWindows);
-  const { updateWindow, setWindowRef: setWindowRef } = useWindowsAction();
+  const { updateWindow, setWindowRef } = useWindowsAction();
 
   const notMinimizedWindows = windows.filter(
     (window) =>
@@ -15,24 +15,23 @@ export function Windows() {
 
   return (
     <>
-      {notMinimizedWindows &&
-        notMinimizedWindows.map((window) => (
-          <WindowRenderer
-            key={window.id}
-            ref={(element) => {
-              if (element != null) {
-                setWindowRef(window.id, element);
-              }
-            }}
-            id={window.id}
-            style={window.style}
-            onStyleChange={(style) => {
-              updateWindow(window.id, { style });
-            }}
-          >
-            {window.content}
-          </WindowRenderer>
-        ))}
+      {notMinimizedWindows.map((window) => (
+        <WindowRenderer
+          key={window.id}
+          ref={(element) => {
+            if (element != null) {
+              setWindowRef(window.id, element);
+            }
+          }}
+          id={window.id}
+          style={window.style}
+          onStyleChange={(style) => {
+            updateWindow(window.id, { style });
+          }}
+        >
+          {window.content}
+        </WindowRenderer>
+      ))}
     </>
   );
 }

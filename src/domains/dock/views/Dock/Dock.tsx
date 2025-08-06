@@ -1,18 +1,18 @@
 import {
   IconAppCalculator,
   IconAppFinder,
-  IconAppTrash,
-} from 'assets/app-icons';
-import { ApplicationID } from 'domains/app/applications';
-import { useDockAction } from 'domains/dock/store';
-import { useWindowsAction, useWindowsStore } from 'domains/window/store/store';
-import { animateGenieEffect } from 'domains/window-animation/services/animateGenieEffect';
-import { useWindowAnimationAction } from 'domains/window-animation/store';
-import { useEffect, useRef } from 'react';
-import { DockItem } from '../DockItem/DockItem';
-import { WindowDockItem } from '../DockItem/WindowDockItem';
-import { DockSeparator } from '../DockSeparator';
-import * as styles from './Dock.css';
+  IconAppTrash
+} from "assets/app-icons";
+import type { ApplicationID } from "domains/app/applications";
+import { useDockAction } from "domains/dock/store";
+import { useWindowsAction, useWindowsStore } from "domains/window/store/store";
+import { animateGenieEffect } from "domains/window-animation/services/animateGenieEffect";
+import { useWindowAnimationAction } from "domains/window-animation/store";
+import { useEffect, useRef } from "react";
+import { DockItem } from "../DockItem/DockItem";
+import { WindowDockItem } from "../DockItem/WindowDockItem";
+import { DockSeparator } from "../DockSeparator";
+import * as styles from "./Dock.css";
 
 export function Dock() {
   const dockRef = useRef<HTMLDivElement>(null);
@@ -25,7 +25,7 @@ export function Dock() {
     startRestoringWindow,
     stopRestoringWindow,
     getDockItemElement,
-    setDockElement,
+    setDockElement
   } = useWindowAnimationAction();
   const { setMouseX } = useDockAction();
 
@@ -74,10 +74,10 @@ export function Dock() {
         return {
           x: rect?.x ?? 0,
           y: dockRect?.y ?? 0,
-          width: rect?.width ?? 0,
+          width: rect?.width ?? 0
         };
       },
-      reverse: true,
+      reverse: true
     });
 
     stopRestoringWindow(windowId);
@@ -91,12 +91,12 @@ export function Dock() {
       onMouseMove={(event) => setMouseX(event.clientX)}
       onMouseLeave={() => setMouseX(null)}
     >
-      <DockItem src={IconAppFinder} open={isOpen('Finder')} />
+      <DockItem src={IconAppFinder} open={isOpen("Finder")} />
       <DockSeparator />
       <DockItem
         src={IconAppCalculator}
-        open={isOpen('calculator')}
-        onClick={() => onClickDockItem('calculator')}
+        open={isOpen("calculator")}
+        onClick={() => onClickDockItem("calculator")}
       />
       <DockSeparator />
       {minimizedWindows.map((window) => (

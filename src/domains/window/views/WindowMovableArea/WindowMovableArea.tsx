@@ -1,9 +1,9 @@
-import { MovableEventMap } from 'modules/movable';
-import { MovableContainer } from 'modules/movable-react';
-import { useRef } from 'react';
-import { cn } from 'third-parties/classnames';
-import { useWindowContext } from '../WindowContext.ts';
-import { container } from './WindowMovableArea.css.ts';
+import type { MovableEventMap } from "modules/movable";
+import { MovableContainer } from "modules/movable-react";
+import { useRef } from "react";
+import { cn } from "third-parties/classnames";
+import { useWindowContext } from "../WindowContext.ts";
+import { container } from "./WindowMovableArea.css.ts";
 
 interface WindowMovableAreaProps {
   children?: React.ReactNode;
@@ -12,7 +12,7 @@ interface WindowMovableAreaProps {
 
 export function WindowMovableArea({
   children,
-  className,
+  className
 }: WindowMovableAreaProps) {
   const { style, onStyleChange } = useWindowContext();
 
@@ -22,13 +22,13 @@ export function WindowMovableArea({
     initialPosition.current = { x: style.x, y: style.y };
   };
 
-  const monMove = (event: MovableEventMap['move']) => {
+  const monMove = (event: MovableEventMap["move"]) => {
     if (!initialPosition.current) {
       return;
     }
     onStyleChange({
       x: initialPosition.current.x + event.delta.x,
-      y: initialPosition.current.y + event.delta.y,
+      y: initialPosition.current.y + event.delta.y
     });
   };
 

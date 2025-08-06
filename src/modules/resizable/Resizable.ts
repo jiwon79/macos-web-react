@@ -1,21 +1,21 @@
-import { EventManager } from 'modules/event-manager/EventManager';
-import { filterUndefinedFromObject } from '../../utils/object';
-import {
+import { EventManager } from "modules/event-manager/EventManager";
+import { filterUndefinedFromObject } from "../../utils/object";
+import type {
   ResizableEventListener,
   ResizableEventMap,
   ResizableEventType,
   ResizableOptions,
-  ResizableResizeEvent,
-} from './interfaces';
+  ResizableResizeEvent
+} from "./interfaces";
 
 export class Resizable {
   private eventManager: EventManager<ResizableEventMap> = new EventManager();
   private isResizing: boolean = false;
 
-  private firstMousePosition: Record<'x' | 'y', number> | undefined;
+  private firstMousePosition: Record<"x" | "y", number> | undefined;
 
-  private firstRect: Pick<DOMRect, 'width' | 'height'> | undefined;
-  private latestRect: Pick<DOMRect, 'width' | 'height'> | undefined;
+  private firstRect: Pick<DOMRect, "width" | "height"> | undefined;
+  private latestRect: Pick<DOMRect, "width" | "height"> | undefined;
 
   private ratio: number | undefined;
 
@@ -29,9 +29,9 @@ export class Resizable {
     this.options = {
       ..._options,
       verticalPositiveDeltaDirection:
-        _options.verticalPositiveDeltaDirection ?? 'bottom',
+        _options.verticalPositiveDeltaDirection ?? "bottom",
       horizontalPositiveDeltaDirection:
-        _options.horizontalPositiveDeltaDirection ?? 'right',
+        _options.horizontalPositiveDeltaDirection ?? "right"
     };
     this.onMouseDown = this.onMouseDown.bind(this);
     this.onMouseMove = this.onMouseMove.bind(this);
@@ -55,7 +55,7 @@ export class Resizable {
 
   private resize(
     e: MouseEvent
-  ): Promise<Omit<ResizableResizeEvent, 'nativeEvent'> | null> {
+  ): Promise<Omit<ResizableResizeEvent, "nativeEvent"> | null> {
     return new Promise((resolve) => {
       requestAnimationFrame(() => {
         const resizedWidth = this.getResizedWidth(e);
@@ -78,8 +78,8 @@ export class Resizable {
                   this.options.verticalPositiveDeltaDirection,
                 delta: {
                   width: resizedWidth.delta,
-                  height: resizedWidth.delta / this.ratio,
-                },
+                  height: resizedWidth.delta / this.ratio
+                }
               });
               return;
             }
@@ -92,8 +92,8 @@ export class Resizable {
                 this.options.verticalPositiveDeltaDirection,
               delta: {
                 width: resizedHeight.delta * this.ratio,
-                height: resizedHeight.delta,
-              },
+                height: resizedHeight.delta
+              }
             });
             return;
           }
@@ -107,8 +107,8 @@ export class Resizable {
                 this.options.verticalPositiveDeltaDirection,
               delta: {
                 width: resizedHeight.delta * this.ratio,
-                height: resizedHeight.delta,
-              },
+                height: resizedHeight.delta
+              }
             });
             return;
           }
@@ -122,8 +122,8 @@ export class Resizable {
                 this.options.verticalPositiveDeltaDirection,
               delta: {
                 width: resizedWidth.delta,
-                height: resizedWidth.delta / this.ratio,
-              },
+                height: resizedWidth.delta / this.ratio
+              }
             });
             return;
           }
@@ -138,8 +138,8 @@ export class Resizable {
                   this.options.verticalPositiveDeltaDirection,
                 delta: {
                   width: resizedWidth.delta,
-                  height: resizedWidth.delta / this.ratio,
-                },
+                  height: resizedWidth.delta / this.ratio
+                }
               });
               return;
             }
@@ -152,8 +152,8 @@ export class Resizable {
                 this.options.verticalPositiveDeltaDirection,
               delta: {
                 width: resizedHeight.delta * this.ratio,
-                height: resizedHeight.delta,
-              },
+                height: resizedHeight.delta
+              }
             });
             return;
           }
@@ -169,8 +169,8 @@ export class Resizable {
             this.options.verticalPositiveDeltaDirection,
           delta: {
             width: resizedWidth?.delta,
-            height: resizedHeight?.delta,
-          },
+            height: resizedHeight?.delta
+          }
         });
       });
     });
@@ -178,7 +178,7 @@ export class Resizable {
 
   private getResizedWidth(
     e: MouseEvent
-  ): Record<'size' | 'delta', number> | null {
+  ): Record<"size" | "delta", number> | null {
     if (this.latestRect == null || this.firstRect == null) {
       return null;
     }
@@ -199,14 +199,14 @@ export class Resizable {
     if (this.options.maxWidth && newWidth > this.options.maxWidth) {
       return {
         size: this.options.maxWidth,
-        delta: delta - newWidth + this.options.maxWidth,
+        delta: delta - newWidth + this.options.maxWidth
       };
     }
 
     if (this.options.minWidth && newWidth < this.options.minWidth) {
       return {
         size: this.options.minWidth,
-        delta: delta - newWidth + this.options.minWidth,
+        delta: delta - newWidth + this.options.minWidth
       };
     }
 
@@ -215,7 +215,7 @@ export class Resizable {
 
   private getResizedHeight(
     e: MouseEvent
-  ): Record<'size' | 'delta', number> | null {
+  ): Record<"size" | "delta", number> | null {
     if (this.latestRect == null || this.firstRect == null) {
       return null;
     }
@@ -236,23 +236,23 @@ export class Resizable {
     if (this.options.maxHeight && newHeight > this.options.maxHeight) {
       return {
         size: this.options.maxHeight,
-        delta: delta - newHeight + this.options.maxHeight,
+        delta: delta - newHeight + this.options.maxHeight
       };
     }
 
     if (this.options.minHeight && newHeight < this.options.minHeight) {
       return {
         size: this.options.minHeight,
-        delta: delta - newHeight + this.options.minHeight,
+        delta: delta - newHeight + this.options.minHeight
       };
     }
 
     return { size: newHeight, delta };
   }
 
-  private getDelta(e: MouseEvent): Record<'x' | 'y', number> {
+  private getDelta(e: MouseEvent): Record<"x" | "y", number> {
     if (this.firstMousePosition == null) {
-      throw new Error('First mouse position is not defined');
+      throw new Error("First mouse position is not defined");
     }
 
     const { x: firstMouseX, y: firstMouseY } = this.firstMousePosition;
@@ -261,10 +261,10 @@ export class Resizable {
     return filterUndefinedFromObject({
       x:
         Math.round(currentMouseX - firstMouseX) *
-        (this.options.horizontalPositiveDeltaDirection === 'left' ? -1 : 1),
+        (this.options.horizontalPositiveDeltaDirection === "left" ? -1 : 1),
       y:
         Math.round(currentMouseY - firstMouseY) *
-        (this.options.verticalPositiveDeltaDirection === 'top' ? -1 : 1),
+        (this.options.verticalPositiveDeltaDirection === "top" ? -1 : 1)
     });
   }
 
@@ -283,19 +283,19 @@ export class Resizable {
     this.isResizing = true;
     this.firstMousePosition = {
       x: e.clientX,
-      y: e.clientY,
+      y: e.clientY
     };
     this.firstRect = {
       width: Math.round(targetElementRect.width),
-      height: Math.round(targetElementRect.height),
+      height: Math.round(targetElementRect.height)
     };
     this.latestRect = this.firstRect;
     this.ratio = targetElementRect.width / targetElementRect.height;
 
-    this.eventManager.emit('startResize', startResizeEvent);
+    this.eventManager.emit("startResize", startResizeEvent);
 
-    document.addEventListener('mousemove', this.onMouseMove);
-    document.addEventListener('mouseup', this.onMouseUp);
+    document.addEventListener("mousemove", this.onMouseMove);
+    document.addEventListener("mouseup", this.onMouseUp);
   }
 
   private async onMouseMove(e: MouseEvent) {
@@ -320,32 +320,32 @@ export class Resizable {
     this.latestRect = this.latestRect
       ? {
           width: resized.width ?? this.latestRect?.width,
-          height: resized.height ?? this.latestRect?.height,
+          height: resized.height ?? this.latestRect?.height
         }
       : undefined;
 
-    this.eventManager.emit('resize', resizeEvent);
+    this.eventManager.emit("resize", resizeEvent);
   }
 
   private onMouseUp(e: MouseEvent): void {
-    document.removeEventListener('mousemove', this.onMouseMove);
-    document.removeEventListener('mouseup', this.onMouseUp);
+    document.removeEventListener("mousemove", this.onMouseMove);
+    document.removeEventListener("mouseup", this.onMouseUp);
 
     this.isResizing = false;
     this.latestRect = undefined;
     this.ratio = undefined;
 
-    this.eventManager.emit('endResize', { nativeEvent: e });
+    this.eventManager.emit("endResize", { nativeEvent: e });
   }
 
   private attachEventListeners() {
-    this.handlerElement.addEventListener('mousedown', this.onMouseDown);
+    this.handlerElement.addEventListener("mousedown", this.onMouseDown);
   }
 
   private detachEventListeners() {
-    this.handlerElement.removeEventListener('mousedown', this.onMouseDown);
-    document.removeEventListener('mousemove', this.onMouseMove);
-    document.removeEventListener('mouseup', this.onMouseUp);
+    this.handlerElement.removeEventListener("mousedown", this.onMouseDown);
+    document.removeEventListener("mousemove", this.onMouseMove);
+    document.removeEventListener("mouseup", this.onMouseUp);
   }
 
   updateOptions(options: Partial<ResizableOptions>) {

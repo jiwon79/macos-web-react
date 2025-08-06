@@ -1,1 +1,1 @@
-export * from './window.ts';
+export * from "./window.ts";

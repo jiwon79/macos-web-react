@@ -1,14 +1,14 @@
-import { EMPTY_IMAGE_URL } from 'domains/dock/constant';
-import { createDockItemImageUrl } from 'domains/dock/services/createDockItemImageUrl';
+import { EMPTY_IMAGE_URL } from "domains/dock/constant";
+import { createDockItemImageUrl } from "domains/dock/services/createDockItemImageUrl";
 import {
   useMinimizingWindow,
   useRestoringWindow,
-  useWindowAnimationAction,
-} from 'domains/window-animation/store';
-import { useMemo, useState } from 'react';
-import { DockItem } from './DockItem';
-import { MinimizingWindowDockItem } from './MinimizingWindowDockItem';
-import { RestoringWindowDockItem } from './RestoringWindowDockItem';
+  useWindowAnimationAction
+} from "domains/window-animation/store";
+import { useMemo, useState } from "react";
+import { DockItem } from "./DockItem";
+import { MinimizingWindowDockItem } from "./MinimizingWindowDockItem";
+import { RestoringWindowDockItem } from "./RestoringWindowDockItem";
 
 interface WindowDockItemProps {
   windowId: string;
@@ -19,7 +19,7 @@ interface WindowDockItemProps {
 export function WindowDockItem({
   windowId,
   image,
-  onClick,
+  onClick
 }: WindowDockItemProps) {
   const minimizingWindow = useMinimizingWindow(windowId);
   const restoringWindow = useRestoringWindow(windowId);

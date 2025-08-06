@@ -1,31 +1,31 @@
-import { ResizableResizeEvent } from 'modules/resizable';
-import { useRef } from 'react';
-import { cn } from 'third-parties/classnames';
-import { mergeRefs, usePreservedCallback } from 'utils/react';
-import {
+import type { ResizableResizeEvent } from "modules/resizable";
+import { useRef } from "react";
+import { cn } from "third-parties/classnames";
+import { mergeRefs, usePreservedCallback } from "utils/react";
+import type {
   LineResizeHandlerPosition,
-  type ResizeHandler,
-} from '../../interfaces';
-import { ResizeHandlerBase } from '../ResizeHandlerBase';
-import { line } from './LineResizeHandler.css';
+  ResizeHandler
+} from "../../interfaces";
+import { ResizeHandlerBase } from "../ResizeHandlerBase";
+import { line } from "./LineResizeHandler.css";
 
 const directionsByPosition = {
   top: {
     horizontal: undefined,
-    vertical: 'top',
+    vertical: "top"
   },
   bottom: {
     horizontal: undefined,
-    vertical: 'bottom',
+    vertical: "bottom"
   },
   left: {
-    horizontal: 'left',
-    vertical: undefined,
+    horizontal: "left",
+    vertical: undefined
   },
   right: {
-    horizontal: 'right',
-    vertical: undefined,
-  },
+    horizontal: "right",
+    vertical: undefined
+  }
 } as const;
 
 export const LineResizeHandler: ResizeHandler<{
@@ -39,13 +39,13 @@ export const LineResizeHandler: ResizeHandler<{
   onResizeStart,
   onResizeEnd,
   position,
-  classNameByPosition,
+  classNameByPosition
 }) => {
   const lineRef = useRef<HTMLDivElement>(null);
 
   const handleResizeByDirection = usePreservedCallback(
     (event: ResizableResizeEvent) => {
-      if (position === 'top' || position === 'bottom') {
+      if (position === "top" || position === "bottom") {
         onResize?.({ ...event, width: undefined });
       } else {
         onResize?.({ ...event, height: undefined });

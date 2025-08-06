@@ -3,7 +3,7 @@ export function assert(
   error: Error | string = new Error()
 ): asserts condition {
   if (!condition) {
-    if (typeof error === 'string') {
+    if (typeof error === "string") {
       throw new Error(error);
     } else {
       throw error;

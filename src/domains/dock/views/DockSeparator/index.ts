@@ -1,1 +1,1 @@
-export * from './DockSeparator';
+export * from "./DockSeparator";

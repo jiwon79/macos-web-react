@@ -1,1 +1,1 @@
-export * from './SubmenuDivider';
+export * from "./SubmenuDivider";

@@ -1,1 +1,1 @@
-export * from './EventManager';
+export * from "./EventManager";

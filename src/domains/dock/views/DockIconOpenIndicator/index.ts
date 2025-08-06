@@ -1,1 +1,1 @@
-export * from './DockIconOpenIndicator';
+export * from "./DockIconOpenIndicator";

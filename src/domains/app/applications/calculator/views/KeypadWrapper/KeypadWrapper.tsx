@@ -1,6 +1,6 @@
-import { Operator } from '../../store';
-import { Keypad } from '../Keypad';
-import { keypadContainer } from './KeypadWrapper.css';
+import type { Operator } from "../../store";
+import { Keypad } from "../Keypad";
+import { keypadContainer } from "./KeypadWrapper.css";
 
 interface KeypadWrapperProps {
   onNumberClick: (number: number) => void;
@@ -19,7 +19,7 @@ export function KeypadWrapper({
   onPlusMinusClick,
   onPercentClick,
   onOperatorClick,
-  onEqualClick,
+  onEqualClick
 }: KeypadWrapperProps) {
   return (
     <div className={keypadContainer}>
@@ -32,7 +32,7 @@ export function KeypadWrapper({
       <Keypad type="function" onClick={onPercentClick}>
         %
       </Keypad>
-      <Keypad type="operator" onClick={() => onOperatorClick('/')}>
+      <Keypad type="operator" onClick={() => onOperatorClick("/")}>
         ÷
       </Keypad>
       <Keypad type="number" onClick={() => onNumberClick(7)}>
@@ -44,7 +44,7 @@ export function KeypadWrapper({
       <Keypad type="number" onClick={() => onNumberClick(9)}>
         9
       </Keypad>
-      <Keypad type="operator" onClick={() => onOperatorClick('*')}>
+      <Keypad type="operator" onClick={() => onOperatorClick("*")}>
         x
       </Keypad>
       <Keypad type="number" onClick={() => onNumberClick(4)}>
@@ -56,7 +56,7 @@ export function KeypadWrapper({
       <Keypad type="number" onClick={() => onNumberClick(6)}>
         6
       </Keypad>
-      <Keypad type="operator" onClick={() => onOperatorClick('-')}>
+      <Keypad type="operator" onClick={() => onOperatorClick("-")}>
         -
       </Keypad>
       <Keypad type="number" onClick={() => onNumberClick(1)}>
@@ -68,7 +68,7 @@ export function KeypadWrapper({
       <Keypad type="number" onClick={() => onNumberClick(3)}>
         3
       </Keypad>
-      <Keypad type="operator" onClick={() => onOperatorClick('+')}>
+      <Keypad type="operator" onClick={() => onOperatorClick("+")}>
         +
       </Keypad>
       <Keypad type="number_wide" onClick={() => onNumberClick(0)}>

@@ -1,9 +1,9 @@
-export * from './Resizable';
 export type {
   ResizableEndResizeEvent,
+  ResizableEvent,
+  ResizableEventListener,
   ResizableOptions,
   ResizableResizeEvent,
-  ResizableStartResizeEvent,
-  ResizableEventListener,
-  ResizableEvent,
-} from './interfaces';
+  ResizableStartResizeEvent
+} from "./interfaces";
+export * from "./Resizable";

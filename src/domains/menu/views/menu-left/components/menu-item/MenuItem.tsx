@@ -1,10 +1,10 @@
-import { MenuConfig } from 'domains/app/interface';
-import { FloatingMenu } from '../../../floating-menu/FloatingMenu';
-import { SubmenuGroup } from '../submenu-group/SubmenuGroup';
+import type { MenuConfig } from "domains/app/interface";
+import { FloatingMenu } from "../../../floating-menu/FloatingMenu";
+import { SubmenuGroup } from "../submenu-group/SubmenuGroup";
 
 interface MenuItemProps {
   menu: MenuConfig;
-  type: 'text' | 'text-bold';
+  type: "text" | "text-bold";
   focused: boolean;
   selected: boolean;
   onSelectedChange: (selected: boolean) => void;
@@ -15,7 +15,7 @@ export function MenuItem({
   type,
   focused,
   selected,
-  onSelectedChange,
+  onSelectedChange
 }: MenuItemProps) {
   return (
     <FloatingMenu

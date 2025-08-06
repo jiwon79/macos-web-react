@@ -1,2 +1,2 @@
-export * from './CornerResizeHandler';
-export * from './LineResizeHandler';
+export * from "./CornerResizeHandler";
+export * from "./LineResizeHandler";

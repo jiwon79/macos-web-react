@@ -1,7 +1,7 @@
-import { style } from '@vanilla-extract/css';
+import { style } from "@vanilla-extract/css";
 
 export const renderer = style({
-  position: 'absolute',
+  position: "absolute",
   top: 0,
-  left: 0,
+  left: 0
 });

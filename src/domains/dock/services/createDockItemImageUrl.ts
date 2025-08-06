@@ -1,21 +1,21 @@
-import { DOCK_ITEM } from '../views/DockItem/constant';
+import { DOCK_ITEM } from "../views/DockItem/constant";
 
 const CANVAS_SIZE = 400;
 const CANVAS_INNER_SIZE = CANVAS_SIZE * DOCK_ITEM.INNER_RATIO;
 
 export function createDockItemImageUrl(imageData: ImageData): string | null {
-  const canvas = document.createElement('canvas');
+  const canvas = document.createElement("canvas");
   canvas.width = CANVAS_SIZE;
   canvas.height = CANVAS_SIZE;
-  const ctx = canvas.getContext('2d');
+  const ctx = canvas.getContext("2d");
   if (ctx == null) {
     return null;
   }
 
-  const imageCanvas = document.createElement('canvas');
+  const imageCanvas = document.createElement("canvas");
   imageCanvas.width = imageData.width;
   imageCanvas.height = imageData.height;
-  const imageCtx = imageCanvas.getContext('2d');
+  const imageCtx = imageCanvas.getContext("2d");
   if (imageCtx == null) {
     return null;
   }

@@ -1,11 +1,11 @@
-import { MenuConfig } from 'domains/app/interface';
-import { MenuLeft } from '../menu-left';
+import type { MenuConfig } from "domains/app/interface";
+import { MenuLeft } from "../menu-left";
 import {
   backgroundBlur,
   backgroundColorBurn,
   container,
-  menuContainer,
-} from './Menu.css';
+  menuContainer
+} from "./Menu.css";
 
 interface MenuProps {
   menus: MenuConfig[];

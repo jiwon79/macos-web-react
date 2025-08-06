@@ -1,1 +1,1 @@
-export * from './WindowResize';
+export * from "./WindowResize";

@@ -1,1 +1,1 @@
-export * from './FloatingMenu';
+export * from "./FloatingMenu";

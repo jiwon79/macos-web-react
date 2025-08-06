@@ -1,2 +1,2 @@
-export * from './mergeRefs';
-export * from './useMergedRefs';
+export * from "./mergeRefs";
+export * from "./useMergedRefs";

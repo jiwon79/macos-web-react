@@ -1,13 +1,13 @@
-import { SubmenuConfig } from 'domains/app/interface';
-import { Fragment } from 'react/jsx-runtime';
+import type { SubmenuConfig } from "domains/app/interface";
+import { Fragment } from "react/jsx-runtime";
 import {
   container,
   divider,
   submenuButton,
   submenuContainer,
   submenuShortcutText,
-  submenuText,
-} from './SubmenuGroup.css';
+  submenuText
+} from "./SubmenuGroup.css";
 
 interface SubMenusProps {
   submenuGroup: SubmenuConfig[][];

@@ -1,35 +1,35 @@
-import { style } from '@vanilla-extract/css';
-import { darkModeStyle, Z_INDEX } from 'third-parties/vanilla-extract';
+import { style } from "@vanilla-extract/css";
+import { darkModeStyle, Z_INDEX } from "third-parties/vanilla-extract";
 
 export const container = style({
   zIndex: Z_INDEX.dock,
 
-  position: 'absolute',
+  position: "absolute",
   bottom: 5,
-  left: '50%',
-  transform: 'translateX(-50%)',
+  left: "50%",
+  transform: "translateX(-50%)",
 
-  display: 'flex',
-  alignItems: 'end',
+  display: "flex",
+  alignItems: "end",
   height: 65,
-  padding: '0 5px',
+  padding: "0 5px",
   borderRadius: 16,
 
-  backgroundColor: 'rgba(242, 242, 242, 0.4)',
+  backgroundColor: "rgba(242, 242, 242, 0.4)",
   boxShadow: `
     0 0 6px rgba(0, 0, 0, 0.15),
     0 0 0 1px rgba(255, 255, 255, 0.54) inset`,
-  backdropFilter: 'blur(12px)',
+  backdropFilter: "blur(12px)"
 });
 
 darkModeStyle(container, {
-  backgroundColor: 'rgba(75, 75, 75, 0.4)',
+  backgroundColor: "rgba(75, 75, 75, 0.4)",
   boxShadow: `
     0 0 0 1px rgba(0, 0, 0, 0.2),
     0 0 0 1px #8A8A8A inset`,
-  backdropFilter: 'blur(30px)',
+  backdropFilter: "blur(30px)"
 });
 
 export const minimizedDockIndicator = style({
-  height: '100%',
+  height: "100%"
 });

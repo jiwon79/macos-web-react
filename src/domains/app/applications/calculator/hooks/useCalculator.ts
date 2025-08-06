@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import { flushSync } from 'react-dom';
-import { CalculatorStore, Operator } from '../store';
+import { useState } from "react";
+import { flushSync } from "react-dom";
+import { CalculatorStore, type Operator } from "../store";
 
 export function useCalculator() {
   const [store] = useState(() => new CalculatorStore());
@@ -12,7 +12,7 @@ export function useCalculator() {
     flushSync(() =>
       setDisplay((prev) => {
         prevDisplay = prev;
-        return '';
+        return "";
       })
     );
     setTimeout(() => {
@@ -65,6 +65,6 @@ export function useCalculator() {
     onPlusMinusClick,
     onOperatorClick,
     onPercentClick,
-    onEqualClick,
+    onEqualClick
   };
 }

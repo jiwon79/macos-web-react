@@ -1,2 +1,2 @@
-export * from './ResizableContainer';
-export * from './MultiDirectionResizableContainer';
+export * from "./MultiDirectionResizableContainer";
+export * from "./ResizableContainer";

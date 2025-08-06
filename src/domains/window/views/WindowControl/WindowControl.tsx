@@ -1,26 +1,26 @@
 import {
   IconWindowClose,
   IconWindowMaximize,
-  IconWindowMinimize,
-} from 'assets/icons';
-import { useWindowsAction, useWindowsStore } from 'domains/window/store/store';
-import { animateGenieEffect } from 'domains/window-animation/services/animateGenieEffect';
+  IconWindowMinimize
+} from "assets/icons";
+import { useWindowsAction, useWindowsStore } from "domains/window/store/store";
+import { animateGenieEffect } from "domains/window-animation/services/animateGenieEffect";
 import {
   useWindowAnimationAction,
-  useWindowAnimationStore,
-} from 'domains/window-animation/store';
-import html2canvas from 'html2canvas';
-import { getImageData } from 'utils/browser';
-import { useWindowContext } from '../WindowContext';
+  useWindowAnimationStore
+} from "domains/window-animation/store";
+import html2canvas from "html2canvas";
+import { getImageData } from "utils/browser";
+import { useWindowContext } from "../WindowContext";
 import {
   closeIcon,
   container,
   maximizeIcon,
-  minimizeIcon,
-} from './WindowControl.css';
+  minimizeIcon
+} from "./WindowControl.css";
 
 interface WindowControlProps {
-  size?: 'standard' | 'mono' | 'withTitle';
+  size?: "standard" | "mono" | "withTitle";
 }
 
 export function WindowControl({ size }: WindowControlProps) {
@@ -48,7 +48,7 @@ export function WindowControl({ size }: WindowControlProps) {
     const targetElement =
       getDockItemElement(id) ?? minimizedDockIndicatorElement;
     if (targetElement == null || dockElement == null) {
-      throw new Error('Target element not found');
+      throw new Error("Target element not found");
     }
     const targetRect = targetElement.getBoundingClientRect();
     const dockRect = dockElement.getBoundingClientRect();
@@ -56,7 +56,7 @@ export function WindowControl({ size }: WindowControlProps) {
     return {
       x: targetRect.x,
       y: dockRect.y,
-      width: targetRect.width,
+      width: targetRect.width
     };
   };
 
@@ -74,7 +74,7 @@ export function WindowControl({ size }: WindowControlProps) {
     const windowCanvas = await html2canvas(windowElement, {
       backgroundColor: null,
       logging: false,
-      useCORS: true,
+      useCORS: true
     });
     const { width, height } = window.style;
     const image = getImageData(windowCanvas, width, height);
@@ -86,20 +86,20 @@ export function WindowControl({ size }: WindowControlProps) {
       id,
       imageData: image,
       window: window.style,
-      target,
+      target
     });
     startMinimizingWindow({
       id,
       imageData: image,
       window: window.style,
-      target,
+      target
     });
 
     await animateGenieEffect({
       image,
       window: window.style,
       getTarget,
-      reverse: false,
+      reverse: false
     });
 
     stopMinimizingWindow(id);
@@ -111,13 +111,25 @@ export function WindowControl({ size }: WindowControlProps) {
 
   return (
     <div className={container({ size })}>
-      <button className={closeIcon} onMouseDown={onCloseMouseDown}>
+      <button
+        type="button"
+        className={closeIcon}
+        onMouseDown={onCloseMouseDown}
+      >
         <IconWindowClose />
       </button>
-      <button className={minimizeIcon} onMouseDown={onMinimizeMouseDown}>
+      <button
+        type="button"
+        className={minimizeIcon}
+        onMouseDown={onMinimizeMouseDown}
+      >
         <IconWindowMinimize />
       </button>
-      <button className={maximizeIcon} onMouseDown={onControlButtonMouseDown}>
+      <button
+        type="button"
+        className={maximizeIcon}
+        onMouseDown={onControlButtonMouseDown}
+      >
         <IconWindowMaximize />
       </button>
     </div>

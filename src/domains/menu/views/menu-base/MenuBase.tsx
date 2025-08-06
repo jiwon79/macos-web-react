@@ -1,8 +1,8 @@
-import { forwardRef } from 'react';
-import { cn } from 'third-parties/classnames';
-import { container } from './MenuBase.css';
+import { forwardRef } from "react";
+import { cn } from "third-parties/classnames";
+import { container } from "./MenuBase.css";
 
-export type MenuType = 'icon' | 'text' | 'text-bold';
+export type MenuType = "icon" | "text" | "text-bold";
 
 export interface MenuBaseProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;

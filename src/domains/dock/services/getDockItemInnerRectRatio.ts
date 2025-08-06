@@ -1,4 +1,4 @@
-import { DOCK_ITEM } from '../views/DockItem/constant';
+import { DOCK_ITEM } from "../views/DockItem/constant";
 
 export function getDockItemInnerRectRatio(imageData: ImageData): {
   x: number;
@@ -19,6 +19,6 @@ export function getDockItemInnerRectRatio(imageData: ImageData): {
     x: offsetXRatio,
     y: offsetYRatio,
     width: scaledWidthRatio,
-    height: scaledHeightRatio,
+    height: scaledHeightRatio
   };
 }

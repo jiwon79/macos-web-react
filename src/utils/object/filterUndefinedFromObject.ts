@@ -1,5 +1,5 @@
-import { filterObject } from './filterObject';
-import { isNotUndefined } from './isNotUndefined';
+import { filterObject } from "./filterObject";
+import { isNotUndefined } from "./isNotUndefined";
 
 type FilterUndefinedFromObjectResult<T extends object> = {
   [key in keyof T]: NonNullable<T[key]>;

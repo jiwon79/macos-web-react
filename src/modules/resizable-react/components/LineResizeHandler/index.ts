@@ -1,1 +1,1 @@
-export * from './LineResizeHandler';
+export * from "./LineResizeHandler";

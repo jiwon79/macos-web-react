@@ -1,7 +1,7 @@
-import { useHoverState } from 'domains/menu/hooks/useHoverState';
-import { HTMLAttributes, ReactNode, useEffect } from 'react';
-import { MenuBase, MenuType } from '../menu-base';
-import { useFloatingMenuContext } from './FloatingMenuContext';
+import { useHoverState } from "domains/menu/hooks/useHoverState";
+import { type HTMLAttributes, type ReactNode, useEffect } from "react";
+import { MenuBase, type MenuType } from "../menu-base";
+import { useFloatingMenuContext } from "./FloatingMenuContext";
 
 interface FloatingMenuTriggerProps extends HTMLAttributes<HTMLDivElement> {
   type: MenuType;
@@ -20,7 +20,7 @@ export function FloatingMenuTrigger({
     onOpenChange,
     reference,
     focused,
-    selected,
+    selected
   } = useFloatingMenuContext();
 
   const { hovered, targetProps } = useHoverState();

@@ -1,17 +1,17 @@
-import { useEffect, useRef } from 'react';
-import { usePreservedCallback } from 'utils/react';
+import { useEffect, useRef } from "react";
+import { usePreservedCallback } from "utils/react";
 import {
   Resizable,
-  ResizableOptions,
-  ResizableResizeEvent,
-} from '../resizable';
+  type ResizableOptions,
+  type ResizableResizeEvent
+} from "../resizable";
 
 interface Props {
   onResize?: (event: ResizableResizeEvent) => void;
   options: Partial<ResizableOptions>;
   children: (
-    targetRef: React.RefObject<any>,
-    handlerRef: React.RefObject<any>
+    targetRef: React.RefObject<HTMLElement>,
+    handlerRef: React.RefObject<HTMLElement>
   ) => React.ReactNode;
 }
 
@@ -39,20 +39,15 @@ export const ResizableContainer = ({ onResize, options, children }: Props) => {
     resizable.current = new Resizable(targetRef.current, handlerRef.current, {
       ...preservedOptions.current,
       canResize: preservedCanResize,
-      shouldStartResize: preservedShouldStartResize,
+      shouldStartResize: preservedShouldStartResize
     });
 
-    resizable.current.on('resize', preservedOnResize);
+    resizable.current.on("resize", preservedOnResize);
 
     return () => {
       resizable.current?.destroy();
     };
-  }, [
-    preservedOptions,
-    preservedCanResize,
-    preservedOnResize,
-    preservedShouldStartResize,
-  ]);
+  }, [preservedCanResize, preservedOnResize, preservedShouldStartResize]);
 
   return <>{children(targetRef, handlerRef)}</>;
 };

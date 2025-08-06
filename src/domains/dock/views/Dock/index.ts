@@ -1,1 +1,1 @@
-export * from './Dock';
+export * from "./Dock";

@@ -1,5 +1,5 @@
-import { cn } from 'third-parties/classnames';
-import { dockIcon } from './DockIconOpenIndicator.css';
+import { cn } from "third-parties/classnames";
+import { dockIcon } from "./DockIconOpenIndicator.css";
 
 interface DockIconOpenIndicatorProps {
   open?: boolean;
@@ -11,7 +11,7 @@ interface DockIconOpenIndicatorProps {
  */
 export function DockIconOpenIndicator({
   className,
-  open = false,
+  open = false
 }: DockIconOpenIndicatorProps) {
   return <div className={cn(className, dockIcon({ open }))} />;
 }

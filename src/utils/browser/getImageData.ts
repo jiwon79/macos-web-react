@@ -3,11 +3,11 @@ export const getImageData = (
   width: number,
   height: number
 ): ImageData | null => {
-  const backgroundCanvas = document.createElement('canvas');
+  const backgroundCanvas = document.createElement("canvas");
   backgroundCanvas.width = width;
   backgroundCanvas.height = height;
 
-  const ctx = backgroundCanvas.getContext('2d');
+  const ctx = backgroundCanvas.getContext("2d");
   if (ctx == null) {
     return null;
   }

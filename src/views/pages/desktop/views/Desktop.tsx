@@ -1,9 +1,9 @@
-import { Dock } from 'domains/dock/views';
-import { useWindowsAction } from 'domains/window/store';
-import { useDarkMode } from 'utils/browser/index.ts';
-import * as styles from './Desktop.css.ts';
-import { DesktopMenu } from './DesktopMenu';
-import { Windows } from './Windows';
+import { Dock } from "domains/dock/views";
+import { useWindowsAction } from "domains/window/store";
+import { useDarkMode } from "utils/browser/index.ts";
+import * as styles from "./Desktop.css.ts";
+import { DesktopMenu } from "./DesktopMenu";
+import { Windows } from "./Windows";
 
 export function Desktop() {
   const { setFocusedWindowID } = useWindowsAction();
@@ -26,10 +26,11 @@ function DarkModeButtonXX() {
 
   return (
     <button
+      type="button"
       onClick={() => setDarkMode(!darkMode)}
-      style={{ position: 'absolute', top: 40 }}
+      style={{ position: "absolute", top: 40 }}
     >
-      {darkMode ? '🌙' : '☀️'}
+      {darkMode ? "🌙" : "☀️"}
     </button>
   );
 }

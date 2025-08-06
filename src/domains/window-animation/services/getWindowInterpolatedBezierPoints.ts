@@ -1,6 +1,6 @@
-import { Point } from 'utils/math';
-import { getInterpolatedBezierPoints } from './getInterpolatedBezierPoints';
-import { getWindowBezierControlPoints } from './getWindowBezierControlPoints';
+import type { Point } from "utils/math";
+import { getInterpolatedBezierPoints } from "./getInterpolatedBezierPoints";
+import { getWindowBezierControlPoints } from "./getWindowBezierControlPoints";
 
 export function getWindowInterpolatedBezierPoints(
   start: Point,

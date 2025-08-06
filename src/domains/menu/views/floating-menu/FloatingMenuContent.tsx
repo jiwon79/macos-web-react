@@ -1,5 +1,5 @@
-import { HTMLAttributes } from 'react';
-import { useFloatingMenuContext } from './FloatingMenuContext';
+import type { HTMLAttributes } from "react";
+import { useFloatingMenuContext } from "./FloatingMenuContext";
 
 interface FloatingMenuContentProps extends HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;

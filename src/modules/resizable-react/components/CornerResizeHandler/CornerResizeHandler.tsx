@@ -1,30 +1,30 @@
-import {
+import type {
   CornerResizeHandlerPosition,
-  ResizeHandler,
-} from 'modules/resizable-react/interfaces';
-import { useRef } from 'react';
-import { cn } from 'third-parties/classnames';
-import { mergeRefs } from 'utils/react';
-import { ResizeHandlerBase } from '../ResizeHandlerBase';
-import { point } from './CornerResizeHandler.css';
+  ResizeHandler
+} from "modules/resizable-react/interfaces";
+import { useRef } from "react";
+import { cn } from "third-parties/classnames";
+import { mergeRefs } from "utils/react";
+import { ResizeHandlerBase } from "../ResizeHandlerBase";
+import { point } from "./CornerResizeHandler.css";
 
 const directionsByPosition = {
-  'top-left': {
-    vertical: 'top',
-    horizontal: 'left',
+  "top-left": {
+    vertical: "top",
+    horizontal: "left"
   },
-  'top-right': {
-    vertical: 'top',
-    horizontal: 'right',
+  "top-right": {
+    vertical: "top",
+    horizontal: "right"
   },
-  'bottom-left': {
-    vertical: 'bottom',
-    horizontal: 'left',
+  "bottom-left": {
+    vertical: "bottom",
+    horizontal: "left"
   },
-  'bottom-right': {
-    vertical: 'bottom',
-    horizontal: 'right',
-  },
+  "bottom-right": {
+    vertical: "bottom",
+    horizontal: "right"
+  }
 } as const;
 
 export const CornerResizeHandler: ResizeHandler<{
@@ -40,7 +40,7 @@ export const CornerResizeHandler: ResizeHandler<{
   onResizeStart,
   onResizeEnd,
   classNameByPosition,
-  keepRatio,
+  keepRatio
 }) => {
   const pointRef = useRef<HTMLDivElement>(null);
   return (

@@ -1,11 +1,11 @@
-import { DEBUG } from 'domains/debug/constant';
-import { getDockItemInnerRectRatio } from 'domains/dock/services/getDockItemInnerRectRatio';
-import { WINDOW_ANIMATION } from 'domains/window-animation/constant';
-import { clamp, easeInOut, easeOut, interpolate, Point } from 'utils/math';
-import { createScreenCanvas } from './createScreenCanvas';
-import { getGenieAnimationTime } from './getGenieAnimationTime';
-import { getTransformedImage } from './getTransformedImage';
-import { getWindowInterpolatedBezierPoints } from './getWindowInterpolatedBezierPoints';
+import { DEBUG } from "domains/debug/constant";
+import { getDockItemInnerRectRatio } from "domains/dock/services/getDockItemInnerRectRatio";
+import { WINDOW_ANIMATION } from "domains/window-animation/constant";
+import { clamp, easeInOut, easeOut, interpolate, type Point } from "utils/math";
+import { createScreenCanvas } from "./createScreenCanvas";
+import { getGenieAnimationTime } from "./getGenieAnimationTime";
+import { getTransformedImage } from "./getTransformedImage";
+import { getWindowInterpolatedBezierPoints } from "./getWindowInterpolatedBezierPoints";
 
 export async function animateGenieEffect(params: {
   image: ImageData;
@@ -21,7 +21,7 @@ export async function animateGenieEffect(params: {
     getGenieAnimationTime(window, initialTarget.y);
 
   const canvas = createScreenCanvas();
-  const ctx = canvas.getContext('2d');
+  const ctx = canvas.getContext("2d");
   if (ctx == null) {
     return;
   }
@@ -63,12 +63,12 @@ export async function animateGenieEffect(params: {
       const leftStart = { x, y: y - currentUpperYDiff };
       const leftEnd = {
         x: interpolate(x, targetInnerX)(easeXt),
-        y: targetY + upperYDiff - currentUpperYDiff,
+        y: targetY + upperYDiff - currentUpperYDiff
       };
       const rightStart = { x: x + width, y: y - currentUpperYDiff };
       const rightEnd = {
         x: interpolate(x + width, targetInnerX)(easeXt) + targetInnerWidth,
-        y: targetY + upperYDiff - currentUpperYDiff,
+        y: targetY + upperYDiff - currentUpperYDiff
       };
 
       const leftBezierPoints = getWindowInterpolatedBezierPoints(
@@ -113,6 +113,6 @@ function drawCurve(ctx: CanvasRenderingContext2D, points: Point[]) {
     ctx.lineTo(points[i].x, points[i].y);
   }
   ctx.lineWidth = 2;
-  ctx.strokeStyle = 'red';
+  ctx.strokeStyle = "red";
   ctx.stroke();
 }

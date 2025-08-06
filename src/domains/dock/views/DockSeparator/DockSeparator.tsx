@@ -1,4 +1,4 @@
-import * as styles from './DockSeparator.css.ts';
+import * as styles from "./DockSeparator.css.ts";
 
 export function DockSeparator() {
   return (
