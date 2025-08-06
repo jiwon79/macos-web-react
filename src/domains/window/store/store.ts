@@ -1,10 +1,10 @@
-import { ApplicationID, applications } from 'domains/app/applications';
-import { create } from 'third-parties/zustand';
-import { uniqBy } from 'utils/array/uniqBy';
-import { deepMergeObject } from 'utils/object';
-import { DeepPartial } from 'utils/type';
-import { MinimizedWindow, Window } from '../interface';
-import { initialWindowStates } from './initialWindowStatesXX';
+import { type ApplicationID, applications } from "domains/app/applications";
+import { create } from "third-parties/zustand";
+import { uniqBy } from "utils/array/uniqBy";
+import { deepMergeObject } from "utils/object";
+import type { DeepPartial } from "utils/type";
+import type { MinimizedWindow, Window } from "../interface";
+import { initialWindowStates } from "./initialWindowStatesXX";
 
 export interface WindowsState {
   windows: Window[];
@@ -48,8 +48,8 @@ export const useWindowsStore = create<WindowsState, WindowsAction>((set) => ({
           windows: [
             ...state.windows.slice(0, index),
             ...state.windows.slice(index + 1),
-            focusedWindow,
-          ],
+            focusedWindow
+          ]
         };
       }),
     createAppWindow: (appID) =>
@@ -67,8 +67,8 @@ export const useWindowsStore = create<WindowsState, WindowsAction>((set) => ({
             x: app.initialStyle.x ?? 100,
             y: app.initialStyle.y ?? 100,
             width: app.initialStyle.width,
-            height: app.initialStyle.height,
-          },
+            height: app.initialStyle.height
+          }
         };
 
         return { windows: [...state.windows, window] };
@@ -77,31 +77,31 @@ export const useWindowsStore = create<WindowsState, WindowsAction>((set) => ({
       set((state) => ({
         windows: state.windows.map((window) =>
           window.id === id ? deepMergeObject(window, data) : window
-        ),
+        )
       }));
     },
     deleteWindow: (id) =>
       set((state) => ({
-        windows: state.windows.filter((window) => window.id !== id),
+        windows: state.windows.filter((window) => window.id !== id)
       })),
     setWindowRef: (id, element) =>
       set((state) => ({
-        windowElements: { ...state.windowElements, [id]: element },
+        windowElements: { ...state.windowElements, [id]: element }
       })),
     minimizeWindow: (window) =>
       set((state) => ({
         minimizedWindows: uniqBy(
           [...state.minimizedWindows, window],
           (window) => window.id
-        ),
+        )
       })),
     restoreMinimizedWindow: (id) =>
       set((state) => ({
         minimizedWindows: state.minimizedWindows.filter(
           (minimizedWindow) => minimizedWindow.id !== id
-        ),
-      })),
-  },
+        )
+      }))
+  }
 }));
 
 export function useWindowsAction() {

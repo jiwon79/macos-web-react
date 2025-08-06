@@ -1,5 +1,6 @@
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef } from "react";
 
+// biome-ignore lint/suspicious/noExplicitAny: any
 export function usePreservedCallback<Callback extends (...args: any[]) => any>(
   callback: Callback
 ) {
@@ -9,6 +10,7 @@ export function usePreservedCallback<Callback extends (...args: any[]) => any>(
     callbackRef.current = callback;
   }, [callback]);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: dynamic dependency array
   return useCallback(
     (...args: unknown[]) => {
       return callbackRef.current(...args);

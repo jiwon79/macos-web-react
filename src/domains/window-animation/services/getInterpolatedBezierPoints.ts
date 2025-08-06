@@ -1,4 +1,4 @@
-import { Point } from 'domains/window/interface/Point';
+import type { Point } from "domains/window/interface/Point";
 
 export function getInterpolatedBezierPoints(
   P0: Point,
@@ -12,7 +12,7 @@ export function getInterpolatedBezierPoints(
 
   const roundedPoints = bezierPoints.map((point) => ({
     x: Math.round(point.x),
-    y: Math.round(point.y),
+    y: Math.round(point.y)
   }));
 
   const minY = Math.min(...roundedPoints.map((p) => p.y));
@@ -66,6 +66,6 @@ function getBezierPoint(
 
   return {
     x: mt3 * P0.x + 3 * mt2 * t * P1.x + 3 * mt * t2 * P2.x + t3 * P3.x,
-    y: mt3 * P0.y + 3 * mt2 * t * P1.y + 3 * mt * t2 * P2.y + t3 * P3.y,
+    y: mt3 * P0.y + 3 * mt2 * t * P1.y + 3 * mt * t2 * P2.y + t3 * P3.y
   };
 }

@@ -1,5 +1,5 @@
-import { WINDOW_ANIMATION } from 'domains/window-animation/constant';
-import { getEaseOutXForY } from 'utils/math';
+import { WINDOW_ANIMATION } from "domains/window-animation/constant";
+import { getEaseOutXForY } from "utils/math";
 
 const { DURATION, X_ANIMATION_DURATION_RATIO } = WINDOW_ANIMATION;
 
@@ -24,6 +24,6 @@ export function getGenieAnimationTime(
     xAnimationDuration,
     yAnimationStart,
     yAnimationDuration,
-    fillAnimationStart,
+    fillAnimationStart
   };
 }

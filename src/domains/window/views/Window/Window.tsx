@@ -1,7 +1,7 @@
-import { cn } from 'third-parties/classnames';
-import { WindowControl } from '../WindowControl/index.ts';
-import { WindowMovableArea } from '../WindowMovableArea';
-import { container } from './Window.css.ts';
+import { cn } from "third-parties/classnames";
+import { WindowControl } from "../WindowControl/index.ts";
+import { WindowMovableArea } from "../WindowMovableArea";
+import { container } from "./Window.css.ts";
 
 interface WindowProps {
   children?: React.ReactNode;

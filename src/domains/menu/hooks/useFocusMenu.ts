@@ -1,8 +1,10 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from "react";
 
 function useFocusMenu({
-  onFocusChange: givenOnFocusChange,
-}: { onFocusChange?: (focused: boolean) => void } = {}) {
+  onFocusChange: givenOnFocusChange
+}: {
+  onFocusChange?: (focused: boolean) => void;
+} = {}) {
   const menuRef = useRef<HTMLDivElement | null>(null);
   const [focused, setFocused] = useState(false);
 
@@ -11,7 +13,7 @@ function useFocusMenu({
       givenOnFocusChange?.(focused);
       setFocused(focused);
     },
-    [setFocused, givenOnFocusChange]
+    [givenOnFocusChange]
   );
 
   const handleMouseDown = useCallback(
@@ -31,10 +33,10 @@ function useFocusMenu({
   );
 
   useEffect(() => {
-    document.addEventListener('mousedown', handleMouseDown, true);
+    document.addEventListener("mousedown", handleMouseDown, true);
 
     return () => {
-      document.removeEventListener('mousedown', handleMouseDown, true);
+      document.removeEventListener("mousedown", handleMouseDown, true);
     };
   }, [handleMouseDown]);
 

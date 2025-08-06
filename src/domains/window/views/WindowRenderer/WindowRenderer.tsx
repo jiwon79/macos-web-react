@@ -1,9 +1,9 @@
-import { WindowStyle } from 'domains/window/interface';
-import { useWindowsAction } from 'domains/window/store';
-import { forwardRef, useMemo } from 'react';
-import { WindowContext } from '../WindowContext.ts';
-import { WindowResize } from '../WindowResize';
-import { renderer } from './WindowRenderer.css.ts';
+import type { WindowStyle } from "domains/window/interface";
+import { useWindowsAction } from "domains/window/store";
+import { forwardRef, useMemo } from "react";
+import { WindowContext } from "../WindowContext.ts";
+import { WindowResize } from "../WindowResize";
+import { renderer } from "./WindowRenderer.css.ts";
 
 export interface WindowRendererProps {
   id: string;
@@ -22,7 +22,7 @@ function _WindowRenderer(
     () => ({
       id,
       style,
-      onStyleChange,
+      onStyleChange
     }),
     [id, style, onStyleChange]
   );
@@ -36,7 +36,7 @@ function _WindowRenderer(
         style={{
           width: `${width}px`,
           height: `${height}px`,
-          transform: `translate(${x}px, ${y}px)`,
+          transform: `translate(${x}px, ${y}px)`
         }}
         onMouseDown={(event) => {
           event.preventDefault();

@@ -1,12 +1,12 @@
-import { Movable, MovableEventMap } from 'modules/movable';
-import { HTMLProps, ReactNode, useEffect, useRef } from 'react';
-import { noop } from 'utils/functions';
-import { usePreservedCallback } from 'utils/react';
+import { Movable, type MovableEventMap } from "modules/movable";
+import { type HTMLProps, type ReactNode, useEffect, useRef } from "react";
+import { noop } from "utils/functions";
+import { usePreservedCallback } from "utils/react";
 
 interface MovableContainerProps extends HTMLProps<HTMLDivElement> {
-  onMove?: (event: MovableEventMap['move']) => void;
-  onStartMove?: (event: MovableEventMap['startMove']) => void;
-  onEndMove?: (event: MovableEventMap['endMove']) => void;
+  onMove?: (event: MovableEventMap["move"]) => void;
+  onStartMove?: (event: MovableEventMap["startMove"]) => void;
+  onEndMove?: (event: MovableEventMap["endMove"]) => void;
   children?: ReactNode;
 }
 
@@ -31,9 +31,9 @@ export function MovableContainer({
 
     movable.current = new Movable(handlerRef.current, { manual: false });
 
-    movable.current.on('move', preservedOnMove);
-    movable.current.on('startMove', preservedOnStartMove);
-    movable.current.on('endMove', preservedOnEndMove);
+    movable.current.on("move", preservedOnMove);
+    movable.current.on("startMove", preservedOnStartMove);
+    movable.current.on("endMove", preservedOnEndMove);
 
     return () => {
       movable.current?.destroy();

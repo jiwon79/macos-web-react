@@ -1,1 +1,1 @@
-export * from './WindowMovableArea.tsx';
+export * from "./WindowMovableArea.tsx";

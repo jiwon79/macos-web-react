@@ -1,12 +1,12 @@
-import { EventManager } from 'modules/event-manager';
-import { assert } from 'utils/functions';
-import { MovableEventMap, MovableOptions } from './interface';
+import { EventManager } from "modules/event-manager";
+import { assert } from "utils/functions";
+import type { MovableEventMap, MovableOptions } from "./interface";
 
 export class Movable {
   private eventManager: EventManager<MovableEventMap> = new EventManager();
   private isMoving: boolean = false;
 
-  private firstMousePosition: Record<'x' | 'y', number> | undefined;
+  private firstMousePosition: Record<"x" | "y", number> | undefined;
 
   constructor(
     protected handlerElement: HTMLElement,
@@ -38,12 +38,12 @@ export class Movable {
   }
 
   onMouseDown = (event: MouseEvent) => {
-    this.eventManager.emit('startMove', { nativeEvent: event });
+    this.eventManager.emit("startMove", { nativeEvent: event });
     this.firstMousePosition = { x: event.clientX, y: event.clientY };
     this.isMoving = true;
 
-    document.addEventListener('mousemove', this.onMouseMove);
-    document.addEventListener('mouseup', this.onMouseUp);
+    document.addEventListener("mousemove", this.onMouseMove);
+    document.addEventListener("mouseup", this.onMouseUp);
   };
 
   private onMouseMove = (event: MouseEvent) => {
@@ -56,15 +56,15 @@ export class Movable {
 
     assert(
       this.firstMousePosition,
-      'firstMousePosition is not defined at mousemove event.'
+      "firstMousePosition is not defined at mousemove event."
     );
 
     const delta = {
       x: event.clientX - this.firstMousePosition.x,
-      y: event.clientY - this.firstMousePosition.y,
+      y: event.clientY - this.firstMousePosition.y
     };
 
-    this.eventManager.emit('move', { nativeEvent: event, delta });
+    this.eventManager.emit("move", { nativeEvent: event, delta });
   };
 
   private onMouseUp = (event: MouseEvent) => {
@@ -72,23 +72,23 @@ export class Movable {
       return;
     }
 
-    this.eventManager.emit('endMove', { nativeEvent: event });
+    this.eventManager.emit("endMove", { nativeEvent: event });
     this.isMoving = false;
     this.firstMousePosition = undefined;
 
-    document.removeEventListener('mousemove', this.onMouseMove);
-    document.removeEventListener('mouseup', this.onMouseUp);
+    document.removeEventListener("mousemove", this.onMouseMove);
+    document.removeEventListener("mouseup", this.onMouseUp);
   };
 
   private attachEventListeners() {
     this.options?.manual &&
-      this.handlerElement.addEventListener('mousedown', this.onMouseDown);
+      this.handlerElement.addEventListener("mousedown", this.onMouseDown);
   }
 
   private detachEventListeners() {
     this.options?.manual &&
-      this.handlerElement.removeEventListener('mousedown', this.onMouseDown);
-    document.removeEventListener('mousemove', this.onMouseMove);
-    document.removeEventListener('mouseup', this.onMouseUp);
+      this.handlerElement.removeEventListener("mousedown", this.onMouseDown);
+    document.removeEventListener("mousemove", this.onMouseMove);
+    document.removeEventListener("mouseup", this.onMouseUp);
   }
 }

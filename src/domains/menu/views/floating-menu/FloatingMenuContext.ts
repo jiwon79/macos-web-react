@@ -1,4 +1,4 @@
-import { createContext, HTMLAttributes, useContext } from 'react';
+import { createContext, type HTMLAttributes, useContext } from "react";
 
 type FloatingMenuContext = {
   focused: boolean;
@@ -19,7 +19,7 @@ export const FloatingMenuContext = createContext<FloatingMenuContext>(null);
 export function useFloatingMenuContext() {
   const context = useContext(FloatingMenuContext);
   if (context === null) {
-    throw new Error('FloatingMenuContext must be used within a FloatingMenu');
+    throw new Error("FloatingMenuContext must be used within a FloatingMenu");
   }
 
   return context;

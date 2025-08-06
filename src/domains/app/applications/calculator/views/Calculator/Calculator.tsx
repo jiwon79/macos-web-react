@@ -1,8 +1,8 @@
-import { Window } from 'domains/window/views';
-import { useCalculator } from '../../hooks';
-import { KeypadWrapper } from '../KeypadWrapper';
-import { calcThemeClass } from '../theme.css';
-import { displayContainer, displayText, movableArea } from './Calculator.css';
+import { Window } from "domains/window/views";
+import { useCalculator } from "../../hooks";
+import { KeypadWrapper } from "../KeypadWrapper";
+import { calcThemeClass } from "../theme.css";
+import { displayContainer, displayText, movableArea } from "./Calculator.css";
 
 export function Calculator() {
   const { display, ...handlers } = useCalculator();

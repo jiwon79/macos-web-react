@@ -1,1 +1,1 @@
-export * from './ResizeHandlerBase';
+export * from "./ResizeHandlerBase";

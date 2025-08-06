@@ -1,4 +1,4 @@
-import { useWindowsStore } from '.';
+import { useWindowsStore } from ".";
 
 export function useFocusedWindow() {
   return useWindowsStore((state) => {

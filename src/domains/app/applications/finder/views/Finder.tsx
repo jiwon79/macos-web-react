@@ -1,3 +1,3 @@
 export function Finder() {
-  return <></>;
+  return <div>Finder</div>;
 }

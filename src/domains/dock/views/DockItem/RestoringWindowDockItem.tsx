@@ -1,16 +1,17 @@
-import { DEBUG } from 'domains/debug/constant';
-import { EMPTY_IMAGE_URL } from 'domains/dock/constant';
-import { useDockItemSize } from 'domains/dock/hooks/useDockItemSize';
-import { useDock } from 'domains/dock/store';
-import { WINDOW_ANIMATION } from 'domains/window-animation/constant';
-import { useWindowAnimationAction } from 'domains/window-animation/store';
-import { animate, motion, useMotionValue, useTransform } from 'framer-motion';
-import { useEffect } from 'react';
-import { DockIconOpenIndicator } from '../DockIconOpenIndicator';
-import * as styles from './DockItem.css';
+import { DEBUG } from "domains/debug/constant";
+import { EMPTY_IMAGE_URL } from "domains/dock/constant";
+import { useDockItemSize } from "domains/dock/hooks/useDockItemSize";
+import { useDock } from "domains/dock/store";
+import { WINDOW_ANIMATION } from "domains/window-animation/constant";
+import { useWindowAnimationAction } from "domains/window-animation/store";
+import { animate, motion, useMotionValue, useTransform } from "framer-motion";
+import { useEffect } from "react";
+import { DockIconOpenIndicator } from "../DockIconOpenIndicator";
+import * as styles from "./DockItem.css";
 
 interface RestoringWindowDockItemProps {
   windowId: string;
+
   onClick?: () => void;
   distance: number;
 }
@@ -18,7 +19,7 @@ interface RestoringWindowDockItemProps {
 export function RestoringWindowDockItem({
   windowId,
   onClick,
-  distance,
+  distance
 }: RestoringWindowDockItemProps) {
   const mouseX = useDock((state) => state.mouseX);
   const { getDockItemElement } = useWindowAnimationAction();
@@ -26,7 +27,7 @@ export function RestoringWindowDockItem({
   const size = useDockItemSize({
     mouseX,
     element: itemElement,
-    initialDistance: distance,
+    initialDistance: distance
   });
 
   const t = useMotionValue(1);
@@ -35,7 +36,7 @@ export function RestoringWindowDockItem({
   useEffect(() => {
     const animation = animate(t, 0, {
       duration: WINDOW_ANIMATION.DURATION / 1000,
-      ease: 'linear',
+      ease: "linear"
     });
 
     return () => animation.stop();
@@ -46,7 +47,7 @@ export function RestoringWindowDockItem({
       className={styles.item}
       style={{
         width: containerWidth,
-        boxShadow: DEBUG.WINDOW_ANIMATION ? 'inset 0 0 0 1px blue' : undefined,
+        boxShadow: DEBUG.WINDOW_ANIMATION ? "inset 0 0 0 1px blue" : undefined
       }}
     >
       <motion.img
@@ -56,7 +57,7 @@ export function RestoringWindowDockItem({
         style={{
           width: size,
           height: size,
-          scaleX: t,
+          scaleX: t
         }}
         onClick={onClick}
       />

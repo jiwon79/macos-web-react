@@ -1,5 +1,5 @@
-import { useCallback } from 'react';
-import { mergeRefs } from './mergeRefs';
+import { useCallback } from "react";
+import { mergeRefs } from "./mergeRefs";
 
 export function useMergedRefs<T>(
   ...refs: Array<React.MutableRefObject<T> | React.LegacyRef<T>>

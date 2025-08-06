@@ -1,1 +1,1 @@
-export * from './SubmenuGroup';
+export * from "./SubmenuGroup";

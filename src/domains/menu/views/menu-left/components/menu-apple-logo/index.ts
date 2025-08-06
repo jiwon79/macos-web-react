@@ -1,1 +1,1 @@
-export * from './MenuAppleLogo';
+export * from "./MenuAppleLogo";

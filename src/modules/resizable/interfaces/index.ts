@@ -1,2 +1,2 @@
-export * from './Event';
-export * from './ResizableOptions';
+export * from "./Event";
+export * from "./ResizableOptions";

@@ -2,8 +2,8 @@ export interface ResizableResizeEvent {
   nativeEvent: MouseEvent;
   width?: number;
   height?: number;
-  horizontalPositiveDeltaDirection: 'left' | 'right';
-  verticalPositiveDeltaDirection: 'top' | 'bottom';
+  horizontalPositiveDeltaDirection: "left" | "right";
+  verticalPositiveDeltaDirection: "top" | "bottom";
   delta: {
     width?: number;
     height?: number;

@@ -1,3 +1,3 @@
 export const DEBUG = {
-  WINDOW_ANIMATION: false,
+  WINDOW_ANIMATION: false
 };

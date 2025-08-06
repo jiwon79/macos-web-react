@@ -1,5 +1,5 @@
-import { useEffect, useRef } from 'react';
-import { usePreservedCallback } from '../usePreservedCallback';
+import { useCallback, useEffect, useRef } from "react";
+import { usePreservedCallback } from "../usePreservedCallback";
 
 interface UseRequestAnimationFrameOptions {
   enabled?: boolean;
@@ -11,11 +11,12 @@ export function useRaf(
 ) {
   const preservedCallback = usePreservedCallback(callback);
   const frameIDRef = useRef<number>();
-  const cancel = () => {
+
+  const cancel = useCallback(() => {
     if (frameIDRef.current !== undefined) {
       cancelAnimationFrame(frameIDRef.current);
     }
-  };
+  }, []);
 
   useEffect(() => {
     if (!enabled) {
@@ -30,5 +31,5 @@ export function useRaf(
 
     frameIDRef.current = requestAnimationFrame(loop);
     return () => cancel();
-  }, [enabled, preservedCallback]);
+  }, [enabled, preservedCallback, cancel]);
 }

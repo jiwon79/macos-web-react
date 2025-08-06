@@ -1,38 +1,38 @@
-import { recipe } from '@vanilla-extract/recipes';
+import { recipe } from "@vanilla-extract/recipes";
 
 export const point = recipe({
   base: {
-    position: 'absolute',
+    position: "absolute",
     width: 12,
     height: 12,
-    borderRadius: '50%',
-    border: '1px solid $blue',
-    background: '$grey0',
+    borderRadius: "50%",
+    border: "1px solid $blue",
+    background: "$grey0",
     zIndex: 100,
-    pointerEvents: 'all',
+    pointerEvents: "all"
   },
   variants: {
     position: {
-      'top-left': {
+      "top-left": {
         top: -6,
         left: -6,
-        cursor: 'nwse-resize',
+        cursor: "nwse-resize"
       },
-      'top-right': {
+      "top-right": {
         top: -6,
         right: -6,
-        cursor: 'nesw-resize',
+        cursor: "nesw-resize"
       },
-      'bottom-left': {
+      "bottom-left": {
         bottom: -6,
         left: -6,
-        cursor: 'nesw-resize',
+        cursor: "nesw-resize"
       },
-      'bottom-right': {
+      "bottom-right": {
         bottom: -6,
         right: -6,
-        cursor: 'nwse-resize',
-      },
-    },
-  },
+        cursor: "nwse-resize"
+      }
+    }
+  }
 });

@@ -3,17 +3,17 @@ import {
   useDismiss,
   useFloating,
   useHover,
-  useInteractions,
-} from '@floating-ui/react';
-import { useCallback, useState } from 'react';
+  useInteractions
+} from "@floating-ui/react";
+import { useCallback, useState } from "react";
 
 export function useFloatingMenu({ focused }: { focused: boolean }) {
   const [open, setOpen] = useState(false);
   const { refs, floatingStyles, context } = useFloating({
     open,
     onOpenChange: setOpen,
-    placement: 'bottom-start',
-    middleware: [offset({ mainAxis: 2 })],
+    placement: "bottom-start",
+    middleware: [offset({ mainAxis: 2 })]
   });
 
   const hover = useHover(context, { enabled: focused });
@@ -21,21 +21,21 @@ export function useFloatingMenu({ focused }: { focused: boolean }) {
 
   const { getReferenceProps, getFloatingProps } = useInteractions([
     hover,
-    dismiss,
+    dismiss
   ]);
 
-  const onOpenChange = useCallback((open: boolean) => setOpen(open), [setOpen]);
+  const onOpenChange = useCallback((open: boolean) => setOpen(open), []);
 
   return {
     refs,
     floating: {
       style: floatingStyles,
-      ...getFloatingProps(),
+      ...getFloatingProps()
     },
     reference: {
-      ...getReferenceProps(),
+      ...getReferenceProps()
     },
     open,
-    onOpenChange,
+    onOpenChange
   };
 }

@@ -1,1 +1,1 @@
-export * from './CornerResizeHandler';
+export * from "./CornerResizeHandler";

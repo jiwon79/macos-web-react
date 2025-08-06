@@ -1,13 +1,19 @@
-import { Resizable } from 'modules/resizable';
-import { ResizeHandler } from 'modules/resizable-react/interfaces';
-import { HTMLProps, ReactNode, Ref, useEffect, useRef } from 'react';
-import { usePreservedCallback } from 'utils/react';
+import { Resizable } from "modules/resizable";
+import type { ResizeHandler } from "modules/resizable-react/interfaces";
+import {
+  type HTMLProps,
+  type ReactNode,
+  type Ref,
+  useEffect,
+  useRef
+} from "react";
+import { usePreservedCallback } from "utils/react";
 
 const noop = () => {};
 
 export const ResizeHandlerBase: ResizeHandler<{
-  horizontalPositiveDeltaDirection?: 'left' | 'right';
-  verticalPositiveDeltaDirection?: 'top' | 'bottom';
+  horizontalPositiveDeltaDirection?: "left" | "right";
+  verticalPositiveDeltaDirection?: "top" | "bottom";
   keepRatio?: boolean;
   children: (
     ref: Ref<HTMLDivElement>,
@@ -33,7 +39,7 @@ export const ResizeHandlerBase: ResizeHandler<{
 
   useEffect(() => {
     resizableRef.current?.updateOptions({
-      keepRatio,
+      keepRatio
     });
   }, [keepRatio]);
 
@@ -45,16 +51,16 @@ export const ResizeHandlerBase: ResizeHandler<{
     resizableRef.current = new Resizable(frameRef.current, handlerRef.current, {
       horizontalPositiveDeltaDirection,
       verticalPositiveDeltaDirection,
-      keepRatio,
+      keepRatio
     });
 
-    resizableRef.current.on('startResize', () => {
+    resizableRef.current.on("startResize", () => {
       onResizeStartPreserved();
     });
-    resizableRef.current.on('resize', (event) => {
+    resizableRef.current.on("resize", (event) => {
       onResizePreserved(event);
     });
-    resizableRef.current.on('endResize', () => {
+    resizableRef.current.on("endResize", () => {
       onResizeEndPreserved();
     });
 
@@ -69,7 +75,7 @@ export const ResizeHandlerBase: ResizeHandler<{
     onResizeEndPreserved,
     onResizePreserved,
     onResizeStartPreserved,
-    verticalPositiveDeltaDirection,
+    verticalPositiveDeltaDirection
   ]);
 
   return children(handlerRef, restProps);

@@ -1,7 +1,7 @@
-import { useMotionValue, useSpring, useTransform } from 'framer-motion';
-import { useCallback } from 'react';
-import { useRaf } from 'utils/react/useRaf';
-import { DOCK_ITEM } from '../views/DockItem/constant';
+import { useMotionValue, useSpring, useTransform } from "framer-motion";
+import { useCallback } from "react";
+import { useRaf } from "utils/react/useRaf";
+import { DOCK_ITEM } from "../views/DockItem/constant";
 
 export const useDockItemSize = (params: {
   mouseX: number | null;
@@ -15,7 +15,7 @@ export const useDockItemSize = (params: {
   const rawSize = useTransform(distance, DISTANCE_INPUT, SIZE_OUTPUT);
   const size = useSpring(rawSize, {
     stiffness: 1300,
-    damping: 82,
+    damping: 82
   });
 
   const setDistance = useCallback(
@@ -52,14 +52,14 @@ const DISTANCE_INPUT = [
   0,
   DISTANCE_LIMIT / 2,
   DISTANCE_LIMIT / 1.25,
-  DISTANCE_LIMIT,
+  DISTANCE_LIMIT
 ];
 const SIZE_OUTPUT = [
   DOCK_ITEM.SIZE * 1.0,
   DOCK_ITEM.SIZE * 1.1,
-  DOCK_ITEM.SIZE * 1.414,
+  DOCK_ITEM.SIZE * Math.SQRT2,
   DOCK_ITEM.SIZE * 2.0,
-  DOCK_ITEM.SIZE * 1.414,
+  DOCK_ITEM.SIZE * Math.SQRT2,
   DOCK_ITEM.SIZE * 1.1,
-  DOCK_ITEM.SIZE * 1.0,
+  DOCK_ITEM.SIZE * 1.0
 ];

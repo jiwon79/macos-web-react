@@ -1,9 +1,9 @@
-import { useDockItemSize } from 'domains/dock/hooks/useDockItemSize';
-import { useDock } from 'domains/dock/store';
-import { motion } from 'framer-motion';
-import { useRef } from 'react';
-import { DockIconOpenIndicator } from '../DockIconOpenIndicator';
-import * as styles from './DockItem.css';
+import { useDockItemSize } from "domains/dock/hooks/useDockItemSize";
+import { useDock } from "domains/dock/store";
+import { motion } from "framer-motion";
+import { useRef } from "react";
+import { DockIconOpenIndicator } from "../DockIconOpenIndicator";
+import * as styles from "./DockItem.css";
 
 interface DockItemProps {
   src: string;
@@ -18,7 +18,7 @@ export function DockItem({
   src,
   onClick,
   initialDistance,
-  onDistanceChange,
+  onDistanceChange
 }: DockItemProps) {
   const ref = useRef<HTMLImageElement>(null);
   const mouseX = useDock((state) => state.mouseX);
@@ -26,7 +26,7 @@ export function DockItem({
     mouseX,
     element: ref.current,
     initialDistance,
-    onDistanceChange,
+    onDistanceChange
   });
 
   return (
@@ -38,7 +38,7 @@ export function DockItem({
         draggable={false}
         style={{
           width: size,
-          height: size,
+          height: size
         }}
         onClick={onClick}
       />

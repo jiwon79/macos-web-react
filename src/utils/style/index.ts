@@ -1,1 +1,1 @@
-export * from './hexAlpha';
+export * from "./hexAlpha";

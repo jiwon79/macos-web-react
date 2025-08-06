@@ -1,4 +1,4 @@
-import { create } from 'third-parties/zustand';
+import { create } from "third-parties/zustand";
 
 export interface DockState {
   mouseX: number | null;
@@ -11,8 +11,8 @@ export interface DockAction {
 export const useDock = create<DockState, DockAction>((set) => ({
   mouseX: null,
   actions: {
-    setMouseX: (mouseX) => set({ mouseX }),
-  },
+    setMouseX: (mouseX) => set({ mouseX })
+  }
 }));
 
 export function useDockAction() {

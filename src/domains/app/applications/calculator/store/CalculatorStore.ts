@@ -1,26 +1,26 @@
-import { round } from '../utils';
+import { round } from "../utils";
 
-export type Operator = '+' | '-' | '*' | '/';
+export type Operator = "+" | "-" | "*" | "/";
 
 const operators: Record<
   Operator,
   (currentNum: number) => (num: number) => number
 > = {
-  '+': (num) => (prevNum) => prevNum + num,
-  '-': (num) => (prevNum) => prevNum - num,
-  '*': (num) => (prevNum) => prevNum * num,
-  '/': (num) => (prevNum) => prevNum / num,
+  "+": (num) => (prevNum) => prevNum + num,
+  "-": (num) => (prevNum) => prevNum - num,
+  "*": (num) => (prevNum) => prevNum * num,
+  "/": (num) => (prevNum) => prevNum / num
 };
 
 export class CalculatorStore {
-  display = '0';
+  display = "0";
   private lastOperator: Operator | null = null;
   private lastValue: number | null = null;
   private currentValue: number | null = null;
   private lastOperatorFunction: ((num: number) => number) | null = null;
 
   get parsedDisplay() {
-    if (this.display === '') {
+    if (this.display === "") {
       return 0;
     }
     return parseFloat(this.display);
@@ -31,11 +31,11 @@ export class CalculatorStore {
     this.currentValue = null;
     this.lastOperator = null;
     this.lastOperatorFunction = null;
-    this.display = '0';
+    this.display = "0";
   }
 
   number(num: number) {
-    if (this.display === '0' || this.currentValue === null) {
+    if (this.display === "0" || this.currentValue === null) {
       this.display = num.toString();
       this.currentValue = num;
       return;
@@ -47,17 +47,17 @@ export class CalculatorStore {
   }
 
   dot() {
-    if (this.display === '0' || this.currentValue === null) {
-      this.display = '0.';
+    if (this.display === "0" || this.currentValue === null) {
+      this.display = "0.";
       this.currentValue = 0;
       return;
     }
 
-    if (this.display.includes('.')) {
+    if (this.display.includes(".")) {
       return;
     }
 
-    this.display = this.display + '.';
+    this.display = `${this.display}.`;
   }
 
   plusMinus() {
