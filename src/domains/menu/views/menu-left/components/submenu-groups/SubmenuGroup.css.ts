@@ -1,6 +1,6 @@
 import { globalStyle, style } from '@vanilla-extract/css';
 import { recipe } from '@vanilla-extract/recipes';
-import { darkModeStyle, font } from 'third-parties/vanilla-extract';
+import { darkModeStyle, FONT } from 'third-parties/vanilla-extract';
 import { hexAlpha } from 'utils/style';
 
 export const container = style({
@@ -28,7 +28,7 @@ export const submenuContainer = style({
 
 export const submenuButton = recipe({
   base: [
-    font.body.regular,
+    FONT.body.regular,
     {
       display: 'flex',
       justifyContent: 'space-between',

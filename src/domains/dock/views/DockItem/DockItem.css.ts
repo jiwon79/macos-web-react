@@ -9,6 +9,7 @@ export const item = style({
 export const icon = style({
   width: 50,
   height: 50,
+  objectFit: 'contain',
   marginBottom: 10,
 });
 

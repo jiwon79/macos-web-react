@@ -1,5 +1,5 @@
 import { cn } from 'third-parties/classnames';
-import { WindowControl } from '../WindoeControl';
+import { WindowControl } from '../WindowControl/index.ts';
 import { WindowMovableArea } from '../WindowMovableArea';
 import { container } from './Window.css.ts';
 

@@ -1,29 +1,48 @@
-import { useDockHoverAnimation } from 'domains/dock/hooks';
+import { useDockItemSize } from 'domains/dock/hooks/useDockItemSize';
+import { useDock } from 'domains/dock/store';
 import { motion } from 'framer-motion';
 import { useRef } from 'react';
 import { DockIconOpenIndicator } from '../DockIconOpenIndicator';
-import { icon, item, openIndicator } from './DockItem.css';
+import * as styles from './DockItem.css';
 
 interface DockItemProps {
   src: string;
-  mouseX: number | null;
   open?: boolean;
+  onClick?: () => void;
+  initialDistance?: number;
+  onDistanceChange?: (distance: number) => void;
 }
 
-export function DockItem({ open, mouseX, src }: DockItemProps) {
+export function DockItem({
+  open,
+  src,
+  onClick,
+  initialDistance,
+  onDistanceChange,
+}: DockItemProps) {
   const ref = useRef<HTMLImageElement>(null);
-  const { size } = useDockHoverAnimation(mouseX, ref);
+  const mouseX = useDock((state) => state.mouseX);
+  const size = useDockItemSize({
+    mouseX,
+    element: ref.current,
+    initialDistance,
+    onDistanceChange,
+  });
 
   return (
-    <div className={item}>
+    <div className={styles.item}>
       <motion.img
         ref={ref}
-        className={icon}
+        className={styles.icon}
         src={src}
         draggable={false}
-        style={{ width: size, height: size }}
+        style={{
+          width: size,
+          height: size,
+        }}
+        onClick={onClick}
       />
-      <DockIconOpenIndicator className={openIndicator} open={open} />
+      <DockIconOpenIndicator className={styles.openIndicator} open={open} />
     </div>
   );
 }

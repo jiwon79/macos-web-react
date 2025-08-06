@@ -1,4 +1,4 @@
-import { WindowStyle } from 'domains/window/interface/WindowState';
+import { WindowStyle } from 'domains/window/interface/window';
 import { createContext, useContext } from 'react';
 
 interface WindowContextProps {

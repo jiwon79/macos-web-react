@@ -1,23 +1,33 @@
+import { ApplicationID, applications } from 'domains/app/applications';
 import { create } from 'third-parties/zustand';
+import { uniqBy } from 'utils/array/uniqBy';
 import { deepMergeObject } from 'utils/object';
 import { DeepPartial } from 'utils/type';
-import { WindowState } from '../interface/index.ts';
-import { initialWindowStates } from './initialWindowStatesXX.tsx';
+import { MinimizedWindow, Window } from '../interface';
+import { initialWindowStates } from './initialWindowStatesXX';
 
 export interface WindowsState {
-  windows: WindowState[];
+  windows: Window[];
+  windowElements: Record<string, HTMLDivElement>;
+  minimizedWindows: MinimizedWindow[];
   focusedWindowID: string | null;
 }
 
 export interface WindowsAction {
   setFocusedWindowID: (id: string | null) => void;
-  addWindow: (window: WindowState) => void;
-  removeWindow: (id: string) => void;
-  updateWindow: (id: string, data: DeepPartial<WindowState>) => void;
+  createAppWindow: (appID: ApplicationID) => void;
+  updateWindow: (id: string, data: DeepPartial<Window>) => void;
+  deleteWindow: (id: string) => void;
+  setWindowRef: (id: string, element: HTMLDivElement) => void;
+
+  minimizeWindow: (window: MinimizedWindow) => void;
+  restoreMinimizedWindow: (id: string) => void;
 }
 
 export const useWindowsStore = create<WindowsState, WindowsAction>((set) => ({
   windows: initialWindowStates,
+  windowElements: {},
+  minimizedWindows: [],
   focusedWindowID: null,
   actions: {
     setFocusedWindowID: (id: string | null) =>
@@ -31,26 +41,38 @@ export const useWindowsStore = create<WindowsState, WindowsAction>((set) => ({
           return state;
         }
 
-        const focusedWdindow = state.windows[index];
+        const focusedWindow = state.windows[index];
 
         return {
           focusedWindowID: id,
           windows: [
             ...state.windows.slice(0, index),
             ...state.windows.slice(index + 1),
-            focusedWdindow,
+            focusedWindow,
           ],
         };
       }),
+    createAppWindow: (appID) =>
+      set((state) => {
+        const app = applications[appID];
+        if (app == null) {
+          return state;
+        }
 
-    addWindow: (window) =>
-      set((state) => ({ windows: [...state.windows, window] })),
+        const window: Window = {
+          appID,
+          id: self.crypto.randomUUID(),
+          content: app.app(),
+          style: {
+            x: app.initialStyle.x ?? 100,
+            y: app.initialStyle.y ?? 100,
+            width: app.initialStyle.width,
+            height: app.initialStyle.height,
+          },
+        };
 
-    removeWindow: (id) =>
-      set((state) => ({
-        windows: state.windows.filter((window) => window.id !== id),
-      })),
-
+        return { windows: [...state.windows, window] };
+      }),
     updateWindow: (id, data) => {
       set((state) => ({
         windows: state.windows.map((window) =>
@@ -58,11 +80,30 @@ export const useWindowsStore = create<WindowsState, WindowsAction>((set) => ({
         ),
       }));
     },
+    deleteWindow: (id) =>
+      set((state) => ({
+        windows: state.windows.filter((window) => window.id !== id),
+      })),
+    setWindowRef: (id, element) =>
+      set((state) => ({
+        windowElements: { ...state.windowElements, [id]: element },
+      })),
+    minimizeWindow: (window) =>
+      set((state) => ({
+        minimizedWindows: uniqBy(
+          [...state.minimizedWindows, window],
+          (window) => window.id
+        ),
+      })),
+    restoreMinimizedWindow: (id) =>
+      set((state) => ({
+        minimizedWindows: state.minimizedWindows.filter(
+          (minimizedWindow) => minimizedWindow.id !== id
+        ),
+      })),
   },
 }));
 
-export function useWindowsAction<
-  TAction extends WindowsAction[keyof WindowsAction],
->(selector: (action: WindowsAction) => TAction): TAction {
-  return useWindowsStore((state) => selector(state.actions));
+export function useWindowsAction() {
+  return useWindowsStore((state) => state.actions);
 }

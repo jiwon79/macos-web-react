@@ -1,5 +1,5 @@
 import { Calculator } from 'domains/app/applications/calculator/views/Calculator';
-import { WindowState } from '../interface';
+import { Window as IWindow } from '../interface';
 import { Window } from '../views';
 
 export const Window1 = () => {
@@ -35,7 +35,7 @@ export const Window3 = () => {
   );
 };
 
-export const initialWindowStates: WindowState[] = [
+export const initialWindowStates: IWindow[] = [
   {
     id: '1',
     appID: '1',

@@ -1,7 +1,9 @@
 import { style } from '@vanilla-extract/css';
-import { darkModeStyle } from 'third-parties/vanilla-extract';
+import { darkModeStyle, Z_INDEX } from 'third-parties/vanilla-extract';
 
 export const container = style({
+  zIndex: Z_INDEX.dock,
+
   position: 'absolute',
   bottom: 5,
   left: '50%',
@@ -26,4 +28,8 @@ darkModeStyle(container, {
     0 0 0 1px rgba(0, 0, 0, 0.2),
     0 0 0 1px #8A8A8A inset`,
   backdropFilter: 'blur(30px)',
+});
+
+export const minimizedDockIndicator = style({
+  height: '100%',
 });

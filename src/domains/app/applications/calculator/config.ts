@@ -1,9 +1,10 @@
+import { IconAppCalculator } from 'assets/app-icons';
 import { AppConfig } from '../../interface';
 import { Calculator } from './views/Calculator';
 
 export const calculatorConfig: AppConfig = {
   id: 'Calculator',
-  icon: 'src/assets/app-icons/ic_app_calculator.png',
+  icon: IconAppCalculator,
   app: Calculator,
   menus: [
     {
