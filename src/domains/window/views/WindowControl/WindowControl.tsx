@@ -27,7 +27,7 @@ export function WindowControl({ size }: WindowControlProps) {
   const { id } = useWindowContext();
   const windows = useWindowsStore((state) => state.windows);
   const windowElements = useWindowsStore((state) => state.windowElements);
-  const { deleteWindow: removeWindow, minimizeWindow } = useWindowsAction();
+  const { deleteWindow, minimizeWindow } = useWindowsAction();
 
   const dockElement = useWindowAnimationStore((state) => state.dockElement);
   const minimizedDockIndicatorElement = useWindowAnimationStore(
@@ -41,17 +41,23 @@ export function WindowControl({ size }: WindowControlProps) {
 
   const onCloseMouseDown = (event: React.MouseEvent) => {
     event.stopPropagation();
-    removeWindow(id);
+    deleteWindow(id);
   };
 
   const getTarget = (): { x: number; y: number; width: number } => {
-    const dockItemElement = getDockItemElement(id);
-    const targetElement = dockItemElement ?? minimizedDockIndicatorElement;
-    if (targetElement == null) {
+    const targetElement =
+      getDockItemElement(id) ?? minimizedDockIndicatorElement;
+    if (targetElement == null || dockElement == null) {
       throw new Error('Target element not found');
     }
+    const targetRect = targetElement.getBoundingClientRect();
+    const dockRect = dockElement.getBoundingClientRect();
 
-    return targetElement.getBoundingClientRect();
+    return {
+      x: targetRect.x,
+      y: dockRect.y,
+      width: targetRect.width,
+    };
   };
 
   const onMinimizeMouseDown = async (event: React.MouseEvent) => {
@@ -89,12 +95,10 @@ export function WindowControl({ size }: WindowControlProps) {
       target,
     });
 
-    const targetContainerY = dockElement?.getBoundingClientRect().y ?? target.y;
     await animateGenieEffect({
       image,
       window: window.style,
-      targetContainerY,
-      getTarget: getTarget,
+      getTarget,
       reverse: false,
     });
 

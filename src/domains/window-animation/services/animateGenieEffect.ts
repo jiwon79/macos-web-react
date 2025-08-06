@@ -1,4 +1,4 @@
-import { getDockItemInnerRect } from 'domains/dock/services/getDockItemInnerRect';
+import { getDockItemInnerRectRatio } from 'domains/dock/services/getDockItemInnerRectRatio';
 import { WINDOW_ANIMATION } from 'domains/window-animation/constant';
 import { clamp, easeInOut, easeOut, interpolate, Point } from 'utils/math';
 import { createScreenCanvas } from './createScreenCanvas';
@@ -10,20 +10,14 @@ export async function animateGenieEffect(params: {
   image: ImageData;
   window: { x: number; y: number; width: number; height: number };
   getTarget: () => { x: number; y: number; width: number };
-  targetContainerY: number;
   reverse: boolean;
 }) {
-  const {
-    image,
-    window,
-    getTarget,
-    targetContainerY,
-    reverse = false,
-  } = params;
+  const { image, window, getTarget, reverse = false } = params;
   const { x, y, width, height } = window;
+  const initialTarget = getTarget();
 
   const { xAnimationDuration, yAnimationStart, yAnimationDuration } =
-    getGenieAnimationTime(window, targetContainerY);
+    getGenieAnimationTime(window, initialTarget.y);
 
   const canvas = createScreenCanvas();
   const ctx = canvas.getContext('2d');
@@ -31,8 +25,7 @@ export async function animateGenieEffect(params: {
     return;
   }
 
-  const dockItemInnerRect = getDockItemInnerRect(image);
-  const targetWidth = dockItemInnerRect.width;
+  const innerRectRatio = getDockItemInnerRectRatio(image);
 
   document.body.appendChild(canvas);
 
@@ -50,27 +43,23 @@ export async function animateGenieEffect(params: {
       }
 
       const target = getTarget();
-      const targetX = target.x + dockItemInnerRect.x;
-      const targetY = Math.min(
-        target.y + dockItemInnerRect.y,
-        targetContainerY
-      );
+      const targetInnerWidth = target.width * innerRectRatio.width;
+      const targetInnerX = target.x + target.width * innerRectRatio.x;
+      const targetY = target.y;
 
       const xt = Math.min(time / xAnimationDuration, 1);
       const easeXt = easeInOut(xt);
       const yt = clamp((time - yAnimationStart) / yAnimationDuration, 0, 1);
       const easeYt = easeOut(yt);
 
-      const currentTargetWidth = targetWidth * t;
-
       const leftStart = { x, y };
       const leftEnd = {
-        x: interpolate(x, targetX)(easeXt),
+        x: interpolate(x, targetInnerX)(easeXt),
         y: targetY,
       };
       const rightStart = { x: x + width, y };
       const rightEnd = {
-        x: interpolate(x + width, targetX)(easeXt) + currentTargetWidth,
+        x: interpolate(x + width, targetInnerX)(easeXt) + targetInnerWidth,
         y: targetY,
       };
 

@@ -4,7 +4,6 @@ import {
   IconAppTrash,
 } from 'assets/app-icons';
 import { ApplicationID } from 'domains/app/applications';
-import { DOCK_ITEM } from 'domains/dock/views/DockItem/constant';
 import { useWindowsAction, useWindowsStore } from 'domains/window/store/store';
 import { animateGenieEffect } from 'domains/window-animation/services/animateGenieEffect';
 import { useWindowAnimationAction } from 'domains/window-animation/store';
@@ -68,17 +67,14 @@ export function Dock() {
     await animateGenieEffect({
       image: minimizedWindow.imageData,
       window: minimizedWindow.window,
-      targetContainerY:
-        dockRef?.current?.getBoundingClientRect().y ?? minimizedWindow.target.y,
       getTarget: () => {
-        const element = getDockItemElement(windowId);
-        return (
-          element?.getBoundingClientRect() ?? {
-            x: minimizedWindow.target.x,
-            y: minimizedWindow.target.y,
-            width: DOCK_ITEM.SIZE,
-          }
-        );
+        const dockRect = dockRef.current?.getBoundingClientRect();
+        const rect = getDockItemElement(windowId)?.getBoundingClientRect();
+        return {
+          x: rect?.x ?? 0,
+          y: dockRect?.y ?? 0,
+          width: rect?.width ?? 0,
+        };
       },
       reverse: true,
     });

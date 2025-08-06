@@ -1,7 +1,6 @@
 import { useDockItemSize } from 'domains/dock/hooks/useDockItemSize';
 import { createDockItemImageUrl } from 'domains/dock/services/createDockItemImageUrl';
-import { getDockItemInnerRect } from 'domains/dock/services/getDockItemInnerRect';
-import { DOCK_ITEM } from 'domains/dock/views/DockItem/constant';
+import { getDockItemInnerRectRatio } from 'domains/dock/services/getDockItemInnerRectRatio';
 import { MinimizedWindow } from 'domains/window/interface';
 import { WINDOW_ANIMATION } from 'domains/window-animation/constant';
 import { getGenieAnimationTime } from 'domains/window-animation/services/getGenieAnimationTime';
@@ -17,7 +16,7 @@ import {
   useMotionValue,
   useTransform,
 } from 'framer-motion';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { DockIconOpenIndicator } from '../DockIconOpenIndicator';
 import { DockItem } from './DockItem';
 import * as styles from './DockItem.css';
@@ -46,11 +45,11 @@ export function WindowDockItem({
     return (
       <div ref={(el) => setDockItemElement(id, el)}>
         <MinimizingWindowDockItem
+          id={id}
           mouseX={mouseX}
           src={src ?? ''}
           onClick={onClick}
           minimizedWindow={minimizingWindow}
-          minimize={false}
         />
       </div>
     );
@@ -82,20 +81,31 @@ export function WindowDockItem({
 }
 
 function MinimizingWindowDockItem({
+  id,
   mouseX,
   src,
   onClick,
   minimizedWindow,
-  minimize,
 }: {
+  id: string;
   mouseX: number | null;
   src: string;
   onClick?: () => void;
   minimizedWindow: MinimizedWindow;
-  minimize: boolean;
 }) {
-  const t = useMotionValue(minimize ? 1 : 0);
-  const containerWidth = useTransform(() => DOCK_ITEM.SIZE * t.get());
+  const containerRef = useRef<HTMLDivElement>(null);
+  const imageRef = useRef<HTMLImageElement>(null);
+
+  const { getDockItemElement } = useWindowAnimationAction();
+  const itemRef = getDockItemElement(id);
+  const size = useDockItemSize({
+    mouseX,
+    element: itemRef,
+  });
+
+  const t = useMotionValue(0);
+  const containerWidth = useTransform(() => size.get() * t.get());
+  const translateX = useTransform(() => (-size.get() * (1 - t.get())) / 2);
 
   const { fillAnimationStart } = getGenieAnimationTime(
     minimizedWindow.window,
@@ -104,8 +114,7 @@ function MinimizingWindowDockItem({
   const fillAnimationStartRatio =
     fillAnimationStart / WINDOW_ANIMATION.DURATION;
 
-  const innerRect = getDockItemInnerRect(minimizedWindow.imageData);
-  const innerYRatio = innerRect.y / DOCK_ITEM.SIZE;
+  const innerYRatio = getDockItemInnerRectRatio(minimizedWindow.imageData).y;
   const getClipPath = interpolate(
     [0, fillAnimationStartRatio, 1],
     [
@@ -118,29 +127,35 @@ function MinimizingWindowDockItem({
   const clipPath = useTransform(() => getClipPath(t.get()));
 
   useEffect(() => {
-    const animation = animate(t, minimize ? 0 : 1, {
+    const animation = animate(t, 1, {
       duration: WINDOW_ANIMATION.DURATION / 1000,
       ease: 'linear',
     });
 
     return () => animation.stop();
-  }, [t, minimize]);
+  }, [t]);
 
   return (
     <motion.div
+      ref={containerRef}
       className={styles.item}
       style={{
         width: containerWidth,
+        boxShadow: 'inset 0 0 0 1px blue',
       }}
     >
       <motion.img
+        ref={imageRef}
         className={styles.icon}
         src={src}
         draggable={false}
         style={{
-          clipPath: minimize ? undefined : clipPath,
+          width: size,
+          height: size,
+          clipPath,
           scaleX: t,
-          opacity: minimize ? 0 : 1,
+          translateX,
+          boxShadow: 'inset 0 0 0 1px red',
         }}
         onClick={onClick}
       />
@@ -185,6 +200,7 @@ function RestoreMinimizingWindowDockItem({
       className={styles.item}
       style={{
         width: containerWidth,
+        boxShadow: 'inset 0 0 0 1px blue',
       }}
     >
       <motion.img
@@ -193,6 +209,7 @@ function RestoreMinimizingWindowDockItem({
         src={EMPTY_IMAGE_URL}
         style={{
           width: size,
+          height: size,
           scaleX: t,
         }}
         onClick={onClick}
