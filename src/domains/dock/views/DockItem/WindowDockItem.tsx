@@ -1,3 +1,4 @@
+import { useDockItemSize } from 'domains/dock/hooks/useDockItemSize';
 import { createDockItemImageUrl } from 'domains/dock/services/createDockItemImageUrl';
 import { getDockItemInnerRect } from 'domains/dock/services/getDockItemInnerRect';
 import { DOCK_ITEM } from 'domains/dock/views/DockItem/constant';
@@ -16,7 +17,7 @@ import {
   useMotionValue,
   useTransform,
 } from 'framer-motion';
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { DockIconOpenIndicator } from '../DockIconOpenIndicator';
 import { DockItem } from './DockItem';
 import * as styles from './DockItem.css';
@@ -37,21 +38,13 @@ export function WindowDockItem({
   const minimizingWindow = useMinimizingWindow(id);
   const maximizingWindow = useMaximizingWindow(id);
   const { setDockItemElement } = useWindowAnimationAction();
-  const itemRef = useRef<HTMLDivElement>(null);
-  const src = useMemo(() => createDockItemImageUrl(imageData), [imageData]);
 
-  useEffect(() => {
-    if (itemRef.current) {
-      setDockItemElement(id, itemRef.current);
-    }
-    return () => {
-      setDockItemElement(id, null);
-    };
-  }, [id, setDockItemElement]);
+  const src = useMemo(() => createDockItemImageUrl(imageData), [imageData]);
+  const [distance, setDistance] = useState(100_000);
 
   if (minimizingWindow != null) {
     return (
-      <div ref={itemRef}>
+      <div ref={(el) => setDockItemElement(id, el)}>
         <MinimizingWindowDockItem
           mouseX={mouseX}
           src={src ?? ''}
@@ -65,15 +58,25 @@ export function WindowDockItem({
 
   if (maximizingWindow != null) {
     return (
-      <div ref={itemRef}>
-        <RestoreMinimizingWindowDOckItem mouseX={mouseX} onClick={onClick} />
+      <div ref={(el) => setDockItemElement(id, el)}>
+        <RestoreMinimizingWindowDockItem
+          id={id}
+          mouseX={mouseX}
+          onClick={onClick}
+          initialDistance={distance}
+        />
       </div>
     );
   }
 
   return (
-    <div ref={itemRef}>
-      <DockItem mouseX={mouseX} src={src ?? ''} onClick={onClick} />
+    <div ref={(el) => setDockItemElement(id, el)}>
+      <DockItem
+        mouseX={mouseX}
+        src={src ?? ''}
+        onClick={onClick}
+        onDistanceChange={setDistance}
+      />
     </div>
   );
 }
@@ -135,8 +138,6 @@ function MinimizingWindowDockItem({
         src={src}
         draggable={false}
         style={{
-          width: DOCK_ITEM.SIZE,
-          height: DOCK_ITEM.SIZE,
           clipPath: minimize ? undefined : clipPath,
           scaleX: t,
           opacity: minimize ? 0 : 1,
@@ -148,15 +149,27 @@ function MinimizingWindowDockItem({
   );
 }
 
-function RestoreMinimizingWindowDOckItem({
+function RestoreMinimizingWindowDockItem({
+  id,
   mouseX,
   onClick,
+  initialDistance,
 }: {
+  id: string;
   mouseX: number | null;
   onClick?: () => void;
+  initialDistance: number;
 }) {
+  const { getDockItemElement } = useWindowAnimationAction();
+  const itemRef = getDockItemElement(id);
+  const size = useDockItemSize({
+    mouseX,
+    element: itemRef,
+    initialDistance,
+  });
+
   const t = useMotionValue(1);
-  const containerWidth = useTransform(() => DOCK_ITEM.SIZE * t.get());
+  const containerWidth = useTransform(() => size.get() * t.get());
 
   useEffect(() => {
     const animation = animate(t, 0, {
@@ -179,8 +192,7 @@ function RestoreMinimizingWindowDOckItem({
         draggable={false}
         src={EMPTY_IMAGE_URL}
         style={{
-          width: DOCK_ITEM.SIZE,
-          height: DOCK_ITEM.SIZE,
+          width: size,
           scaleX: t,
         }}
         onClick={onClick}

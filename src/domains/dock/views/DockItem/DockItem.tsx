@@ -1,5 +1,4 @@
 import { useDockItemSize } from 'domains/dock/hooks/useDockItemSize';
-import { DOCK_ITEM } from 'domains/dock/views/DockItem/constant';
 import { motion } from 'framer-motion';
 import { useRef } from 'react';
 import { DockIconOpenIndicator } from '../DockIconOpenIndicator';
@@ -10,11 +9,22 @@ interface DockItemProps {
   mouseX: number | null;
   open?: boolean;
   onClick?: () => void;
+  onDistanceChange?: (distance: number) => void;
 }
 
-export function DockItem({ open, mouseX, src, onClick }: DockItemProps) {
+export function DockItem({
+  open,
+  mouseX,
+  src,
+  onClick,
+  onDistanceChange,
+}: DockItemProps) {
   const ref = useRef<HTMLImageElement>(null);
-  const size = useDockItemSize(mouseX, ref, DOCK_ITEM.SIZE);
+  const size = useDockItemSize({
+    mouseX,
+    element: ref.current,
+    onDistanceChange,
+  });
 
   return (
     <div className={styles.item}>
