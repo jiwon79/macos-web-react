@@ -11,6 +11,7 @@ export interface WindowsState {
   windowElements: Record<string, HTMLDivElement>;
   minimizedWindows: MinimizedWindow[];
   focusedWindowID: string | null;
+  isDraggingWindow: boolean;
 }
 
 export interface WindowsAction {
@@ -22,6 +23,7 @@ export interface WindowsAction {
 
   minimizeWindow: (window: MinimizedWindow) => void;
   restoreMinimizedWindow: (id: string) => void;
+  setIsDraggingWindow: (isDragging: boolean) => void;
 }
 
 export const useWindowsStore = create<WindowsState, WindowsAction>((set) => ({
@@ -29,6 +31,7 @@ export const useWindowsStore = create<WindowsState, WindowsAction>((set) => ({
   windowElements: {},
   minimizedWindows: [],
   focusedWindowID: null,
+  isDraggingWindow: false,
   actions: {
     setFocusedWindowID: (id: string | null) =>
       set((state) => {
@@ -100,7 +103,8 @@ export const useWindowsStore = create<WindowsState, WindowsAction>((set) => ({
         minimizedWindows: state.minimizedWindows.filter(
           (minimizedWindow) => minimizedWindow.id !== id
         )
-      }))
+      })),
+    setIsDraggingWindow: (isDragging) => set({ isDraggingWindow: isDragging })
   }
 }));
 
