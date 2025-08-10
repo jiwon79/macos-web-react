@@ -1,3 +1,4 @@
+import { applications } from "domains/app/applications";
 import { useWindowsAction, useWindowsStore } from "domains/window/store";
 import { WindowRenderer } from "domains/window/views/WindowRenderer/WindowRenderer";
 
@@ -15,23 +16,29 @@ export function Windows() {
 
   return (
     <>
-      {notMinimizedWindows.map((window) => (
-        <WindowRenderer
-          key={window.id}
-          ref={(element) => {
-            if (element != null) {
-              setWindowRef(window.id, element);
-            }
-          }}
-          id={window.id}
-          style={window.style}
-          onStyleChange={(style) => {
-            updateWindow(window.id, { style });
-          }}
-        >
-          {window.content}
-        </WindowRenderer>
-      ))}
+      {notMinimizedWindows.map((window) => {
+        const app = applications[window.appID];
+        const resizable = app?.resizable ?? true;
+
+        return (
+          <WindowRenderer
+            key={window.id}
+            ref={(element) => {
+              if (element != null) {
+                setWindowRef(window.id, element);
+              }
+            }}
+            id={window.id}
+            style={window.style}
+            resizable={resizable}
+            onStyleChange={(style) => {
+              updateWindow(window.id, { style });
+            }}
+          >
+            {window.content}
+          </WindowRenderer>
+        );
+      })}
     </>
   );
 }

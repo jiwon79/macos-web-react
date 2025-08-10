@@ -6,6 +6,7 @@ export const calculatorConfig: AppConfig = {
   id: "Calculator",
   icon: IconAppCalculator,
   app: Calculator,
+  resizable: false,
   menus: [
     {
       name: "Calculator",
