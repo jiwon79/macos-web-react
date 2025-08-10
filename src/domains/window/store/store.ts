@@ -58,27 +58,26 @@ export const useWindowsStore = create<WindowsState, WindowsAction>((set) => ({
           ]
         };
       }),
-    createAppWindow: (appID) =>
-      set((state) => {
-        const app = applications[appID];
-        if (app == null) {
-          return state;
+    createAppWindow: (appID) => {
+      const app = applications[appID];
+      if (app == null) {
+        return;
+      }
+
+      const window: Window = {
+        appID,
+        id: self.crypto.randomUUID(),
+        content: app.app(),
+        style: {
+          x: app.initialStyle.x ?? 100,
+          y: app.initialStyle.y ?? 100,
+          width: app.initialStyle.width,
+          height: app.initialStyle.height
         }
+      };
 
-        const window: Window = {
-          appID,
-          id: self.crypto.randomUUID(),
-          content: app.app(),
-          style: {
-            x: app.initialStyle.x ?? 100,
-            y: app.initialStyle.y ?? 100,
-            width: app.initialStyle.width,
-            height: app.initialStyle.height
-          }
-        };
-
-        return { windows: [...state.windows, window] };
-      }),
+      set((state) => ({ windows: [...state.windows, window] }));
+    },
     updateWindow: (id, data) => {
       set((state) => ({
         windows: state.windows.map((window) =>

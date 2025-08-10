@@ -42,23 +42,28 @@ export function Dock() {
 
   const isOpen = (appID: ApplicationID) => {
     return (
-      minimizedWindows.some((window) => window.id === appID) ||
+      minimizedWindows.some((window) => window.appID === appID) ||
       windows.some((window) => window.appID === appID)
     );
   };
 
   const onClickDockItem = (appID: ApplicationID) => {
-    const isOpened = isOpen(appID);
-    if (!isOpened) {
+    // Check if app has a minimized window
+    const minimizedWindow = minimizedWindows.find((window) => window.appID === appID);
+    
+    // Check if app has an active window
+    const activeWindow = windows.find((window) => window.appID === appID);
+    
+    if (minimizedWindow) {
+      // Restore minimized window
+      onRestoreWindow(minimizedWindow.id);
+    } else if (activeWindow) {
+      // Focus existing window
+      setFocusedWindowID(activeWindow.id);
+    } else {
+      // Create new window
       createAppWindow(appID);
     }
-
-    const isMinimized = minimizedWindows.some((window) => window.id === appID);
-    if (isMinimized) {
-      onRestoreWindow(appID);
-    }
-
-    setFocusedWindowID(appID);
   };
 
   const onRestoreWindow = async (windowId: string) => {
@@ -95,7 +100,11 @@ export function Dock() {
       onMouseMove={(event) => !disableHover && setMouseX(event.clientX)}
       onMouseLeave={() => !disableHover && setMouseX(null)}
     >
-      <DockItem src={IconAppFinder} open={isOpen("Finder")} />
+      <DockItem 
+        src={IconAppFinder} 
+        open={isOpen("Finder")}
+        onClick={() => onClickDockItem("Finder")}
+      />
       <DockSeparator />
       <DockItem
         src={IconAppCalculator}

@@ -14,6 +14,7 @@ export interface WindowStyle {
 
 export interface MinimizedWindow {
   id: string;
+  appID: string;
   imageData: ImageData;
   window: {
     x: number;

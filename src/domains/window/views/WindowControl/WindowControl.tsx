@@ -84,12 +84,14 @@ export function WindowControl({ size }: WindowControlProps) {
 
     minimizeWindow({
       id,
+      appID: window.appID,
       imageData: image,
       window: window.style,
       target
     });
     startMinimizingWindow({
       id,
+      appID: window.appID,
       imageData: image,
       window: window.style,
       target

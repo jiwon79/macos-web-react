@@ -24,17 +24,6 @@ export const Window2 = () => {
   );
 };
 
-export const Window3 = () => {
-  return (
-    <Window>
-      <Window.MovableArea>
-        <Window.Control />
-      </Window.MovableArea>
-      <p>window 3</p>
-    </Window>
-  );
-};
-
 export const initialWindowStates: IWindow[] = [
   {
     id: "1",
@@ -64,7 +53,7 @@ export const initialWindowStates: IWindow[] = [
     content: <Calculator />,
     style: {
       x: 30,
-      y: 280,
+      y: 240,
       width: 232,
       height: 321
     }
