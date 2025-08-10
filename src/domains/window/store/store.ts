@@ -12,6 +12,7 @@ export interface WindowsState {
   minimizedWindows: MinimizedWindow[];
   focusedWindowID: string | null;
   isDraggingWindow: boolean;
+  isResizingWindow: boolean;
 }
 
 export interface WindowsAction {
@@ -24,6 +25,7 @@ export interface WindowsAction {
   minimizeWindow: (window: MinimizedWindow) => void;
   restoreMinimizedWindow: (id: string) => void;
   setIsDraggingWindow: (isDragging: boolean) => void;
+  setIsResizingWindow: (isResizing: boolean) => void;
 }
 
 export const useWindowsStore = create<WindowsState, WindowsAction>((set) => ({
@@ -32,6 +34,7 @@ export const useWindowsStore = create<WindowsState, WindowsAction>((set) => ({
   minimizedWindows: [],
   focusedWindowID: null,
   isDraggingWindow: false,
+  isResizingWindow: false,
   actions: {
     setFocusedWindowID: (id: string | null) =>
       set((state) => {
@@ -104,7 +107,8 @@ export const useWindowsStore = create<WindowsState, WindowsAction>((set) => ({
           (minimizedWindow) => minimizedWindow.id !== id
         )
       })),
-    setIsDraggingWindow: (isDragging) => set({ isDraggingWindow: isDragging })
+    setIsDraggingWindow: (isDragging) => set({ isDraggingWindow: isDragging }),
+    setIsResizingWindow: (isResizing) => set({ isResizingWindow: isResizing })
   }
 }));
 

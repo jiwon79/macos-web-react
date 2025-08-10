@@ -19,6 +19,9 @@ export function Dock() {
   const windows = useWindowsStore((state) => state.windows);
   const minimizedWindows = useWindowsStore((state) => state.minimizedWindows);
   const isDraggingWindow = useWindowsStore((state) => state.isDraggingWindow);
+  const isResizingWindow = useWindowsStore((state) => state.isResizingWindow);
+  const disableHover = isDraggingWindow || isResizingWindow;
+
   const { restoreMinimizedWindow, createAppWindow, setFocusedWindowID } =
     useWindowsAction();
   const {
@@ -89,8 +92,8 @@ export function Dock() {
     <div
       ref={dockRef}
       className={styles.container}
-      onMouseMove={(event) => !isDraggingWindow && setMouseX(event.clientX)}
-      onMouseLeave={() => !isDraggingWindow && setMouseX(null)}
+      onMouseMove={(event) => !disableHover && setMouseX(event.clientX)}
+      onMouseLeave={() => !disableHover && setMouseX(null)}
     >
       <DockItem src={IconAppFinder} open={isOpen("Finder")} />
       <DockSeparator />
