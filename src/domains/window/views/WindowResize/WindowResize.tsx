@@ -1,4 +1,5 @@
 import type { WindowStyle } from "domains/window/interface";
+import { useWindowsAction } from "domains/window/store";
 import type { ResizableEventMap } from "modules/resizable/interfaces";
 import { MultiDirectionResizableContainer } from "modules/resizable-react";
 import type { ResizeHandlerBaseProps } from "modules/resizable-react/interfaces";
@@ -11,6 +12,7 @@ interface WindowResizeProps {
 
 export function WindowResize({ children }: WindowResizeProps) {
   const { style, onStyleChange } = useWindowContext();
+  const { setIsResizingWindow } = useWindowsAction();
   const initialStyleRef = useRef<WindowStyle | undefined>(undefined);
 
   const handleResize = (event: ResizableEventMap["resize"]) => {
@@ -60,10 +62,12 @@ export function WindowResize({ children }: WindowResizeProps) {
 
   const handleResizeStart: ResizeHandlerBaseProps["onResizeStart"] = () => {
     initialStyleRef.current = style;
+    setIsResizingWindow(true);
   };
 
   const handleResizeEnd: ResizeHandlerBaseProps["onResizeEnd"] = () => {
     initialStyleRef.current = undefined;
+    setIsResizingWindow(false);
   };
 
   return (
