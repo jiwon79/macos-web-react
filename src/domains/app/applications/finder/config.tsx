@@ -4,7 +4,7 @@ import { Finder } from "./views/Finder";
 export const finderConfig: AppConfig = {
   id: "Finder",
   icon: "src/assets/app-icons/ic_app_calculator.png",
-  app: Finder,
+  app: () => <Finder />,
   menus: [
     {
       name: "Finder",

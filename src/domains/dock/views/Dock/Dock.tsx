@@ -20,7 +20,7 @@ export function Dock() {
   const minimizedWindows = useWindowsStore((state) => state.minimizedWindows);
   const isDraggingWindow = useWindowsStore((state) => state.isDraggingWindow);
   const isResizingWindow = useWindowsStore((state) => state.isResizingWindow);
-  const disableHover = isDraggingWindow || isResizingWindow;
+  const allowHover = !isDraggingWindow && !isResizingWindow;
 
   const { restoreMinimizedWindow, createAppWindow, setFocusedWindowID } =
     useWindowsAction();
@@ -42,26 +42,33 @@ export function Dock() {
 
   const isOpen = (appID: ApplicationID) => {
     return (
-      minimizedWindows.some((window) => window.id === appID) ||
+      minimizedWindows.some((window) => window.appID === appID) ||
       windows.some((window) => window.appID === appID)
     );
   };
 
-  const onClickDockItem = (appID: ApplicationID) => {
-    const isOpened = isOpen(appID);
-    if (!isOpened) {
+  const handleClickDockItem = (appID: ApplicationID) => {
+    // Check if app has a minimized window
+    const minimizedWindow = minimizedWindows.find(
+      (window) => window.appID === appID
+    );
+
+    // Check if app has an active window
+    const activeWindow = windows.find((window) => window.appID === appID);
+
+    if (minimizedWindow) {
+      // Restore minimized window
+      restoreWindow(minimizedWindow.id);
+    } else if (activeWindow) {
+      // Focus existing window
+      setFocusedWindowID(activeWindow.id);
+    } else {
+      // Create new window
       createAppWindow(appID);
     }
-
-    const isMinimized = minimizedWindows.some((window) => window.id === appID);
-    if (isMinimized) {
-      onRestoreWindow(appID);
-    }
-
-    setFocusedWindowID(appID);
   };
 
-  const onRestoreWindow = async (windowId: string) => {
+  const restoreWindow = async (windowId: string) => {
     const minimizedWindow = minimizedWindows.find((w) => w.id === windowId);
     if (!minimizedWindow) {
       return;
@@ -92,15 +99,19 @@ export function Dock() {
     <div
       ref={dockRef}
       className={styles.container}
-      onMouseMove={(event) => !disableHover && setMouseX(event.clientX)}
-      onMouseLeave={() => !disableHover && setMouseX(null)}
+      onMouseMove={(event) => allowHover && setMouseX(event.clientX)}
+      onMouseLeave={() => allowHover && setMouseX(null)}
     >
-      <DockItem src={IconAppFinder} open={isOpen("Finder")} />
+      <DockItem
+        src={IconAppFinder}
+        open={isOpen("Finder")}
+        onClick={() => handleClickDockItem("Finder")}
+      />
       <DockSeparator />
       <DockItem
         src={IconAppCalculator}
         open={isOpen("calculator")}
-        onClick={() => onClickDockItem("calculator")}
+        onClick={() => handleClickDockItem("calculator")}
       />
       <DockSeparator />
       {minimizedWindows.map((window) => (
@@ -108,7 +119,7 @@ export function Dock() {
           key={window.id}
           windowId={window.id}
           image={window.imageData}
-          onClick={() => onRestoreWindow(window.id)}
+          onClick={() => restoreWindow(window.id)}
         />
       ))}
       <div

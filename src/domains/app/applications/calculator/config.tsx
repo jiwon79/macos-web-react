@@ -5,8 +5,12 @@ import { Calculator } from "./views/Calculator";
 export const calculatorConfig: AppConfig = {
   id: "Calculator",
   icon: IconAppCalculator,
-  app: Calculator,
+  app: () => <Calculator />,
   resizable: false,
+  initialStyle: {
+    width: 232,
+    height: 321
+  },
   menus: [
     {
       name: "Calculator",
@@ -269,9 +273,5 @@ export const calculatorConfig: AppConfig = {
         ]
       ]
     }
-  ],
-  initialStyle: {
-    width: 300,
-    height: 400
-  }
+  ]
 };
