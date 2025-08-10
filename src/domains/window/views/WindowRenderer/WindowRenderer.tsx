@@ -9,11 +9,12 @@ export interface WindowRendererProps {
   id: string;
   style: WindowStyle;
   onStyleChange: (style: Partial<WindowStyle>) => void;
+  resizable?: boolean;
   children: React.ReactNode;
 }
 
 function _WindowRenderer(
-  { id, style, onStyleChange, children }: WindowRendererProps,
+  { id, style, onStyleChange, resizable = true, children }: WindowRendererProps,
   ref: React.Ref<HTMLDivElement>
 ) {
   const { setFocusedWindowID } = useWindowsAction();
@@ -45,7 +46,7 @@ function _WindowRenderer(
         }}
         className={renderer}
       >
-        <WindowResize>{children}</WindowResize>
+        {resizable ? <WindowResize>{children}</WindowResize> : children}
       </div>
     </WindowContext.Provider>
   );

@@ -14,6 +14,7 @@ export interface AppConfig {
   app: () => React.ReactElement;
   icon: string;
   menus: MenuConfig[];
+  resizable?: boolean;
   resize?: {
     minWidth?: number;
     minHeight?: number;
